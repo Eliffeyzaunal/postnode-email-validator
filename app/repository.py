@@ -1,5 +1,7 @@
 import json
 import sqlite3
+from collections.abc import Iterator
+from contextlib import contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -21,8 +23,18 @@ class Repository:
         connection.execute("PRAGMA foreign_keys=ON")
         return connection
 
+    @contextmanager
+    def session(self) -> Iterator[sqlite3.Connection]:
+        """İşlem sonunda bağlantıyı Windows dahil tüm platformlarda kapatır."""
+        connection = self.connect()
+        try:
+            with connection:
+                yield connection
+        finally:
+            connection.close()
+
     def initialize(self) -> None:
-        with self.connect() as connection:
+        with self.session() as connection:
             connection.executescript(
                 """
                 CREATE TABLE IF NOT EXISTS dns_cache (
@@ -60,7 +72,7 @@ class Repository:
 
     def get_cached_dns(self, domain: str) -> DNSResult | None:
         now = datetime.now(UTC).isoformat()
-        with self.connect() as connection:
+        with self.session() as connection:
             row = connection.execute(
                 "SELECT domain, state, detail FROM dns_cache WHERE domain = ? AND expires_at > ?",
                 (domain, now),
@@ -70,7 +82,7 @@ class Repository:
         return DNSResult(row["domain"], DNSState(row["state"]), row["detail"], True)
 
     def put_dns(self, result: DNSResult, checked_at: datetime, expires_at: datetime) -> None:
-        with self.connect() as connection:
+        with self.session() as connection:
             connection.execute(
                 """
                 INSERT INTO dns_cache(domain, state, detail, checked_at, expires_at)
@@ -113,7 +125,7 @@ class Repository:
                     mask_email(item.suggestion) if item.suggestion else None,
                 )
             )
-        with self.connect() as connection:
+        with self.session() as connection:
             connection.execute(
                 "INSERT INTO batches(id, filename, created_at, summary_json) VALUES (?, ?, ?, ?)",
                 (batch_id, filename, created_at, json.dumps(summary, ensure_ascii=False)),
@@ -129,7 +141,7 @@ class Repository:
             )
 
     def get_batch(self, batch_id: str) -> dict[str, Any] | None:
-        with self.connect() as connection:
+        with self.session() as connection:
             row = connection.execute(
                 "SELECT id, filename, created_at, summary_json FROM batches WHERE id = ?",
                 (batch_id,),
@@ -144,7 +156,7 @@ class Repository:
         }
 
     def get_results(self, batch_id: str, offset: int = 0, limit: int = 100) -> list[dict[str, Any]]:
-        with self.connect() as connection:
+        with self.session() as connection:
             rows = connection.execute(
                 """
                 SELECT row_number, masked_email, email_hash, domain, status,
@@ -168,4 +180,3 @@ class Repository:
             }
             for row in rows
         ]
-

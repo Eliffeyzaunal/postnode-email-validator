@@ -1,0 +1,37 @@
+name: Testler
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - name: Kodu indir
+        uses: actions/checkout@v4
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Bağımlılıkları kur
+        run: pip install -r requirements-dev.txt
+
+      - name: Otomatik testleri çalıştır
+        run: pytest
+
+      - name: Değerlendirme kümesini çalıştır
+        run: python scripts/evaluate.py
+
+      - name: 10.000 adres benchmark'ını çalıştır
+        run: python scripts/benchmark.py
+

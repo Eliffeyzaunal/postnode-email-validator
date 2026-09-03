@@ -42,6 +42,10 @@ class DNSChecker:
         try:
             answers = self.resolver.resolve(domain, "MX")
             if answers:
+                # RFC 7505: preference=0 ve exchange="." olan Null MX kaydı,
+                # alan adının e-posta kabul etmediğini açıkça bildirir.
+                if any(str(answer.exchange).rstrip(".") == "" for answer in answers):
+                    return DNSResult(domain, DNSState.NO_MAIL_HOST, "Null MX kaydı bulundu")
                 return DNSResult(domain, DNSState.MX, "MX kaydı bulundu")
         except dns.resolver.NXDOMAIN:
             return DNSResult(domain, DNSState.NXDOMAIN, "Alan adı bulunamadı")
@@ -79,4 +83,3 @@ class StaticDNSChecker:
     def lookup(self, domain: str) -> DNSResult:
         self.calls[domain] = self.calls.get(domain, 0) + 1
         return DNSResult(domain, self.states.get(domain, self.default), "static")
-

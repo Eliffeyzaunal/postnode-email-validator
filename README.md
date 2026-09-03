@@ -140,7 +140,11 @@ python scripts/evaluate.py
 python scripts/benchmark.py
 ```
 
-`evaluation/evaluation.csv` 200 sentetik ve elle gözden geçirilmiş etiket içerir. Değerlendirme gerçek DNS değişimlerinden etkilenmemek için aynı dosyadaki sabit DNS durumlarını kullanır. `benchmark/emails-10000.csv` tam 10.000 satırdır; benchmark tekil DNS sorgusu sayısını ve işlem süresini raporlar.
+`evaluation/evaluation.csv` 200 sentetik ve elle gözden geçirilmiş etiket içerir. Değerlendirme gerçek DNS değişimlerinden etkilenmemek için aynı dosyadaki sabit DNS durumlarını kullanır. Bu sonuç bir kural-kapsam kontrolüdür; gerçek müşteri doğruluğu iddiası değildir.
+
+`benchmark/emails-10000.csv` tam 10.000 satırdır. Benchmark, gerçek SQLite kayıt yolunu kullanarak hem boş DNS cache ile ilk koşuyu hem de dolu cache ile ikinci koşuyu ölçer. Ağ değişkenliğini ortadan kaldırmak için DNS cevabı sabittir; ilk koşuda dört tekil alan adı için dört sorgu, ikinci koşuda ise kalıcı cache sayesinde sıfır sorgu beklenir. İki koşuda toplam 20.000 sonuç satırının SQLite'a yazıldığı da doğrulanır.
+
+GitHub Actions, her `main` push ve pull request işleminde Python 3.11 ve 3.12 üzerinde testleri, değerlendirmeyi ve benchmark'ı otomatik çalıştırır.
 
 ## Liste kaynakları ve güncelleme
 
