@@ -33,7 +33,7 @@ class EmailValidatorService:
         dns_checker: DNSLookup | None = None,
     ):
         self.settings = settings
-        self.repository = repository or Repository(settings.database_path)
+        self.repository = repository or Repository(settings.database_url)
         self.dns_checker = dns_checker or DNSChecker(
             self.repository,
             settings.dns_timeout_seconds,
@@ -195,4 +195,3 @@ class EmailValidatorService:
             "top_domains": dict(domains.most_common(10)),
             "duration_ms": duration_ms,
         }
-

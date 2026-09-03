@@ -1,13 +1,37 @@
 services:
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-postnode_validator}
+      MYSQL_USER: ${MYSQL_USER:-postnode}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-postnode_dev_password}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-postnode_root_dev_password}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin ping -h 127.0.0.1 -u${MYSQL_USER:-postnode} -p${MYSQL_PASSWORD:-postnode_dev_password} --silent",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 15s
+
   validator:
     build: .
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
     ports:
       - "8000:8000"
     environment:
-      DATABASE_PATH: /service/runtime/validator.db
-    volumes:
-      - validator-data:/service/runtime
+      DATABASE_URL: mysql+pymysql://${MYSQL_USER:-postnode}:${MYSQL_PASSWORD:-postnode_dev_password}@mysql:3306/${MYSQL_DATABASE:-postnode_validator}?charset=utf8mb4
 
 volumes:
-  validator-data:
-
+  mysql-data:

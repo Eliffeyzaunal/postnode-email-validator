@@ -32,7 +32,7 @@ app = FastAPI(
 @lru_cache
 def get_service() -> EmailValidatorService:
     settings = get_settings()
-    return EmailValidatorService(settings, Repository(settings.database_path))
+    return EmailValidatorService(settings, Repository(settings.database_url))
 
 
 def _response_item(item) -> ResultResponse:
@@ -135,4 +135,3 @@ def export_batch(batch_id: str) -> StreamingResponse:
         media_type="text/csv; charset=utf-8",
         headers={"Content-Disposition": f'attachment; filename="{batch_id}.csv"'},
     )
-

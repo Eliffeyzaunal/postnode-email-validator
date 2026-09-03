@@ -48,7 +48,7 @@ def test_duplicate_and_sequence_detection(service):
 
 def test_database_never_stores_raw_email(service):
     batch_id, _, _ = service.validate_many(["secret.person@gmail.com"])
-    raw_bytes = service.repository.database_path.read_bytes()
-    assert b"secret.person@gmail.com" not in raw_bytes
+    stored = service.repository.get_results(batch_id)
+    assert "secret.person@gmail.com" not in repr(stored)
+    assert stored[0]["masked_email"] == "s***n@gmail.com"
     assert service.repository.get_batch(batch_id) is not None
-

@@ -1,6 +1,11 @@
 @echo off
 setlocal
 cd /d "%~dp0"
+docker compose up -d --wait mysql
+if errorlevel 1 (
+  echo MySQL baslatilamadi. Docker Desktop'in acik oldugunu kontrol edin.
+  exit /b 1
+)
 if not exist .venv (
   py -m venv .venv
 )

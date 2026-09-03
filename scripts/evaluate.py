@@ -3,6 +3,7 @@ import json
 import sys
 from collections import Counter
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
@@ -29,12 +30,18 @@ def main() -> None:
         row["email"].rsplit("@", 1)[1].casefold(): STATE_MAP[row["dns_state"]]
         for row in rows if "@" in row["email"] and row["dns_state"] in STATE_MAP
     }
-    settings = Settings(
-        database_path=PROJECT_ROOT / "evaluation" / "evaluation.db",
-        domain_concentration_min_list_size=100_000,
-    )
-    service = EmailValidatorService(settings, Repository(settings.database_path), StaticDNSChecker(states))
-    _, _, results = service.validate_many([row["email"] for row in rows], persist=False)
+    with TemporaryDirectory(prefix="postnode-evaluation-") as directory:
+        database_url = f"sqlite:///{(Path(directory) / 'evaluation.db').as_posix()}"
+        settings = Settings(
+            database_url=database_url,
+            domain_concentration_min_list_size=100_000,
+        )
+        repository = Repository(database_url)
+        try:
+            service = EmailValidatorService(settings, repository, StaticDNSChecker(states))
+            _, _, results = service.validate_many([row["email"] for row in rows], persist=False)
+        finally:
+            repository.close()
     expected = [Status(row["expected_status"]) for row in rows]
     correct = sum(actual.status == wanted for actual, wanted in zip(results, expected, strict=True))
     valid_total = sum(wanted == Status.VALID for wanted in expected)

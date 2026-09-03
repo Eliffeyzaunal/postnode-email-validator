@@ -9,6 +9,24 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_DATABASE: postnode_validator
+          MYSQL_USER: postnode
+          MYSQL_PASSWORD: postnode_test_password
+          MYSQL_ROOT_PASSWORD: postnode_root_test_password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -upostnode -ppostnode_test_password --silent"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+    env:
+      DATABASE_URL: mysql+pymysql://postnode:postnode_test_password@127.0.0.1:3306/postnode_validator?charset=utf8mb4
+      TEST_MYSQL_DATABASE_URL: mysql+pymysql://postnode:postnode_test_password@127.0.0.1:3306/postnode_validator?charset=utf8mb4
     strategy:
       matrix:
         python-version: ["3.11", "3.12"]
@@ -34,4 +52,3 @@ jobs:
 
       - name: 10.000 adres benchmark'ını çalıştır
         run: python scripts/benchmark.py
-

@@ -1,12 +1,12 @@
 # Postnode Liste Hijyeni ve Adres Doğrulama Servisi
 
-PDF'deki Görev 1 için hazırlanmış, ana uygulamadan bağımsız FastAPI servisidir. CSV/TXT listesini `gecerli`, `supheli` veya `gecersiz` olarak sınıflandırır; sabit sebep kodları üretir, liste özeti çıkarır ve gizlilik güvenli geçmişi SQLite'ta saklar.
+PDF'deki Görev 1 için hazırlanmış, ana uygulamadan bağımsız FastAPI servisidir. CSV/TXT listesini `gecerli`, `supheli` veya `gecersiz` olarak sınıflandırır; sabit sebep kodları üretir, liste özeti çıkarır ve gizlilik güvenli geçmişi üretimde MySQL'de saklar.
 
 ## Özellikler
 
 - Sözdizimi, uzunluk, yerel bölüm ve alan adı kontrolleri
 - MX sorgusu; MX yoksa A/AAAA geri dönüşünün ayrı sınıflandırılması
-- Kalıcı SQLite DNS önbelleği ve toplu işlemde alan adı tekilleştirme
+- Kalıcı MySQL DNS önbelleği ve toplu işlemde alan adı tekilleştirme
 - Güncellenebilir disposable-domain, rol hesabı ve typo veri dosyaları
 - Yazım hatası için düzeltme önerisi
 - Yinelenen adres, ardışık üretilmiş yerel bölüm ve alan adı yoğunluğu analizi
@@ -18,24 +18,26 @@ SMTP `RCPT TO`, catch-all tespiti ve ücretli doğrulama servisi özellikle kull
 
 ## Kurulum ve çalıştırma
 
-Python 3.11+ gerekir.
-
-```bash
-python -m venv .venv
-source .venv/bin/activate          # Windows: .venv\\Scripts\\activate
-pip install -r requirements-dev.txt
-uvicorn app.main:app --reload
-```
-
-Tarayıcı: `http://127.0.0.1:8000/docs`
-
-Windows'ta hızlı başlatmak için `run_windows.bat` dosyasına çift tıklanabilir; sanal ortamı kurar, bağımlılıkları yükler, servisi açar ve Swagger ekranını tarayıcıda başlatır.
-
-Docker seçeneği:
+Python 3.11+ ve MySQL 8 gerekir. En kolay kurulum Docker iledir:
 
 ```bash
 docker compose up --build
 ```
+
+Tarayıcı: `http://127.0.0.1:8000/docs`
+
+Uygulamayı VS Code terminalinde çalıştırmak için önce yalnızca MySQL'i başlatın:
+
+```bash
+docker compose up -d mysql
+python -m venv .venv
+source .venv/bin/activate          # Windows: .venv\\Scripts\\activate
+pip install -r requirements-dev.txt
+cp .env.example .env              # Windows CMD: copy .env.example .env
+uvicorn app.main:app --reload
+```
+
+Windows'ta hızlı başlatmak için `run_windows.bat` dosyasına çift tıklanabilir; Docker'daki MySQL'i, sanal ortamı, bağımlılıkları, API'yi ve Swagger ekranını sırayla başlatır.
 
 ## API
 
@@ -82,7 +84,7 @@ curl -X POST http://127.0.0.1:8000/api/v1/validate/file \
 python -m app.cli samples/sample_emails.csv --output outputs/results.csv
 ```
 
-CLI özeti terminale JSON yazar; satır sonuçlarını maskeli CSV'ye kaydeder.
+CLI, `.env` içindeki MySQL bağlantısını kullanır; özeti terminale JSON yazar ve satır sonuçlarını maskeli CSV'ye kaydeder. Farklı bir sunucu için `--database-url` verilebilir.
 
 ## Kütüphane kullanımı
 
@@ -96,7 +98,9 @@ batch_id, summary, results = service.validate_many(["user@gmail.com"])
 
 ## Veritabanı
 
-`dns_cache` alan adı sonucunu TTL ile saklar. `batches` işlem özetini, `validation_results` ise satır numarası, maskeli adres, SHA-256 özet, alan adı, karar ve sebep kodlarını saklar. Açık e-posta adresi saklanmaz. SQLite dosyası varsayılan olarak `data/validator.db` konumundadır; `.env` ile değiştirilebilir.
+`dns_cache` alan adı sonucunu TTL ile saklar. `batches` işlem özetini, `validation_results` ise satır numarası, maskeli adres, SHA-256 özet, alan adı, karar ve sebep kodlarını saklar. Açık e-posta adresi saklanmaz.
+
+Üretim ve normal geliştirme çalışması `.env` içindeki `DATABASE_URL` üzerinden MySQL kullanır. Repository SQLAlchemy ile yazılmıştır; testler aynı tablo ve sorgu kodunu geçici SQLite veritabanlarında hızlı ve izole biçimde çalıştırır. GitHub Actions ayrıca MySQL 8.4 üzerinde gerçek repository entegrasyonunu doğrular.
 
 ## Karar mantığı
 
@@ -142,9 +146,9 @@ python scripts/benchmark.py
 
 `evaluation/evaluation.csv` 200 sentetik ve elle gözden geçirilmiş etiket içerir. Değerlendirme gerçek DNS değişimlerinden etkilenmemek için aynı dosyadaki sabit DNS durumlarını kullanır. Bu sonuç bir kural-kapsam kontrolüdür; gerçek müşteri doğruluğu iddiası değildir.
 
-`benchmark/emails-10000.csv` tam 10.000 satırdır. Benchmark, gerçek SQLite kayıt yolunu kullanarak hem boş DNS cache ile ilk koşuyu hem de dolu cache ile ikinci koşuyu ölçer. Ağ değişkenliğini ortadan kaldırmak için DNS cevabı sabittir; ilk koşuda dört tekil alan adı için dört sorgu, ikinci koşuda ise kalıcı cache sayesinde sıfır sorgu beklenir. İki koşuda toplam 20.000 sonuç satırının SQLite'a yazıldığı da doğrulanır.
+`benchmark/emails-10000.csv` tam 10.000 satırdır. Benchmark, üretimde kullanılan MySQL kayıt yoluyla hem boş DNS cache ile ilk koşuyu hem de dolu cache ile ikinci koşuyu ölçer. Ağ değişkenliğini ortadan kaldırmak için DNS cevabı sabittir; ilk koşuda dört tekil alan adı için dört sorgu, ikinci koşuda ise kalıcı cache sayesinde sıfır sorgu beklenir. İki koşuda toplam 20.000 sonuç satırının MySQL'e yazıldığı doğrulanır ve benchmark kendi oluşturduğu satırları bitişte temizler.
 
-GitHub Actions, her `main` push ve pull request işleminde Python 3.11 ve 3.12 üzerinde testleri, değerlendirmeyi ve benchmark'ı otomatik çalıştırır.
+GitHub Actions, her `main` push ve pull request işleminde Python 3.11 ve 3.12 üzerinde SQLite birim testlerini, gerçek MySQL 8.4 entegrasyon testini, değerlendirmeyi ve MySQL benchmark'ını otomatik çalıştırır.
 
 ## Liste kaynakları ve güncelleme
 
@@ -157,7 +161,7 @@ GitHub Actions, her `main` push ve pull request işleminde Python 3.11 ve 3.12 �
 - Gerçek müşteri listelerini repoya koymayın.
 - Uygulama açık adresi loglamaz ve kalıcı depoya yazmaz.
 - API/CLI çıktısı satır numarası, maskeli adres ve hash ile eşlenir.
-- SQLite, yetkili olmayan kullanıcıların erişemeyeceği dizinde tutulmalıdır.
+- MySQL parolaları yalnızca ortam değişkenlerinde tutulmalı; `.env` repoya eklenmemelidir.
 - Dosya boyutu ve satır sayısı sınırlandırılmıştır.
 - SMTP mailbox doğrulaması yapılmaz.
 

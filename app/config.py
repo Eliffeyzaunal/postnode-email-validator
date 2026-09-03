@@ -8,7 +8,10 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
 class Settings(BaseSettings):
-    database_path: Path = PROJECT_ROOT / "data" / "validator.db"
+    database_url: str = (
+        "mysql+pymysql://postnode:postnode_dev_password@127.0.0.1:3306/"
+        "postnode_validator?charset=utf8mb4"
+    )
     disposable_domains_path: Path = PROJECT_ROOT / "data" / "disposable_domains.txt"
     role_accounts_path: Path = PROJECT_ROOT / "data" / "role_accounts.txt"
     domain_typos_path: Path = PROJECT_ROOT / "data" / "domain_typos.json"
@@ -27,4 +30,3 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
-

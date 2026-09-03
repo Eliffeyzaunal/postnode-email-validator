@@ -12,7 +12,7 @@ from app.validator import EmailValidatorService
 @pytest.fixture
 def settings(tmp_path: Path) -> Settings:
     return Settings(
-        database_path=tmp_path / "test.db",
+        database_url=f"sqlite:///{(tmp_path / 'test.db').as_posix()}",
         disposable_domains_path=PROJECT_ROOT / "data" / "disposable_domains.txt",
         role_accounts_path=PROJECT_ROOT / "data" / "role_accounts.txt",
         domain_typos_path=PROJECT_ROOT / "data" / "domain_typos.json",
@@ -35,6 +35,9 @@ def dns_checker() -> StaticDNSChecker:
 
 
 @pytest.fixture
-def service(settings: Settings, dns_checker: StaticDNSChecker) -> EmailValidatorService:
-    return EmailValidatorService(settings, Repository(settings.database_path), dns_checker)
-
+def service(settings: Settings, dns_checker: StaticDNSChecker):
+    repository = Repository(settings.database_url)
+    try:
+        yield EmailValidatorService(settings, repository, dns_checker)
+    finally:
+        repository.close()

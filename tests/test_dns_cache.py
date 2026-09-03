@@ -6,7 +6,7 @@ from app.repository import Repository
 
 
 def test_dns_cache_prevents_second_network_lookup(tmp_path):
-    repository = Repository(tmp_path / "cache.db")
+    repository = Repository(f"sqlite:///{(tmp_path / 'cache.db').as_posix()}")
     checker = DNSChecker(repository, ttl_seconds=3600)
     checker._lookup_uncached = Mock(return_value=DNSResult("gmail.com", DNSState.MX, "test"))
 
@@ -16,3 +16,4 @@ def test_dns_cache_prevents_second_network_lookup(tmp_path):
     assert first.state == DNSState.MX
     assert second.from_cache is True
     checker._lookup_uncached.assert_called_once_with("gmail.com")
+    repository.close()

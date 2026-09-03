@@ -21,20 +21,23 @@ class ResolverStub:
 
 
 def test_null_mx_means_domain_accepts_no_email(tmp_path):
-    checker = DNSChecker(Repository(tmp_path / "null-mx.db"))
+    repository = Repository(f"sqlite:///{(tmp_path / 'null-mx.db').as_posix()}")
+    checker = DNSChecker(repository)
     checker.resolver = ResolverStub([MXRecord(0, ".")])
 
     result = checker._lookup_uncached("no-mail.example")
 
     assert result.state == DNSState.NO_MAIL_HOST
     assert result.detail == "Null MX kaydı bulundu"
+    repository.close()
 
 
 def test_regular_mx_is_accepted(tmp_path):
-    checker = DNSChecker(Repository(tmp_path / "regular-mx.db"))
+    repository = Repository(f"sqlite:///{(tmp_path / 'regular-mx.db').as_posix()}")
+    checker = DNSChecker(repository)
     checker.resolver = ResolverStub([MXRecord(10, "mail.example.")])
 
     result = checker._lookup_uncached("example.com")
 
     assert result.state == DNSState.MX
-
+    repository.close()
