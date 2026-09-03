@@ -1,0 +1,16 @@
+abuse
+admin
+billing
+contact
+destek
+help
+info
+iletisim
+marketing
+noreply
+no-reply
+sales
+security
+support
+webmaster
+

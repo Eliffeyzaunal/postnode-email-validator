@@ -1,0 +1,13 @@
+services:
+  validator:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_PATH: /service/runtime/validator.db
+    volumes:
+      - validator-data:/service/runtime
+
+volumes:
+  validator-data:
+
