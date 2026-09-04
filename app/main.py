@@ -7,6 +7,13 @@ from fastapi.responses import StreamingResponse
 
 from app import __version__
 from app.config import get_settings
+from app.blocklist.models import (
+    BlocklistCheckRequest,
+    BlocklistNotification,
+    BlocklistRunResponse,
+)
+from app.blocklist.repository import BlocklistRepository
+from app.blocklist.service import BlocklistMonitorService
 from app.models import (
     BatchMetadataResponse,
     BatchRequest,
@@ -23,9 +30,12 @@ from app.validator import EmailValidatorService
 
 
 app = FastAPI(
-    title="Postnode Liste Hijyeni ve Adres Doğrulama Servisi",
+    title="Postnode E-posta Güvenliği Servisleri",
     version=__version__,
-    description="CSV/TXT e-posta listelerini syntax, DNS/MX ve risk kurallarıyla sınıflandırır.",
+    description=(
+        "Liste hijyeni/adres doğrulama ve sahte DNS cevaplarıyla "
+        "kara liste izleme servislerini sunar."
+    ),
 )
 
 
@@ -33,6 +43,15 @@ app = FastAPI(
 def get_service() -> EmailValidatorService:
     settings = get_settings()
     return EmailValidatorService(settings, Repository(settings.database_url))
+
+
+@lru_cache
+def get_blocklist_service() -> BlocklistMonitorService:
+    settings = get_settings()
+    return BlocklistMonitorService(
+        settings,
+        BlocklistRepository(settings.database_url),
+    )
 
 
 def _response_item(item) -> ResultResponse:
@@ -65,6 +84,46 @@ def health() -> dict:
 @app.get("/api/v1/reason-codes", tags=["validation"])
 def reason_codes() -> dict[str, str]:
     return {code.value: description for code, description in REASON_DESCRIPTIONS.items()}
+
+
+@app.get("/api/v1/blocklists/providers", tags=["blocklist"])
+def blocklist_providers() -> list[dict]:
+    """Etkin sağlayıcıları ve SORBS erişilebilirlik durumunu döndürür."""
+    return get_blocklist_service().provider_status()
+
+
+@app.post(
+    "/api/v1/blocklists/check",
+    response_model=BlocklistRunResponse,
+    tags=["blocklist"],
+)
+def check_blocklists(
+    request: BlocklistCheckRequest | None = None,
+) -> BlocklistRunResponse:
+    """Bir defalık kontrol yapar; boş gövde örnek varlıkları kullanır."""
+    try:
+        return get_blocklist_service().run_once(request)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/api/v1/blocklists/runs/{run_id}", tags=["blocklist-history"])
+def get_blocklist_run(run_id: str) -> dict:
+    run = get_blocklist_service().repository.get_run(run_id)
+    if not run:
+        raise HTTPException(status_code=404, detail="Kara liste kontrol kaydı bulunamadı.")
+    return run
+
+
+@app.get(
+    "/api/v1/blocklists/runs/{run_id}/notifications",
+    response_model=list[BlocklistNotification],
+    tags=["blocklist-history"],
+)
+def get_blocklist_notifications(run_id: str) -> list[dict]:
+    if not get_blocklist_service().repository.get_run(run_id):
+        raise HTTPException(status_code=404, detail="Kara liste kontrol kaydı bulunamadı.")
+    return get_blocklist_service().repository.get_notifications(run_id)
 
 
 @app.post("/api/v1/validate", response_model=BatchResponse, tags=["validation"])

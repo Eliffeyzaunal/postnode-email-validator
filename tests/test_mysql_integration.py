@@ -4,6 +4,9 @@ import uuid
 import pytest
 
 from app.config import PROJECT_ROOT, Settings
+from app.blocklist.models import BlocklistCheckRequest, MonitoredAsset
+from app.blocklist.repository import BlocklistRepository
+from app.blocklist.service import BlocklistMonitorService
 from app.dns_checker import StaticDNSChecker
 from app.models import DNSState
 from app.repository import Repository
@@ -46,4 +49,39 @@ def test_mysql_repository_round_trip():
         assert raw_email not in repr(stored)
     finally:
         repository.delete_batches([batch_id] if batch_id else [])
+        repository.close()
+
+
+@pytest.mark.skipif(not MYSQL_URL, reason="MySQL entegrasyon adresi tanımlı değil.")
+def test_mysql_blocklist_repository_round_trip():
+    asset_id = f"mysql-blocklist-{uuid.uuid4().hex}"
+    settings = Settings(
+        database_url=MYSQL_URL,
+        blocklist_providers_path=PROJECT_ROOT / "config" / "blocklists.json",
+        blocklist_assets_path=PROJECT_ROOT / "config" / "monitored-assets.example.json",
+        blocklist_fake_dns_path=PROJECT_ROOT / "data" / "blocklist_fake_dns.json",
+    )
+    repository = BlocklistRepository(settings.database_url)
+    service = BlocklistMonitorService(settings, repository)
+    run_id = ""
+    try:
+        report = service.run_once(
+            BlocklistCheckRequest(
+                assets=[MonitoredAsset(id=asset_id, type="ip", value="127.0.0.2")]
+            )
+        )
+        run_id = report.run_id
+        stored = repository.get_run(run_id)
+
+        assert stored is not None
+        assert stored["total_checks"] == 4
+        assert len(stored["results"]) == 4
+        assert {item["status"] for item in stored["results"]} == {
+            "listed",
+            "unavailable",
+        }
+    finally:
+        if run_id:
+            repository.delete_run(run_id)
+        repository.delete_states([asset_id])
         repository.close()

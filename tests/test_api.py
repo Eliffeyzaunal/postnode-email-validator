@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
 
-from app.main import app, get_service
+from app.main import app, get_blocklist_service, get_service
 
 
 def test_health():
@@ -40,3 +40,28 @@ def test_file_upload(service):
     finally:
         main_module.get_service = original
 
+
+def test_blocklist_api_and_history(blocklist_service):
+    import app.main as main_module
+
+    original = main_module.get_blocklist_service
+    main_module.get_blocklist_service = lambda: blocklist_service
+    try:
+        client = TestClient(app)
+        response = client.post("/api/v1/blocklists/check")
+        assert response.status_code == 200
+        body = response.json()
+        assert body["summary"]["total"] == 10
+
+        history = client.get(f"/api/v1/blocklists/runs/{body['run_id']}")
+        assert history.status_code == 200
+        assert history.json()["total_checks"] == 10
+
+        notifications = client.get(
+            f"/api/v1/blocklists/runs/{body['run_id']}/notifications"
+        )
+        assert notifications.status_code == 200
+        assert len(notifications.json()) == 5
+    finally:
+        main_module.get_blocklist_service = original
+        get_blocklist_service.cache_clear()

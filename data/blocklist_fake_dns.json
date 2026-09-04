@@ -1,0 +1,44 @@
+{
+  "default": {
+    "state": "nxdomain",
+    "a_records": [],
+    "txt_records": []
+  },
+  "responses": {
+    "2.0.0.127.zen.spamhaus.org": {
+      "state": "ok",
+      "a_records": ["127.0.0.2", "127.0.0.4", "127.0.0.10"],
+      "txt_records": [
+        "Spamhaus resmi pozitif test girdisi: SBL, XBL ve PBL"
+      ]
+    },
+    "test.dbl.spamhaus.org": {
+      "state": "ok",
+      "a_records": ["127.0.1.2"],
+      "txt_records": [
+        "Spamhaus DBL resmi pozitif test girdisi"
+      ]
+    },
+    "2.0.0.127.bl.spamcop.net": {
+      "state": "ok",
+      "a_records": ["127.0.0.2"],
+      "txt_records": [
+        "SpamCop resmi DNSBL test girdisi"
+      ]
+    },
+    "2.0.0.127.b.barracudacentral.org": {
+      "state": "ok",
+      "a_records": ["127.0.0.2"],
+      "txt_records": [
+        "Barracuda BRBL test girdisi"
+      ]
+    },
+    "test.surbl.org.multi.surbl.org": {
+      "state": "ok",
+      "a_records": ["127.0.0.80"],
+      "txt_records": [
+        "SURBL resmi test girdisi: MW ve ABUSE"
+      ]
+    }
+  }
+}

@@ -15,6 +15,9 @@ class Settings(BaseSettings):
     disposable_domains_path: Path = PROJECT_ROOT / "data" / "disposable_domains.txt"
     role_accounts_path: Path = PROJECT_ROOT / "data" / "role_accounts.txt"
     domain_typos_path: Path = PROJECT_ROOT / "data" / "domain_typos.json"
+    blocklist_providers_path: Path = PROJECT_ROOT / "config" / "blocklists.json"
+    blocklist_assets_path: Path = PROJECT_ROOT / "config" / "monitored-assets.example.json"
+    blocklist_fake_dns_path: Path = PROJECT_ROOT / "data" / "blocklist_fake_dns.json"
     dns_timeout_seconds: float = 2.0
     dns_cache_ttl_seconds: int = 86_400
     dns_error_cache_ttl_seconds: int = 300

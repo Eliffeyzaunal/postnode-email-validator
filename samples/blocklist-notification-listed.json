@@ -1,0 +1,12 @@
+{
+  "type": "listed",
+  "asset_id": "spamhaus-test-ip",
+  "asset_type": "ip",
+  "asset_value": "127.0.0.2",
+  "provider_id": "spamhaus_zen",
+  "previous_status": null,
+  "current_status": "listed",
+  "first_detected_at": "2026-09-03T10:00:00Z",
+  "reason": "SBL",
+  "removal_url": "https://check.spamhaus.org/listed/?searchterm=127.0.0.2"
+}

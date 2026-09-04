@@ -3,6 +3,8 @@ from pathlib import Path
 import pytest
 
 from app.config import PROJECT_ROOT, Settings
+from app.blocklist.repository import BlocklistRepository
+from app.blocklist.service import BlocklistMonitorService
 from app.dns_checker import StaticDNSChecker
 from app.models import DNSState
 from app.repository import Repository
@@ -39,5 +41,20 @@ def service(settings: Settings, dns_checker: StaticDNSChecker):
     repository = Repository(settings.database_url)
     try:
         yield EmailValidatorService(settings, repository, dns_checker)
+    finally:
+        repository.close()
+
+
+@pytest.fixture
+def blocklist_service(tmp_path: Path):
+    settings = Settings(
+        database_url=f"sqlite:///{(tmp_path / 'blocklist.db').as_posix()}",
+        blocklist_providers_path=PROJECT_ROOT / "config" / "blocklists.json",
+        blocklist_assets_path=PROJECT_ROOT / "config" / "monitored-assets.example.json",
+        blocklist_fake_dns_path=PROJECT_ROOT / "data" / "blocklist_fake_dns.json",
+    )
+    repository = BlocklistRepository(settings.database_url)
+    try:
+        yield BlocklistMonitorService(settings, repository)
     finally:
         repository.close()

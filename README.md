@@ -1,6 +1,6 @@
-# Postnode Liste Hijyeni ve Adres Doğrulama Servisi
+# Postnode E-posta Güvenliği Servisleri
 
-PDF'deki Görev 1 için hazırlanmış, ana uygulamadan bağımsız FastAPI servisidir. CSV/TXT listesini `gecerli`, `supheli` veya `gecersiz` olarak sınıflandırır; sabit sebep kodları üretir, liste özeti çıkarır ve gizlilik güvenli geçmişi üretimde MySQL'de saklar.
+PDF'deki Görev 1 için liste hijyeni/adres doğrulama, Görev 2'nin ilk aşaması için kara liste izleme sağlayan bağımsız FastAPI servisidir. Üretimde MySQL, otomatik birim testlerinde aynı SQLAlchemy repository kodu üzerinden geçici SQLite kullanılır.
 
 ## Özellikler
 
@@ -13,6 +13,10 @@ PDF'deki Görev 1 için hazırlanmış, ana uygulamadan bağımsız FastAPI serv
 - Toplam/karar dağılımı, ilk 10 alan adı ve tahmini bounce oranı
 - FastAPI, CLI ve doğrudan Python kütüphane kullanımı
 - Açık e-posta adresi DB'ye, CSV çıktısına veya API cevabına yazılmaz
+- Spamhaus, SpamCop, Barracuda ve SURBL için resmî test girdileriyle kara liste kontrolü
+- Ağdan bağımsız, tekrar üretilebilir sahte DNS cevapları
+- Listeye giriş/çıkış durum değişikliklerini MySQL/JSON olarak kaydetme
+- SORBS hizmetini `unavailable` olarak ayrıca raporlama
 
 SMTP `RCPT TO`, catch-all tespiti ve ücretli doğrulama servisi özellikle kullanılmaz.
 
@@ -51,6 +55,10 @@ Windows'ta hızlı başlatmak için `run_windows.bat` dosyasına çift tıklanab
 | GET | `/api/v1/batches/{id}` | Yükleme özeti |
 | GET | `/api/v1/batches/{id}/results` | Sayfalı sonuçlar |
 | GET | `/api/v1/batches/{id}/export` | Maskeli CSV dışa aktarma |
+| GET | `/api/v1/blocklists/providers` | Sağlayıcı ve kullanılabilirlik listesi |
+| POST | `/api/v1/blocklists/check` | Tek seferlik IP/alan adı kara liste kontrolü |
+| GET | `/api/v1/blocklists/runs/{id}` | Kontrol geçmişi ve sonuçları |
+| GET | `/api/v1/blocklists/runs/{id}/notifications` | Durum değişikliği bildirimleri |
 
 Tek adres örneği:
 
@@ -86,6 +94,27 @@ python -m app.cli samples/sample_emails.csv --output outputs/results.csv
 
 CLI, `.env` içindeki MySQL bağlantısını kullanır; özeti terminale JSON yazar ve satır sonuçlarını maskeli CSV'ye kaydeder. Farklı bir sunucu için `--database-url` verilebilir.
 
+Görev 2'nin örnek IP/alan adlarını kara listelerde kontrol etmek için:
+
+```bash
+python -m app.blocklist.cli --output outputs/blocklist-report.json
+```
+
+Komut `config/monitored-assets.example.json` girdilerini okur, belirleyici sonuçları terminale ve JSON dosyasına yazar, aynı koşuyu MySQL'e kaydeder. FastAPI'de boş gövdeyle `POST /api/v1/blocklists/check` aynı örnekleri kullanır; istenirse gövdede özel `assets` listesi verilebilir.
+
+## Görev 2 — kara liste izleme (ilk aşama)
+
+Bu aşamada canlı DNSBL sorgusu yerine sağlayıcıların resmî pozitif test girdileri ve `data/blocklist_fake_dns.json` içindeki sahte cevaplar kullanılır. Böylece testler erişim kotası, DNS çözücü politikası veya internet bağlantısından etkilenmez. Uygulama şu dört sonucu birbirinden ayırır:
+
+- `listed`: Belgelenmiş pozitif dönüş kodu alındı.
+- `not_listed`: Sahte DNS cevabı `NXDOMAIN` oldu.
+- `query_error`: Timeout/SERVFAIL/erişim/kota hatası oluştu; temiz sonuç sayılmaz.
+- `unavailable`: Sağlayıcı kullanılamıyor; SORBS EOL durumu bu şekilde tutulur.
+
+İlk kontrolde listelenmiş bir kayıt için `listed`, sonraki kontrolde temizlenirse `delisted` bildirimi üretilir. Aynı durum değişmeden devam ediyorsa tekrar bildirim üretilmez. Bildirimler şimdilik JSON ve `blocklist_notifications` tablosuna yazılır; e-posta/webhook entegrasyonu yapılmaz.
+
+Sağlayıcı tanımları `config/blocklists.json`, örnek varlıklar `config/monitored-assets.example.json`, dönüş kodlarının açıklamalı tablosu ise [`docs/blocklist-code-table.md`](docs/blocklist-code-table.md) içindedir. Örnek giriş/çıkış bildirimleri `samples/blocklist-notification-listed.json` ve `samples/blocklist-notification-delisted.json` dosyalarında bulunur.
+
 ## Kütüphane kullanımı
 
 ```python
@@ -101,6 +130,8 @@ batch_id, summary, results = service.validate_many(["user@gmail.com"])
 `dns_cache` alan adı sonucunu TTL ile saklar. `batches` işlem özetini, `validation_results` ise satır numarası, maskeli adres, SHA-256 özet, alan adı, karar ve sebep kodlarını saklar. Açık e-posta adresi saklanmaz.
 
 Üretim ve normal geliştirme çalışması `.env` içindeki `DATABASE_URL` üzerinden MySQL kullanır. Repository SQLAlchemy ile yazılmıştır; testler aynı tablo ve sorgu kodunu geçici SQLite veritabanlarında hızlı ve izole biçimde çalıştırır. GitHub Actions ayrıca MySQL 8.4 üzerinde gerçek repository entegrasyonunu doğrular.
+
+Görev 2 için `blocklist_runs` koşu bilgisini, `blocklist_results` her sağlayıcı sonucunu, `blocklist_states` son bilinen durumu ve ilk görülme zamanını, `blocklist_notifications` ise yalnızca durum değişikliği olaylarını saklar.
 
 ## Karar mantığı
 
@@ -150,6 +181,8 @@ python scripts/benchmark.py
 
 GitHub Actions, her `main` push ve pull request işleminde Python 3.11 ve 3.12 üzerinde SQLite birim testlerini, gerçek MySQL 8.4 entegrasyon testini, değerlendirmeyi ve MySQL benchmark'ını otomatik çalıştırır.
 
+Kara liste testleri IP ters çevirme sorgusunu, SURBL bit maskesini, Spamhaus hata kodlarını, SORBS `unavailable` sonucunu, mükerrer bildirim engelini, `listed → not_listed` geçişini, API geçmişini ve MySQL kayıt yolunu kapsar.
+
 ## Liste kaynakları ve güncelleme
 
 `data/disposable_domains.txt` küçük başlangıç listesidir. Üretim öncesinde açık kaynak [disposable_email_blocklist.conf](https://github.com/disposable-email-domains/disposable-email-domains/blob/main/disposable_email_blocklist.conf) dosyasıyla ayda bir güncellenmeli; değişiklik test ve kod incelemesinden geçmelidir. Uygulama çalışırken internetten otomatik indirme yapmaz; bu, sonucun denetlenebilir ve belirleyici kalmasını sağlar.
@@ -168,3 +201,5 @@ GitHub Actions, her `main` push ve pull request işleminde Python 3.11 ve 3.12 �
 ## Sınırlamalar
 
 MX kaydı mailbox'ın gerçekten var olduğunu kanıtlamaz. Disposable listesi güncelliği kadar güçlüdür. Rol hesapları ve liste anomalileri risk sinyalidir; kesin geçersizlik değildir. DNS çıktısı TTL süresince önbellekten gelir.
+
+Görev 2'nin bu ilk aşaması gerçek DNSBL ağına sorgu göndermez. Saatlik otomatik zamanlayıcı, 30 günlük bulunabilirlik raporu ve gerçek bildirim kanalları sonraki aşamaya bırakılmıştır. SORBS hizmet sonlandırma nedeniyle sorgulanamaz ve `unavailable` raporlanır.

@@ -1,0 +1,121 @@
+{
+  "providers": [
+    {
+      "id": "spamhaus_zen",
+      "name": "Spamhaus ZEN",
+      "asset_types": ["ip"],
+      "availability": "available",
+      "zone": "zen.spamhaus.org",
+      "query_mode": "reverse_ip",
+      "severity": "high",
+      "return_codes": {
+        "127.0.0.2": "SBL",
+        "127.0.0.3": "CSS",
+        "127.0.0.4": "XBL",
+        "127.0.0.9": "DROP",
+        "127.0.0.10": "PBL_ISP",
+        "127.0.0.11": "PBL_SPAMHAUS",
+        "127.0.0.30": "BCL"
+      },
+      "error_codes": {
+        "127.255.255.252": "DNSBL_NAME_ERROR",
+        "127.255.255.254": "PUBLIC_RESOLVER_BLOCKED",
+        "127.255.255.255": "QUERY_LIMIT_EXCEEDED"
+      },
+      "removal_url": "https://check.spamhaus.org/listed/?searchterm={asset}",
+      "source_url": "https://docs.spamhaus.com/datasets/docs/source/10-data-type-documentation/datasets/040-zones.html"
+    },
+    {
+      "id": "spamhaus_dbl",
+      "name": "Spamhaus DBL",
+      "asset_types": ["domain"],
+      "availability": "available",
+      "zone": "dbl.spamhaus.org",
+      "query_mode": "domain",
+      "severity": "high",
+      "return_codes": {
+        "127.0.1.2": "LOW_REPUTATION_DOMAIN",
+        "127.0.1.4": "PHISHING_DOMAIN",
+        "127.0.1.5": "MALWARE_DOMAIN",
+        "127.0.1.6": "BOTNET_C2_DOMAIN",
+        "127.0.1.102": "ABUSED_LEGIT_DOMAIN",
+        "127.0.1.103": "ABUSED_REDIRECTOR",
+        "127.0.1.104": "ABUSED_PHISHING_DOMAIN",
+        "127.0.1.105": "ABUSED_MALWARE_DOMAIN",
+        "127.0.1.106": "ABUSED_C2_DOMAIN"
+      },
+      "error_codes": {
+        "127.0.1.255": "IP_QUERY_NOT_ALLOWED",
+        "127.255.255.252": "DNSBL_NAME_ERROR",
+        "127.255.255.254": "PUBLIC_RESOLVER_BLOCKED",
+        "127.255.255.255": "QUERY_LIMIT_EXCEEDED"
+      },
+      "removal_url": "https://check.spamhaus.org/listed/?searchterm={asset}",
+      "source_url": "https://docs.spamhaus.com/datasets/docs/source/10-data-type-documentation/datasets/040-zones.html"
+    },
+    {
+      "id": "spamcop",
+      "name": "SpamCop SCBL",
+      "asset_types": ["ip"],
+      "availability": "available",
+      "zone": "bl.spamcop.net",
+      "query_mode": "reverse_ip",
+      "severity": "medium",
+      "return_codes": {
+        "127.0.0.2": "SCBL_LISTED"
+      },
+      "error_codes": {},
+      "removal_url": "https://www.spamcop.net/bl.shtml?{asset}",
+      "source_url": "https://www.spamcop.net/fom-serve/cache/291.html"
+    },
+    {
+      "id": "barracuda",
+      "name": "Barracuda Reputation Block List",
+      "asset_types": ["ip"],
+      "availability": "available",
+      "zone": "b.barracudacentral.org",
+      "query_mode": "reverse_ip",
+      "severity": "high",
+      "return_codes": {
+        "127.0.0.2": "BRBL_LISTED"
+      },
+      "error_codes": {},
+      "removal_url": "https://www.barracudacentral.org/rbl/removal-request?ip={asset}",
+      "source_url": "https://www.barracudacentral.org/lookups"
+    },
+    {
+      "id": "surbl",
+      "name": "SURBL Multi",
+      "asset_types": ["domain"],
+      "availability": "available",
+      "zone": "multi.surbl.org",
+      "query_mode": "domain",
+      "severity": "medium",
+      "return_codes": {},
+      "bitmask_codes": {
+        "4": "DISPOSABLE_MAIL",
+        "8": "PHISHING",
+        "16": "MALWARE",
+        "32": "CLICK_TRACKER",
+        "64": "ABUSE",
+        "128": "CRACKED_SITE"
+      },
+      "error_codes": {
+        "127.0.0.1": "ACCESS_BLOCKED"
+      },
+      "removal_url": "https://www.surbl.org/surbl-analysis/lookup",
+      "source_url": "https://www.surbl.org/surbl-analysis/lists/lists"
+    },
+    {
+      "id": "sorbs",
+      "name": "SORBS",
+      "asset_types": ["ip", "domain"],
+      "availability": "unavailable",
+      "severity": "info",
+      "return_codes": {},
+      "error_codes": {},
+      "unavailable_reason": "Proofpoint tarafindan hizmet sonlandirma (EOL) sureci ilan edildi.",
+      "source_url": "https://proofpoint.my.site.com/community/s/article/End-of-Life-EOL-process-for-the-Spam-and-Open-Relay-Blocking-System-SORBS-service"
+    }
+  ]
+}

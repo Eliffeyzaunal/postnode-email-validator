@@ -1,0 +1,22 @@
+{
+  "assets": [
+    {
+      "id": "spamhaus-test-ip",
+      "type": "ip",
+      "value": "127.0.0.2",
+      "label": "Resmi DNSBL pozitif test IP adresi"
+    },
+    {
+      "id": "spamhaus-test-domain",
+      "type": "domain",
+      "value": "test",
+      "label": "Spamhaus DBL resmi test alan adi"
+    },
+    {
+      "id": "surbl-test-domain",
+      "type": "domain",
+      "value": "test.surbl.org",
+      "label": "SURBL resmi test alan adi"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "type": "delisted",
+  "asset_id": "spamhaus-test-ip",
+  "asset_type": "ip",
+  "asset_value": "127.0.0.2",
+  "provider_id": "spamcop",
+  "previous_status": "listed",
+  "current_status": "not_listed",
+  "first_detected_at": "2026-09-03T10:00:00Z",
+  "reason": null,
+  "removal_url": "https://www.spamcop.net/bl.shtml?127.0.0.2"
+}
