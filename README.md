@@ -1,6 +1,6 @@
 # Postnode E-posta Güvenliği Servisleri
 
-PDF'deki Görev 1 için liste hijyeni/adres doğrulama, Görev 2'nin ilk aşaması için kara liste izleme sağlayan bağımsız FastAPI servisidir. Üretimde MySQL, otomatik birim testlerinde aynı SQLAlchemy repository kodu üzerinden geçici SQLite kullanılır.
+PDF'deki Görev 1 için liste hijyeni/adres doğrulama, Görev 2 için periyodik kara liste izleme ve alarm sağlayan bağımsız FastAPI servisidir. Üretimde MySQL, otomatik birim testlerinde aynı SQLAlchemy repository kodu üzerinden geçici SQLite kullanılır.
 
 ## Özellikler
 
@@ -17,6 +17,9 @@ PDF'deki Görev 1 için liste hijyeni/adres doğrulama, Görev 2'nin ilk aşamas
 - Ağdan bağımsız, tekrar üretilebilir sahte DNS cevapları
 - Listeye giriş/çıkış durum değişikliklerini MySQL/JSON olarak kaydetme
 - SORBS hizmetini `unavailable` olarak ayrıca raporlama
+- Varsayılan saatlik izleme, kalıcı kalp atışı ve kaçırılan tur tespiti
+- 90 gün saklanan geçmişten 30 günlük özet rapor
+- Test için belirleyici sahte DNS, açıkça etkinleştirildiğinde canlı DNSBL istemcisi
 
 SMTP `RCPT TO`, catch-all tespiti ve ücretli doğrulama servisi özellikle kullanılmaz.
 
@@ -41,7 +44,7 @@ cp .env.example .env              # Windows CMD: copy .env.example .env
 uvicorn app.main:app --reload
 ```
 
-Windows'ta hızlı başlatmak için `run_windows.bat` dosyasına çift tıklanabilir; Docker'daki MySQL'i, sanal ortamı, bağımlılıkları, API'yi ve Swagger ekranını sırayla başlatır.
+Windows'ta hızlı başlatmak için `run_windows.bat` dosyasına çift tıklanabilir; Docker'daki MySQL'i, sanal ortamı, bağımlılıkları, saatlik blocklist izleyicisini, API'yi ve Swagger ekranını sırayla başlatır.
 
 ## API
 
@@ -59,6 +62,8 @@ Windows'ta hızlı başlatmak için `run_windows.bat` dosyasına çift tıklanab
 | POST | `/api/v1/blocklists/check` | Tek seferlik IP/alan adı kara liste kontrolü |
 | GET | `/api/v1/blocklists/runs/{id}` | Kontrol geçmişi ve sonuçları |
 | GET | `/api/v1/blocklists/runs/{id}/notifications` | Durum değişikliği bildirimleri |
+| GET | `/api/v1/blocklists/monitor/status` | Zamanlayıcı sağlığı ve kaçırılan tur bilgisi |
+| GET | `/api/v1/blocklists/reports/history?days=30` | Geçmiş/sağlayıcı bulunabilirlik raporu |
 
 Tek adres örneği:
 
@@ -102,9 +107,29 @@ python -m app.blocklist.cli --output outputs/blocklist-report.json
 
 Komut `config/monitored-assets.example.json` girdilerini okur, belirleyici sonuçları terminale ve JSON dosyasına yazar, aynı koşuyu MySQL'e kaydeder. FastAPI'de boş gövdeyle `POST /api/v1/blocklists/check` aynı örnekleri kullanır; istenirse gövdede özel `assets` listesi verilebilir.
 
-## Görev 2 — kara liste izleme (ilk aşama)
+Saatlik izleyiciyi başlatmak için:
 
-Bu aşamada canlı DNSBL sorgusu yerine sağlayıcıların resmî pozitif test girdileri ve `data/blocklist_fake_dns.json` içindeki sahte cevaplar kullanılır. Böylece testler erişim kotası, DNS çözücü politikası veya internet bağlantısından etkilenmez. Uygulama şu dört sonucu birbirinden ayırır:
+```bash
+python -m app.blocklist.scheduler_cli
+```
+
+Bir zamanlayıcı turunu elle doğrulamak ve çıkmak için:
+
+```bash
+python -m app.blocklist.scheduler_cli --once
+```
+
+Son 30 günün JSON raporunu üretmek için:
+
+```bash
+python -m app.blocklist.report_cli --days 30
+```
+
+Docker ile `docker compose up --build` çalıştırıldığında API'den ayrı `blocklist-monitor` servisi de başlar. Böylece birden fazla API worker'ının aynı kontrolü tetiklemesi engellenir.
+
+## Görev 2 - kara liste izleme
+
+Varsayılan `BLOCKLIST_DNS_MODE=fake` ayarında sağlayıcıların resmî pozitif test girdileri ve `data/blocklist_fake_dns.json` içindeki sahte cevaplar kullanılır. Böylece testler erişim kotası, DNS çözücü politikası veya internet bağlantısından etkilenmez ve aynı girdi aynı kararı üretir. Uygulama şu dört sonucu birbirinden ayırır:
 
 - `listed`: Belgelenmiş pozitif dönüş kodu alındı.
 - `not_listed`: Sahte DNS cevabı `NXDOMAIN` oldu.
@@ -114,6 +139,31 @@ Bu aşamada canlı DNSBL sorgusu yerine sağlayıcıların resmî pozitif test g
 İlk kontrolde listelenmiş bir kayıt için `listed`, sonraki kontrolde temizlenirse `delisted` bildirimi üretilir. Aynı durum değişmeden devam ediyorsa tekrar bildirim üretilmez. Bildirimler şimdilik JSON ve `blocklist_notifications` tablosuna yazılır; e-posta/webhook entegrasyonu yapılmaz.
 
 Sağlayıcı tanımları `config/blocklists.json`, örnek varlıklar `config/monitored-assets.example.json`, dönüş kodlarının açıklamalı tablosu ise [`docs/blocklist-code-table.md`](docs/blocklist-code-table.md) içindedir. Örnek giriş/çıkış bildirimleri `samples/blocklist-notification-listed.json` ve `samples/blocklist-notification-delisted.json` dosyalarında bulunur.
+
+Zamanlayıcı her turun başlangıç, başarı ve hata zamanını kalıcı olarak kaydeder. Sonraki turun zamanı `BLOCKLIST_INTERVAL_SECONDS` ile hesaplanır; bu zaman `BLOCKLIST_MISSED_GRACE_SECONDS` kadar aşılırsa `/monitor/status` cevabı `missed` olur. Böylece süreç aniden çöktüğünde eski kalp atışı üzerinden gecikme fark edilir. Geçmiş varsayılan 90 gün tutulur; 30 günden daha kısa saklama ayarı kabul edilmez.
+
+30 günlük rapordaki `availability_rate`, ilgili sağlayıcı için başarılı `listed + not_listed` cevaplarının tüm kontrollere oranıdır. `query_error` ve `unavailable` cevapları başarılı kabul edilmez. Örnek teslim çıktısı `samples/blocklist-30-day-report.json` dosyasındadır.
+
+Canlı DNSBL sorgusu yalnızca sağlayıcının kullanım şartları ve uygun DNS çözümleyicisi doğrulandıktan sonra açılmalıdır:
+
+```env
+BLOCKLIST_DNS_MODE=live
+BLOCKLIST_NAMESERVERS=192.0.2.53
+```
+
+Spamhaus için sıradan bir genel çözümleyici sürekli temiz sonuç varsayımına yol açabilir. Uygulama erişim ve kota dönüş kodlarını `query_error` olarak raporlar; bunları `not_listed` saymaz.
+
+### Sorgu kullanım şartları
+
+| Sağlayıcı | Ücretsiz kullanım/limit notu | Bu projedeki karar |
+|---|---|---|
+| Spamhaus | Genel aynalar küçük/orta ölçekli ticari olmayan kullanımda makul hacim için ücretsizdir; sorgu kaynağı kendi recursive resolver'ı veya ECS destekli çözümleyiciyle tanımlanabilir olmalıdır. Ticari/yüksek hacim DQS gerektirir. | Sahte DNS varsayılan; canlı modda uygun resolver zorunlu. |
+| SURBL | FQS, 1.000'den az kullanıcısı olan veya günde 250.000'den az mesaj tarayan uygun küçük kuruluşlar için ücretsizdir; ücretli ürüne gömme kapsam dışıdır. | Sahte DNS varsayılan; üretim öncesi kullanım uygunluğu kontrol edilir. |
+| SpamCop | Resmî sayfa sayısal bir DNS sorgu kotası yayımlamaz ve SCBL'nin agresif olabileceğini, tek başına engelleme yerine puanlamada kullanılmasını önerir. | `medium` önem; kesin engelleme kararı verilmez. |
+| Barracuda | Resmî lookup/removal sayfalarında sayısal ücretsiz kota belirtilmez; canlı DNS erişimi ve kayıt gereksinimi dağıtım öncesi doğrulanmalıdır. | Sahte DNS varsayılan; doğrulanmamış erişim temiz sonuç sayılmaz. |
+| SORBS | Proofpoint hizmet için EOL süreci ilan etmiştir. | Sorgulanmaz, `unavailable` raporlanır. |
+
+Kaynaklar: [Spamhaus Fair Use](https://www.spamhaus.org/blocklists/dnsbl-fair-use-policy/), [SURBL Usage Policy](https://surbl.org/usage-policy), [SpamCop SCBL açıklaması](https://www.spamcop.net/fom-serve/cache/297.html), [Barracuda lookup](https://www.barracudacentral.org/lookups), [SORBS EOL](https://proofpoint.my.site.com/community/s/article/End-of-Life-EOL-process-for-the-Spam-and-Open-Relay-Blocking-System-SORBS-service).
 
 ## Kütüphane kullanımı
 
@@ -131,7 +181,7 @@ batch_id, summary, results = service.validate_many(["user@gmail.com"])
 
 Üretim ve normal geliştirme çalışması `.env` içindeki `DATABASE_URL` üzerinden MySQL kullanır. Repository SQLAlchemy ile yazılmıştır; testler aynı tablo ve sorgu kodunu geçici SQLite veritabanlarında hızlı ve izole biçimde çalıştırır. GitHub Actions ayrıca MySQL 8.4 üzerinde gerçek repository entegrasyonunu doğrular.
 
-Görev 2 için `blocklist_runs` koşu bilgisini, `blocklist_results` her sağlayıcı sonucunu, `blocklist_states` son bilinen durumu ve ilk görülme zamanını, `blocklist_notifications` ise yalnızca durum değişikliği olaylarını saklar.
+Görev 2 için `blocklist_runs` koşu bilgisini, `blocklist_results` her sağlayıcı sonucunu, `blocklist_states` son bilinen durumu ve ilk görülme zamanını, `blocklist_notifications` yalnızca durum değişikliği olaylarını, `blocklist_monitor_status` son kalp atışını, `blocklist_monitor_events` ise zamanlayıcı başlangıç/başarı/hata geçmişini saklar.
 
 ## Karar mantığı
 
@@ -181,7 +231,7 @@ python scripts/benchmark.py
 
 GitHub Actions, her `main` push ve pull request işleminde Python 3.11 ve 3.12 üzerinde SQLite birim testlerini, gerçek MySQL 8.4 entegrasyon testini, değerlendirmeyi ve MySQL benchmark'ını otomatik çalıştırır.
 
-Kara liste testleri IP ters çevirme sorgusunu, SURBL bit maskesini, Spamhaus hata kodlarını, SORBS `unavailable` sonucunu, mükerrer bildirim engelini, `listed → not_listed` geçişini, API geçmişini ve MySQL kayıt yolunu kapsar.
+Kara liste testleri IP ters çevirme sorgusunu, SURBL bit maskesini, Spamhaus hata kodlarını, SORBS `unavailable` sonucunu, mükerrer bildirim engelini, `listed → not_listed` geçişini, canlı DNS hata ayrımını, zamanlayıcı kalp atışını, kaçırılan turu, 30 günlük raporu, API geçmişini ve MySQL kayıt yolunu kapsar.
 
 ## Liste kaynakları ve güncelleme
 
@@ -202,4 +252,4 @@ Kara liste testleri IP ters çevirme sorgusunu, SURBL bit maskesini, Spamhaus ha
 
 MX kaydı mailbox'ın gerçekten var olduğunu kanıtlamaz. Disposable listesi güncelliği kadar güçlüdür. Rol hesapları ve liste anomalileri risk sinyalidir; kesin geçersizlik değildir. DNS çıktısı TTL süresince önbellekten gelir.
 
-Görev 2'nin bu ilk aşaması gerçek DNSBL ağına sorgu göndermez. Saatlik otomatik zamanlayıcı, 30 günlük bulunabilirlik raporu ve gerçek bildirim kanalları sonraki aşamaya bırakılmıştır. SORBS hizmet sonlandırma nedeniyle sorgulanamaz ve `unavailable` raporlanır.
+Görev 2 sahte DNS modunda gerçek DNSBL ağına sorgu göndermez. Canlı mod dış ağ durumuna ve sağlayıcı politikasına bağlı olduğu için belirleyici değildir; yalnızca bilinçli olarak etkinleştirilir. Zamanlayıcı tek ayrı süreç olarak çalıştırılmalıdır. Bildirimler JSON/veritabanı kaydıdır; e-posta ve webhook kanalları kapsam dışıdır. SORBS hizmet sonlandırma nedeniyle sorgulanamaz ve `unavailable` raporlanır.

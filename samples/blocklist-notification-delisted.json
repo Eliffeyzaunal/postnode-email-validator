@@ -7,6 +7,6 @@
   "previous_status": "listed",
   "current_status": "not_listed",
   "first_detected_at": "2026-09-03T10:00:00Z",
-  "reason": null,
+  "reason": "SpamCop resmî DNSBL test girdisi",
   "removal_url": "https://www.spamcop.net/bl.shtml?127.0.0.2"
 }

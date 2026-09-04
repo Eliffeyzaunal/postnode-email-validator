@@ -13,6 +13,7 @@ def test_official_examples_are_checked_with_fake_dns(blocklist_service):
     }
     assert len(report.notifications) == 5
     assert {item.type.value for item in report.notifications} == {"listed"}
+    assert any("Spamhaus resmi pozitif" in (item.reason or "") for item in report.notifications)
     assert all(item.status != CheckStatus.QUERY_ERROR for item in report.results)
 
 
@@ -39,6 +40,7 @@ def test_delisting_creates_transition_notification(blocklist_service):
     assert events[0].previous_status == CheckStatus.LISTED
     assert events[0].current_status == CheckStatus.NOT_LISTED
     assert events[0].first_detected_at is not None
+    assert events[0].reason == "SpamCop resmi DNSBL test girdisi"
 
 
 def test_run_and_notifications_are_persisted(blocklist_service):

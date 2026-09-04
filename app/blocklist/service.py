@@ -8,7 +8,11 @@ from app.blocklist.config_loader import (
     load_fake_responses,
     load_providers,
 )
-from app.blocklist.dns_client import BlocklistDNSClient, FakeBlocklistDNSClient
+from app.blocklist.dns_client import (
+    BlocklistDNSClient,
+    FakeBlocklistDNSClient,
+    LiveBlocklistDNSClient,
+)
 from app.blocklist.models import (
     BlocklistCheckRequest,
     BlocklistRunResponse,
@@ -32,10 +36,24 @@ class BlocklistMonitorService:
         self.repository = repository or BlocklistRepository(settings.database_url)
         self.providers = load_providers(settings.blocklist_providers_path)
         if dns_client is None:
-            default, responses = load_fake_responses(settings.blocklist_fake_dns_path)
-            dns_client = FakeBlocklistDNSClient(default, responses)
+            dns_client = self._build_dns_client(settings)
         self.dns_client = dns_client
         self.checker = BlocklistChecker(dns_client)
+
+    @staticmethod
+    def _build_dns_client(settings: Settings) -> BlocklistDNSClient:
+        if settings.blocklist_dns_mode == "live":
+            nameservers = (
+                [item.strip() for item in settings.blocklist_nameservers.split(",") if item.strip()]
+                if settings.blocklist_nameservers
+                else None
+            )
+            return LiveBlocklistDNSClient(
+                timeout_seconds=settings.blocklist_dns_timeout_seconds,
+                nameservers=nameservers,
+            )
+        default, responses = load_fake_responses(settings.blocklist_fake_dns_path)
+        return FakeBlocklistDNSClient(default, responses)
 
     def run_once(
         self,
@@ -104,4 +122,3 @@ class BlocklistMonitorService:
             }
             for provider in self.providers
         ]
-

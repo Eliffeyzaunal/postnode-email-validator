@@ -139,3 +139,40 @@ class BlocklistRunResponse(BaseModel):
 class BlocklistCheckRequest(BaseModel):
     assets: list[MonitoredAsset] | None = Field(default=None, max_length=1000)
 
+
+class MonitorHealth(BaseModel):
+    name: str
+    status: Literal["not_started", "running", "healthy", "error", "missed", "stopped"]
+    interval_seconds: int
+    last_started_at: datetime | None = None
+    last_completed_at: datetime | None = None
+    last_success_at: datetime | None = None
+    next_due_at: datetime | None = None
+    last_error: str | None = None
+    missed: bool
+    checked_at: datetime
+
+
+class ProviderHistorySummary(BaseModel):
+    provider_id: str
+    total_checks: int
+    listed: int
+    not_listed: int
+    query_error: int
+    unavailable: int
+    availability_rate: float
+
+
+class BlocklistHistoryReport(BaseModel):
+    days: int
+    period_start: datetime
+    period_end: datetime
+    total_runs: int
+    total_checks: int
+    notifications: int
+    listed_events: int
+    delisted_events: int
+    query_error_events: int
+    providers: list[ProviderHistorySummary]
+    current_listings: list[dict]
+    monitor: MonitorHealth

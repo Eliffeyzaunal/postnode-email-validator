@@ -1,0 +1,90 @@
+{
+  "days": 30,
+  "period_start": "2026-08-05T09:00:00Z",
+  "period_end": "2026-09-04T09:00:00Z",
+  "total_runs": 720,
+  "total_checks": 7200,
+  "notifications": 7,
+  "listed_events": 4,
+  "delisted_events": 3,
+  "query_error_events": 0,
+  "providers": [
+    {
+      "provider_id": "barracuda",
+      "total_checks": 720,
+      "listed": 0,
+      "not_listed": 718,
+      "query_error": 2,
+      "unavailable": 0,
+      "availability_rate": 0.9972
+    },
+    {
+      "provider_id": "spamhaus_zen",
+      "total_checks": 720,
+      "listed": 12,
+      "not_listed": 704,
+      "query_error": 4,
+      "unavailable": 0,
+      "availability_rate": 0.9944
+    },
+    {
+      "provider_id": "spamcop",
+      "total_checks": 720,
+      "listed": 0,
+      "not_listed": 720,
+      "query_error": 0,
+      "unavailable": 0,
+      "availability_rate": 1.0
+    },
+    {
+      "provider_id": "spamhaus_dbl",
+      "total_checks": 1440,
+      "listed": 5,
+      "not_listed": 1430,
+      "query_error": 5,
+      "unavailable": 0,
+      "availability_rate": 0.9965
+    },
+    {
+      "provider_id": "surbl",
+      "total_checks": 1440,
+      "listed": 7,
+      "not_listed": 1425,
+      "query_error": 8,
+      "unavailable": 0,
+      "availability_rate": 0.9944
+    },
+    {
+      "provider_id": "sorbs",
+      "total_checks": 2160,
+      "listed": 0,
+      "not_listed": 0,
+      "query_error": 0,
+      "unavailable": 2160,
+      "availability_rate": 0.0
+    }
+  ],
+  "current_listings": [
+    {
+      "asset_id": "mail-ip-1",
+      "asset_type": "ip",
+      "asset_value": "192.0.2.10",
+      "provider_id": "spamhaus_zen",
+      "first_detected_at": "2026-09-04T08:00:00Z",
+      "reason": "SBL",
+      "removal_url": "https://check.spamhaus.org/listed/?searchterm=192.0.2.10"
+    }
+  ],
+  "monitor": {
+    "name": "default",
+    "status": "healthy",
+    "interval_seconds": 3600,
+    "last_started_at": "2026-09-04T09:00:00Z",
+    "last_completed_at": "2026-09-04T09:00:02Z",
+    "last_success_at": "2026-09-04T09:00:02Z",
+    "next_due_at": "2026-09-04T10:00:02Z",
+    "last_error": null,
+    "missed": false,
+    "checked_at": "2026-09-04T09:00:05Z"
+  }
+}

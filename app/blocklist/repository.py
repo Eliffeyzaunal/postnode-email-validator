@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import uuid
-from datetime import UTC, datetime
+from collections import Counter, defaultdict
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from sqlalchemy import (
@@ -25,9 +26,12 @@ from sqlalchemy import (
 
 from app.blocklist.models import (
     BlocklistCheckResult,
+    BlocklistHistoryReport,
     BlocklistNotification,
     CheckStatus,
+    MonitorHealth,
     NotificationType,
+    ProviderHistorySummary,
 )
 
 
@@ -124,6 +128,40 @@ blocklist_notifications = Table(
 )
 Index("idx_blocklist_notifications_run", blocklist_notifications.c.run_id)
 
+blocklist_monitor_status = Table(
+    "blocklist_monitor_status",
+    metadata,
+    Column("name", String(100), primary_key=True),
+    Column("status", String(32), nullable=False),
+    Column("interval_seconds", Integer, nullable=False),
+    Column("last_started_at", DateTime),
+    Column("last_completed_at", DateTime),
+    Column("last_success_at", DateTime),
+    Column("next_due_at", DateTime),
+    Column("last_error", Text),
+    Column("updated_at", DateTime, nullable=False),
+    mysql_engine="InnoDB",
+    mysql_charset="utf8mb4",
+)
+
+blocklist_monitor_events = Table(
+    "blocklist_monitor_events",
+    metadata,
+    Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("monitor_name", String(100), nullable=False),
+    Column("event_type", String(32), nullable=False),
+    Column("occurred_at", DateTime, nullable=False),
+    Column("run_id", String(36)),
+    Column("detail", Text),
+    mysql_engine="InnoDB",
+    mysql_charset="utf8mb4",
+)
+Index(
+    "idx_blocklist_monitor_events_time",
+    blocklist_monitor_events.c.monitor_name,
+    blocklist_monitor_events.c.occurred_at,
+)
+
 
 def _naive_utc(value: datetime) -> datetime:
     if value.tzinfo is None:
@@ -196,9 +234,13 @@ class BlocklistRepository:
                     result, previous, previous_status
                 )
                 reason = (
-                    ", ".join(result.return_codes)
-                    if result.return_codes
-                    else (result.reasons[0] if result.reasons else result.detail)
+                    result.reasons[0]
+                    if result.reasons
+                    else (
+                        ", ".join(result.return_codes)
+                        if result.return_codes
+                        else result.detail
+                    )
                 )
 
                 connection.execute(
@@ -256,12 +298,15 @@ class BlocklistRepository:
                 event_type = self._notification_type(previous_status, result.status)
                 if event_type is not None:
                     notification_first_detected = first_detected_at
+                    notification_reason = reason
                     if (
                         event_type == NotificationType.DELISTED
                         and previous is not None
-                        and previous["first_detected_at"] is not None
                     ):
-                        notification_first_detected = previous["first_detected_at"]
+                        if previous["first_detected_at"] is not None:
+                            notification_first_detected = previous["first_detected_at"]
+                        if previous["reason"]:
+                            notification_reason = previous["reason"]
                     notification = BlocklistNotification(
                         id=str(uuid.uuid4()),
                         run_id=run_id,
@@ -273,7 +318,7 @@ class BlocklistRepository:
                         previous_status=previous_status,
                         current_status=result.status,
                         first_detected_at=_aware_utc(notification_first_detected),
-                        reason=reason,
+                        reason=notification_reason,
                         removal_url=result.removal_url,
                         created_at=completed_at,
                     )
@@ -393,4 +438,298 @@ class BlocklistRepository:
         with self.engine.begin() as connection:
             connection.execute(
                 delete(blocklist_states).where(blocklist_states.c.asset_id.in_(asset_ids))
+            )
+
+    def mark_monitor_started(
+        self,
+        name: str,
+        interval_seconds: int,
+        now: datetime | None = None,
+    ) -> None:
+        now = now or datetime.now(UTC)
+        self._update_monitor(
+            name=name,
+            status="running",
+            interval_seconds=interval_seconds,
+            now=now,
+            last_started_at=now,
+            next_due_at=now + timedelta(seconds=interval_seconds),
+            event_type="started",
+        )
+
+    def mark_monitor_completed(
+        self,
+        name: str,
+        interval_seconds: int,
+        run_id: str,
+        now: datetime | None = None,
+    ) -> None:
+        now = now or datetime.now(UTC)
+        self._update_monitor(
+            name=name,
+            status="healthy",
+            interval_seconds=interval_seconds,
+            now=now,
+            last_completed_at=now,
+            last_success_at=now,
+            next_due_at=now + timedelta(seconds=interval_seconds),
+            last_error=None,
+            event_type="completed",
+            run_id=run_id,
+        )
+
+    def mark_monitor_failed(
+        self,
+        name: str,
+        interval_seconds: int,
+        detail: str,
+        now: datetime | None = None,
+    ) -> None:
+        now = now or datetime.now(UTC)
+        self._update_monitor(
+            name=name,
+            status="error",
+            interval_seconds=interval_seconds,
+            now=now,
+            last_completed_at=now,
+            next_due_at=now + timedelta(seconds=interval_seconds),
+            last_error=detail,
+            event_type="failed",
+            detail=detail,
+        )
+
+    def mark_monitor_stopped(
+        self,
+        name: str,
+        interval_seconds: int,
+        now: datetime | None = None,
+    ) -> None:
+        now = now or datetime.now(UTC)
+        self._update_monitor(
+            name=name,
+            status="stopped",
+            interval_seconds=interval_seconds,
+            now=now,
+            event_type="stopped",
+        )
+
+    def _update_monitor(
+        self,
+        *,
+        name: str,
+        status: str,
+        interval_seconds: int,
+        now: datetime,
+        event_type: str,
+        last_started_at: datetime | None = None,
+        last_completed_at: datetime | None = None,
+        last_success_at: datetime | None = None,
+        next_due_at: datetime | None = None,
+        last_error: str | None = None,
+        run_id: str | None = None,
+        detail: str | None = None,
+    ) -> None:
+        now_db = _naive_utc(now)
+        with self.engine.begin() as connection:
+            previous = connection.execute(
+                select(blocklist_monitor_status).where(
+                    blocklist_monitor_status.c.name == name
+                )
+            ).mappings().first()
+            values = {
+                "status": status,
+                "interval_seconds": interval_seconds,
+                "updated_at": now_db,
+            }
+            optional_values = {
+                "last_started_at": last_started_at,
+                "last_completed_at": last_completed_at,
+                "last_success_at": last_success_at,
+                "next_due_at": next_due_at,
+            }
+            for key, value in optional_values.items():
+                if value is not None:
+                    values[key] = _naive_utc(value)
+            if event_type in {"completed", "failed"}:
+                values["last_error"] = last_error
+            if previous is None:
+                connection.execute(
+                    insert(blocklist_monitor_status).values(name=name, **values)
+                )
+            else:
+                connection.execute(
+                    update(blocklist_monitor_status)
+                    .where(blocklist_monitor_status.c.name == name)
+                    .values(**values)
+                )
+            connection.execute(
+                insert(blocklist_monitor_events).values(
+                    monitor_name=name,
+                    event_type=event_type,
+                    occurred_at=now_db,
+                    run_id=run_id,
+                    detail=detail,
+                )
+            )
+
+    def get_monitor_health(
+        self,
+        name: str,
+        interval_seconds: int,
+        grace_seconds: int,
+        now: datetime | None = None,
+    ) -> MonitorHealth:
+        now = now or datetime.now(UTC)
+        with self.engine.connect() as connection:
+            row = connection.execute(
+                select(blocklist_monitor_status).where(
+                    blocklist_monitor_status.c.name == name
+                )
+            ).mappings().first()
+        if row is None:
+            return MonitorHealth(
+                name=name,
+                status="not_started",
+                interval_seconds=interval_seconds,
+                missed=True,
+                checked_at=now,
+            )
+        next_due = _aware_utc(row["next_due_at"])
+        missed = bool(
+            next_due
+            and now > next_due + timedelta(seconds=grace_seconds)
+            and row["status"] != "stopped"
+        )
+        return MonitorHealth(
+            name=name,
+            status="missed" if missed else row["status"],
+            interval_seconds=row["interval_seconds"],
+            last_started_at=_aware_utc(row["last_started_at"]),
+            last_completed_at=_aware_utc(row["last_completed_at"]),
+            last_success_at=_aware_utc(row["last_success_at"]),
+            next_due_at=next_due,
+            last_error=row["last_error"],
+            missed=missed,
+            checked_at=now,
+        )
+
+    def history_report(
+        self,
+        days: int,
+        monitor_name: str,
+        interval_seconds: int,
+        grace_seconds: int,
+        now: datetime | None = None,
+    ) -> BlocklistHistoryReport:
+        now = now or datetime.now(UTC)
+        start = now - timedelta(days=days)
+        start_db = _naive_utc(start)
+        end_db = _naive_utc(now)
+        with self.engine.connect() as connection:
+            runs = connection.execute(
+                select(blocklist_runs.c.id).where(
+                    blocklist_runs.c.completed_at >= start_db,
+                    blocklist_runs.c.completed_at <= end_db,
+                )
+            ).all()
+            result_rows = connection.execute(
+                select(
+                    blocklist_results.c.provider_id,
+                    blocklist_results.c.status,
+                ).where(
+                    blocklist_results.c.checked_at >= start_db,
+                    blocklist_results.c.checked_at <= end_db,
+                )
+            ).mappings().all()
+            notification_rows = connection.execute(
+                select(blocklist_notifications.c.event_type).where(
+                    blocklist_notifications.c.created_at >= start_db,
+                    blocklist_notifications.c.created_at <= end_db,
+                )
+            ).mappings().all()
+            current_rows = connection.execute(
+                select(blocklist_states).where(
+                    blocklist_states.c.status == CheckStatus.LISTED.value
+                )
+            ).mappings().all()
+
+        by_provider: dict[str, Counter] = defaultdict(Counter)
+        for row in result_rows:
+            by_provider[row["provider_id"]][row["status"]] += 1
+        providers = []
+        for provider_id, counts in sorted(by_provider.items()):
+            total = sum(counts.values())
+            successful = counts[CheckStatus.LISTED.value] + counts[CheckStatus.NOT_LISTED.value]
+            providers.append(
+                ProviderHistorySummary(
+                    provider_id=provider_id,
+                    total_checks=total,
+                    listed=counts[CheckStatus.LISTED.value],
+                    not_listed=counts[CheckStatus.NOT_LISTED.value],
+                    query_error=counts[CheckStatus.QUERY_ERROR.value],
+                    unavailable=counts[CheckStatus.UNAVAILABLE.value],
+                    availability_rate=round(successful / total, 4) if total else 0.0,
+                )
+            )
+        event_counts = Counter(row["event_type"] for row in notification_rows)
+        current_listings = [
+            {
+                "asset_id": row["asset_id"],
+                "asset_type": row["asset_type"],
+                "asset_value": row["asset_value"],
+                "provider_id": row["provider_id"],
+                "first_detected_at": (
+                    _aware_utc(row["first_detected_at"]).isoformat()
+                    if row["first_detected_at"]
+                    else None
+                ),
+                "reason": row["reason"],
+                "removal_url": row["removal_url"],
+            }
+            for row in current_rows
+        ]
+        return BlocklistHistoryReport(
+            days=days,
+            period_start=start,
+            period_end=now,
+            total_runs=len(runs),
+            total_checks=len(result_rows),
+            notifications=len(notification_rows),
+            listed_events=event_counts[NotificationType.LISTED.value],
+            delisted_events=event_counts[NotificationType.DELISTED.value],
+            query_error_events=event_counts[NotificationType.QUERY_ERROR.value],
+            providers=providers,
+            current_listings=current_listings,
+            monitor=self.get_monitor_health(
+                monitor_name,
+                interval_seconds,
+                grace_seconds,
+                now,
+            ),
+        )
+
+    def delete_history_before(self, cutoff: datetime, monitor_name: str) -> None:
+        cutoff_db = _naive_utc(cutoff)
+        with self.engine.begin() as connection:
+            connection.execute(
+                delete(blocklist_runs).where(blocklist_runs.c.completed_at < cutoff_db)
+            )
+            connection.execute(
+                delete(blocklist_monitor_events).where(
+                    blocklist_monitor_events.c.monitor_name == monitor_name,
+                    blocklist_monitor_events.c.occurred_at < cutoff_db,
+                )
+            )
+
+    def delete_monitor(self, name: str) -> None:
+        with self.engine.begin() as connection:
+            connection.execute(
+                delete(blocklist_monitor_events).where(
+                    blocklist_monitor_events.c.monitor_name == name
+                )
+            )
+            connection.execute(
+                delete(blocklist_monitor_status).where(
+                    blocklist_monitor_status.c.name == name
+                )
             )

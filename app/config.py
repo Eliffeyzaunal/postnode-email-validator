@@ -1,5 +1,6 @@
 from functools import lru_cache
 from pathlib import Path
+from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -18,6 +19,12 @@ class Settings(BaseSettings):
     blocklist_providers_path: Path = PROJECT_ROOT / "config" / "blocklists.json"
     blocklist_assets_path: Path = PROJECT_ROOT / "config" / "monitored-assets.example.json"
     blocklist_fake_dns_path: Path = PROJECT_ROOT / "data" / "blocklist_fake_dns.json"
+    blocklist_dns_mode: Literal["fake", "live"] = "fake"
+    blocklist_nameservers: str | None = None
+    blocklist_dns_timeout_seconds: float = 3.0
+    blocklist_interval_seconds: int = 3_600
+    blocklist_missed_grace_seconds: int = 300
+    blocklist_retention_days: int = 90
     dns_timeout_seconds: float = 2.0
     dns_cache_ttl_seconds: int = 86_400
     dns_error_cache_ttl_seconds: int = 300

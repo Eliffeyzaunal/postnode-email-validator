@@ -32,6 +32,22 @@ services:
       - "8000:8000"
     environment:
       DATABASE_URL: mysql+pymysql://${MYSQL_USER:-postnode}:${MYSQL_PASSWORD:-postnode_dev_password}@mysql:3306/${MYSQL_DATABASE:-postnode_validator}?charset=utf8mb4
+      BLOCKLIST_DNS_MODE: ${BLOCKLIST_DNS_MODE:-fake}
+
+  blocklist-monitor:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    command: ["python", "-m", "app.blocklist.scheduler_cli"]
+    environment:
+      DATABASE_URL: mysql+pymysql://${MYSQL_USER:-postnode}:${MYSQL_PASSWORD:-postnode_dev_password}@mysql:3306/${MYSQL_DATABASE:-postnode_validator}?charset=utf8mb4
+      BLOCKLIST_DNS_MODE: ${BLOCKLIST_DNS_MODE:-fake}
+      BLOCKLIST_NAMESERVERS: ${BLOCKLIST_NAMESERVERS:-}
+      BLOCKLIST_INTERVAL_SECONDS: ${BLOCKLIST_INTERVAL_SECONDS:-3600}
+      BLOCKLIST_MISSED_GRACE_SECONDS: ${BLOCKLIST_MISSED_GRACE_SECONDS:-300}
+      BLOCKLIST_RETENTION_DAYS: ${BLOCKLIST_RETENTION_DAYS:-90}
 
 volumes:
   mysql-data:

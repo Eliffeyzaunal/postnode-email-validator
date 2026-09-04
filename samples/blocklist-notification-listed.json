@@ -7,6 +7,6 @@
   "previous_status": null,
   "current_status": "listed",
   "first_detected_at": "2026-09-03T10:00:00Z",
-  "reason": "SBL",
+  "reason": "Spamhaus resmî pozitif test girdisi: SBL, XBL ve PBL",
   "removal_url": "https://check.spamhaus.org/listed/?searchterm=127.0.0.2"
 }

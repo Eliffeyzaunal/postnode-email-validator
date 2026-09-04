@@ -9,10 +9,13 @@ from app import __version__
 from app.config import get_settings
 from app.blocklist.models import (
     BlocklistCheckRequest,
+    BlocklistHistoryReport,
     BlocklistNotification,
     BlocklistRunResponse,
+    MonitorHealth,
 )
 from app.blocklist.repository import BlocklistRepository
+from app.blocklist.scheduler import BlocklistScheduler
 from app.blocklist.service import BlocklistMonitorService
 from app.models import (
     BatchMetadataResponse,
@@ -33,8 +36,8 @@ app = FastAPI(
     title="Postnode E-posta Güvenliği Servisleri",
     version=__version__,
     description=(
-        "Liste hijyeni/adres doğrulama ve sahte DNS cevaplarıyla "
-        "kara liste izleme servislerini sunar."
+        "Liste hijyeni/adres doğrulama ile belirleyici veya seçilebilir canlı DNS "
+        "üzerinden periyodik kara liste izleme servislerini sunar."
     ),
 )
 
@@ -52,6 +55,11 @@ def get_blocklist_service() -> BlocklistMonitorService:
         settings,
         BlocklistRepository(settings.database_url),
     )
+
+
+@lru_cache
+def get_blocklist_scheduler() -> BlocklistScheduler:
+    return BlocklistScheduler(get_blocklist_service())
 
 
 def _response_item(item) -> ResultResponse:
@@ -124,6 +132,29 @@ def get_blocklist_notifications(run_id: str) -> list[dict]:
     if not get_blocklist_service().repository.get_run(run_id):
         raise HTTPException(status_code=404, detail="Kara liste kontrol kaydı bulunamadı.")
     return get_blocklist_service().repository.get_notifications(run_id)
+
+
+@app.get(
+    "/api/v1/blocklists/monitor/status",
+    response_model=MonitorHealth,
+    tags=["blocklist-monitor"],
+)
+def get_blocklist_monitor_status() -> MonitorHealth:
+    return get_blocklist_scheduler().status()
+
+
+@app.get(
+    "/api/v1/blocklists/reports/history",
+    response_model=BlocklistHistoryReport,
+    tags=["blocklist-history"],
+)
+def get_blocklist_history_report(
+    days: int = Query(30, ge=1, le=90),
+) -> BlocklistHistoryReport:
+    try:
+        return get_blocklist_scheduler().history_report(days)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
 @app.post("/api/v1/validate", response_model=BatchResponse, tags=["validation"])

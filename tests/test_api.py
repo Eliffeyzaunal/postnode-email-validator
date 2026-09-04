@@ -1,6 +1,12 @@
 from fastapi.testclient import TestClient
 
-from app.main import app, get_blocklist_service, get_service
+from app.blocklist.scheduler import BlocklistScheduler
+from app.main import (
+    app,
+    get_blocklist_scheduler,
+    get_blocklist_service,
+    get_service,
+)
 
 
 def test_health():
@@ -45,7 +51,9 @@ def test_blocklist_api_and_history(blocklist_service):
     import app.main as main_module
 
     original = main_module.get_blocklist_service
+    original_scheduler = main_module.get_blocklist_scheduler
     main_module.get_blocklist_service = lambda: blocklist_service
+    main_module.get_blocklist_scheduler = lambda: BlocklistScheduler(blocklist_service)
     try:
         client = TestClient(app)
         response = client.post("/api/v1/blocklists/check")
@@ -62,6 +70,17 @@ def test_blocklist_api_and_history(blocklist_service):
         )
         assert notifications.status_code == 200
         assert len(notifications.json()) == 5
+
+        status = client.get("/api/v1/blocklists/monitor/status")
+        assert status.status_code == 200
+        assert status.json()["status"] == "not_started"
+
+        BlocklistScheduler(blocklist_service).run_cycle()
+        history_report = client.get("/api/v1/blocklists/reports/history?days=30")
+        assert history_report.status_code == 200
+        assert history_report.json()["total_runs"] == 2
     finally:
         main_module.get_blocklist_service = original
+        main_module.get_blocklist_scheduler = original_scheduler
         get_blocklist_service.cache_clear()
+        get_blocklist_scheduler.cache_clear()

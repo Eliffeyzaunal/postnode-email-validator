@@ -1,6 +1,6 @@
 # Kara Liste DNS Dönüş Kodları
 
-Bu belge Görev 2'nin ilk aşamasında kullanılan dönüş kodlarını ve karar kurallarını kaydeder. Uygulama şimdilik yalnızca `data/blocklist_fake_dns.json` içindeki belirleyici cevapları kullanır; gerçek DNSBL ağına sorgu göndermez.
+Bu belge Görev 2'de kullanılan dönüş kodlarını ve karar kurallarını kaydeder. Varsayılan sahte DNS modu `data/blocklist_fake_dns.json` içindeki belirleyici cevapları kullanır. `BLOCKLIST_DNS_MODE=live` açıkça seçilirse aynı yorumlama kuralları gerçek DNS cevaplarına uygulanır.
 
 ## Genel kararlar
 
