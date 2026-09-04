@@ -624,7 +624,7 @@ class BlocklistRepository:
         now = now or datetime.now(UTC)
         start = now - timedelta(days=days)
         start_db = _naive_utc(start)
-        end_db = _naive_utc(now)
+        end_db = _naive_utc(now + timedelta(seconds=1))
         with self.engine.connect() as connection:
             runs = connection.execute(
                 select(blocklist_runs.c.id).where(
