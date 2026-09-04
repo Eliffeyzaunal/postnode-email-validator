@@ -153,6 +153,8 @@ BLOCKLIST_NAMESERVERS=192.0.2.53
 
 Spamhaus için sıradan bir genel çözümleyici sürekli temiz sonuç varsayımına yol açabilir. Uygulama erişim ve kota dönüş kodlarını `query_error` olarak raporlar; bunları `not_listed` saymaz.
 
+Canlı moda geçiş öncesi uygulanacak güvenli doğrulama sırası ve başarı ölçütleri [`docs/live-dns-readiness.md`](docs/live-dns-readiness.md) dosyasında belgelenmiştir. Uygun resolver bilgisi sağlanana kadar canlı ön kontrol tamamlanmış sayılmaz ve sahte DNS varsayılanı korunur.
+
 ### Sorgu kullanım şartları
 
 | Sağlayıcı | Ücretsiz kullanım/limit notu | Bu projedeki karar |
@@ -164,6 +166,12 @@ Spamhaus için sıradan bir genel çözümleyici sürekli temiz sonuç varsayım
 | SORBS | Proofpoint hizmet için EOL süreci ilan etmiştir. | Sorgulanmaz, `unavailable` raporlanır. |
 
 Kaynaklar: [Spamhaus Fair Use](https://www.spamhaus.org/blocklists/dnsbl-fair-use-policy/), [SURBL Usage Policy](https://surbl.org/usage-policy), [SpamCop SCBL açıklaması](https://www.spamcop.net/fom-serve/cache/297.html), [Barracuda lookup](https://www.barracudacentral.org/lookups), [SORBS EOL](https://proofpoint.my.site.com/community/s/article/End-of-Life-EOL-process-for-the-Spam-and-Open-Relay-Blocking-System-SORBS-service).
+
+## Süreç ve demo belgeleri
+
+- Günlük 3-5 satırlık çalışma kayıtları: [`docs/progress-notes.md`](docs/progress-notes.md)
+- Hafta sonu 15 dakikalık anlatım ve komut sırası: [`docs/demo-plan.md`](docs/demo-plan.md)
+- Canlı DNSBL geçiş kontrol listesi: [`docs/live-dns-readiness.md`](docs/live-dns-readiness.md)
 
 ## Kütüphane kullanımı
 
