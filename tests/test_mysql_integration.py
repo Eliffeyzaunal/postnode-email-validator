@@ -1,5 +1,7 @@
 import os
 import uuid
+from concurrent.futures import ThreadPoolExecutor
+from threading import Barrier
 
 import pytest
 
@@ -102,4 +104,43 @@ def test_mysql_blocklist_repository_round_trip(tmp_path):
             repository.delete_run(run_id)
         repository.delete_states([asset_id])
         repository.delete_monitor(monitor_name)
+        repository.close()
+
+
+@pytest.mark.skipif(not MYSQL_URL, reason="MySQL entegrasyon adresi tanımlı değil.")
+def test_mysql_concurrent_blocklist_runs_create_one_alarm_set():
+    asset_id = f"mysql-concurrent-{uuid.uuid4().hex}"
+    settings = Settings(
+        database_url=MYSQL_URL,
+        blocklist_providers_path=PROJECT_ROOT / "config" / "blocklists.json",
+        blocklist_fake_dns_path=PROJECT_ROOT / "data" / "blocklist_fake_dns.json",
+    )
+    repository = BlocklistRepository(settings.database_url)
+    service = BlocklistMonitorService(settings, repository)
+    request = BlocklistCheckRequest(
+        assets=[MonitoredAsset(id=asset_id, type="ip", value="127.0.0.2")]
+    )
+    barrier = Barrier(2)
+    run_ids: list[str] = []
+
+    def run_check():
+        barrier.wait()
+        return service.run_once(request)
+
+    try:
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            reports = list(pool.map(lambda _item: run_check(), range(2)))
+        run_ids = [report.run_id for report in reports]
+
+        listed_notifications = [
+            notification
+            for report in reports
+            for notification in report.notifications
+            if notification.type.value == "listed"
+        ]
+        assert len(listed_notifications) == 3
+    finally:
+        for run_id in run_ids:
+            repository.delete_run(run_id)
+        repository.delete_states([asset_id])
         repository.close()

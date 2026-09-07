@@ -25,7 +25,7 @@ def main() -> None:
     args = build_parser().parse_args()
     settings = Settings(**({"database_url": args.database_url} if args.database_url else {}))
     emails = parse_bytes(args.input.read_bytes(), args.input.name, settings.max_batch_size)
-    repository = Repository(settings.database_url)
+    repository = Repository(settings.database_url, settings.email_hash_secret)
     service = EmailValidatorService(settings, repository)
     try:
         batch_id, summary, results = service.validate_many(emails, args.input.name)
@@ -40,7 +40,7 @@ def main() -> None:
             writer.writerow([
                 item.row_number,
                 mask_email(source),
-                email_hash(source),
+                email_hash(source, settings.email_hash_secret),
                 item.domain or "",
                 item.status.value,
                 "|".join(code.value for code in item.reason_codes),

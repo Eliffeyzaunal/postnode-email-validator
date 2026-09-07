@@ -53,7 +53,7 @@ def main() -> None:
     path = PROJECT_ROOT / "benchmark" / "emails-10000.csv"
     emails = [row["email"] for row in csv.DictReader(path.open(encoding="utf-8"))]
     settings = Settings(domain_concentration_threshold=1.1)
-    repository = Repository(settings.database_url)
+    repository = Repository(settings.database_url, settings.email_hash_secret)
     checker = DeterministicCachingDNSChecker(repository)
     service = EmailValidatorService(settings, repository, checker)
     batch_ids: list[str] = []

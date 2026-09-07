@@ -26,11 +26,25 @@ class BlocklistScheduler:
         self.service = service
         self.repository = service.repository
         self.monitor_name = monitor_name
-        self.interval_seconds = interval_seconds or service.settings.blocklist_interval_seconds
-        self.grace_seconds = grace_seconds or service.settings.blocklist_missed_grace_seconds
-        self.retention_days = retention_days or service.settings.blocklist_retention_days
+        self.interval_seconds = (
+            service.settings.blocklist_interval_seconds
+            if interval_seconds is None
+            else interval_seconds
+        )
+        self.grace_seconds = (
+            service.settings.blocklist_missed_grace_seconds
+            if grace_seconds is None
+            else grace_seconds
+        )
+        self.retention_days = (
+            service.settings.blocklist_retention_days
+            if retention_days is None
+            else retention_days
+        )
         if self.interval_seconds < 1:
             raise ValueError("Kontrol aralığı en az 1 saniye olmalıdır.")
+        if self.grace_seconds < 0:
+            raise ValueError("Gecikme toleransı negatif olamaz.")
         if self.retention_days < 30:
             raise ValueError("Blocklist geçmişi en az 30 gün saklanmalıdır.")
 

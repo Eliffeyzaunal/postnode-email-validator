@@ -1,5 +1,7 @@
 # Postnode E-posta Güvenliği Servisleri
 
+[![Testler](https://github.com/Eliffeyzaunal/postnode-email-validator/actions/workflows/tests.yml/badge.svg)](https://github.com/Eliffeyzaunal/postnode-email-validator/actions/workflows/tests.yml)
+
 PDF'deki Görev 1 için liste hijyeni/adres doğrulama, Görev 2 için periyodik kara liste izleme ve alarm sağlayan bağımsız FastAPI servisidir. Üretimde MySQL, otomatik birim testlerinde aynı SQLAlchemy repository kodu üzerinden geçici SQLite kullanılır.
 
 ## Özellikler
@@ -50,7 +52,7 @@ Windows'ta hızlı başlatmak için `run_windows.bat` dosyasına çift tıklanab
 
 | Yöntem | Yol | Amaç |
 |---|---|---|
-| GET | `/health` | Sağlık kontrolü |
+| GET | `/health` | Veritabanı, blocklist modu ve zamanlayıcı sağlık kontrolü |
 | GET | `/api/v1/reason-codes` | Sabit sebep kodu sözlüğü |
 | POST | `/api/v1/validate` | Tek adres doğrulama |
 | POST | `/api/v1/validate/batch` | JSON listesi doğrulama |
@@ -105,7 +107,7 @@ Görev 2'nin örnek IP/alan adlarını kara listelerde kontrol etmek için:
 python -m app.blocklist.cli --output outputs/blocklist-report.json
 ```
 
-Komut `config/monitored-assets.example.json` girdilerini okur, belirleyici sonuçları terminale ve JSON dosyasına yazar, aynı koşuyu MySQL'e kaydeder. FastAPI'de boş gövdeyle `POST /api/v1/blocklists/check` aynı örnekleri kullanır; istenirse gövdede özel `assets` listesi verilebilir.
+Komut `config/monitored-assets.example.json` girdilerini okur, belirleyici sonuçları terminale ve JSON dosyasına yazar, aynı koşuyu MySQL'e kaydeder. FastAPI'de boş gövdeyle `POST /api/v1/blocklists/check` aynı örnekleri kullanır; istenirse gövdede özel `assets` listesi verilebilir. API yanıtındaki `dns_mode` alanı sonucun `fake` veya `live` DNS ile üretildiğini açıkça gösterir.
 
 Saatlik izleyiciyi başlatmak için:
 
@@ -252,9 +254,11 @@ Kara liste testleri IP ters çevirme sorgusunu, SURBL bit maskesini, Spamhaus ha
 - Gerçek müşteri listelerini repoya koymayın.
 - Uygulama açık adresi loglamaz ve kalıcı depoya yazmaz.
 - API/CLI çıktısı satır numarası, maskeli adres ve hash ile eşlenir.
-- MySQL parolaları yalnızca ortam değişkenlerinde tutulmalı; `.env` repoya eklenmemelidir.
+- E-posta özeti anahtarlı HMAC-SHA256 ile üretilir; `EMAIL_HASH_SECRET` üretimde güçlü ve benzersiz bir değerle değiştirilmelidir.
+- MySQL parolaları yalnızca ortam değişkenlerinde tutulmalı; `.env` repoya eklenmemelidir. Docker Compose içindeki geliştirme parolaları üretimde kullanılmamalıdır.
 - Dosya boyutu ve satır sayısı sınırlandırılmıştır.
 - SMTP mailbox doğrulaması yapılmaz.
+- API, görev kapsamı gereği kimlik doğrulama içermez; internete doğrudan açılmamalı, güvenilir ağ veya kimlik doğrulayan bir ağ geçidi arkasında çalıştırılmalıdır.
 
 ## Sınırlamalar
 

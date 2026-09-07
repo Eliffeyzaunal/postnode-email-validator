@@ -1,4 +1,15 @@
-from app.blocklist.models import CheckStatus, DNSResponse, DNSResponseState
+from concurrent.futures import ThreadPoolExecutor
+from threading import Barrier
+
+import pytest
+
+from app.blocklist.models import (
+    BlocklistCheckRequest,
+    CheckStatus,
+    DNSResponse,
+    DNSResponseState,
+    MonitoredAsset,
+)
 
 
 def test_official_examples_are_checked_with_fake_dns(blocklist_service):
@@ -41,6 +52,102 @@ def test_delisting_creates_transition_notification(blocklist_service):
     assert events[0].current_status == CheckStatus.NOT_LISTED
     assert events[0].first_detected_at is not None
     assert events[0].reason == "SpamCop resmi DNSBL test girdisi"
+
+
+def test_query_error_does_not_hide_a_later_delisting(blocklist_service):
+    first = blocklist_service.run_once()
+    first_listing = next(
+        item for item in first.notifications if item.provider_id == "spamcop"
+    )
+    blocklist_service.dns_client.set_response(
+        "2.0.0.127.bl.spamcop.net",
+        DNSResponse(state=DNSResponseState.TIMEOUT, detail="DNS zaman aşımı"),
+    )
+
+    failed = blocklist_service.run_once()
+    failed_event = next(
+        item for item in failed.notifications if item.provider_id == "spamcop"
+    )
+    assert failed_event.type.value == "query_error"
+
+    blocklist_service.dns_client.set_response(
+        "2.0.0.127.bl.spamcop.net",
+        DNSResponse(state=DNSResponseState.NXDOMAIN),
+    )
+    recovered = blocklist_service.run_once()
+    event = next(
+        item for item in recovered.notifications if item.provider_id == "spamcop"
+    )
+
+    assert event.type.value == "delisted"
+    assert event.previous_status == CheckStatus.QUERY_ERROR
+    assert event.current_status == CheckStatus.NOT_LISTED
+    assert event.first_detected_at == first_listing.first_detected_at
+    assert event.reason == "SpamCop resmi DNSBL test girdisi"
+
+
+def test_query_error_recovery_does_not_repeat_listed_alarm(blocklist_service):
+    first = blocklist_service.run_once()
+    first_listing = next(
+        item for item in first.notifications if item.provider_id == "spamcop"
+    )
+    blocklist_service.dns_client.set_response(
+        "2.0.0.127.bl.spamcop.net",
+        DNSResponse(state=DNSResponseState.TIMEOUT, detail="DNS zaman aşımı"),
+    )
+    blocklist_service.run_once()
+    blocklist_service.dns_client.set_response(
+        "2.0.0.127.bl.spamcop.net",
+        DNSResponse(
+            state=DNSResponseState.OK,
+            a_records=["127.0.0.2"],
+            txt_records=["SpamCop resmi DNSBL test girdisi"],
+        ),
+    )
+
+    recovered = blocklist_service.run_once()
+    event = next(
+        item for item in recovered.notifications if item.provider_id == "spamcop"
+    )
+
+    assert event.type.value == "recovered"
+    assert event.current_status == CheckStatus.LISTED
+    assert event.first_detected_at == first_listing.first_detected_at
+
+
+def test_asset_id_cannot_be_reused_for_a_different_value(blocklist_service):
+    blocklist_service.run_once()
+    request = BlocklistCheckRequest(
+        assets=[
+            MonitoredAsset(
+                id="spamhaus-test-ip",
+                type="ip",
+                value="127.0.0.3",
+            )
+        ]
+    )
+
+    with pytest.raises(ValueError, match="daha önce farklı"):
+        blocklist_service.run_once(request)
+
+
+def test_concurrent_runs_create_one_alarm_set(blocklist_service):
+    barrier = Barrier(2)
+
+    def run_check():
+        barrier.wait()
+        return blocklist_service.run_once()
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        reports = list(pool.map(lambda _item: run_check(), range(2)))
+
+    listed_notifications = [
+        notification
+        for report in reports
+        for notification in report.notifications
+        if notification.type.value == "listed"
+    ]
+    assert len(listed_notifications) == 5
 
 
 def test_run_and_notifications_are_persisted(blocklist_service):

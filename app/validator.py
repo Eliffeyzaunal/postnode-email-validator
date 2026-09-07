@@ -33,7 +33,10 @@ class EmailValidatorService:
         dns_checker: DNSLookup | None = None,
     ):
         self.settings = settings
-        self.repository = repository or Repository(settings.database_url)
+        self.repository = repository or Repository(
+            settings.database_url,
+            settings.email_hash_secret,
+        )
         self.dns_checker = dns_checker or DNSChecker(
             self.repository,
             settings.dns_timeout_seconds,

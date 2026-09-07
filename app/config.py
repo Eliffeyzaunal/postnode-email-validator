@@ -6,6 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_EMAIL_HASH_SECRET = "postnode_dev_hash_secret_change_me"
 
 
 class Settings(BaseSettings):
@@ -33,6 +34,7 @@ class Settings(BaseSettings):
     domain_concentration_threshold: float = 0.70
     domain_concentration_min_list_size: int = 100
     max_dns_workers: int = 20
+    email_hash_secret: str = DEFAULT_EMAIL_HASH_SECRET
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

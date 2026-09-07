@@ -2,7 +2,7 @@ import csv
 import io
 from functools import lru_cache
 
-from fastapi import FastAPI, File, HTTPException, Query, UploadFile
+from fastapi import FastAPI, File, HTTPException, Query, Response, UploadFile
 from fastapi.responses import StreamingResponse
 
 from app import __version__
@@ -45,7 +45,10 @@ app = FastAPI(
 @lru_cache
 def get_service() -> EmailValidatorService:
     settings = get_settings()
-    return EmailValidatorService(settings, Repository(settings.database_url))
+    return EmailValidatorService(
+        settings,
+        Repository(settings.database_url, settings.email_hash_secret),
+    )
 
 
 @lru_cache
@@ -67,7 +70,7 @@ def _response_item(item) -> ResultResponse:
     return ResultResponse(
         row_number=item.row_number,
         masked_email=mask_email(source),
-        email_hash=email_hash(source),
+        email_hash=email_hash(source, get_settings().email_hash_secret),
         domain=item.domain,
         status=item.status,
         reason_codes=item.reason_codes,
@@ -85,8 +88,34 @@ def _batch_response(batch_id: str, summary: dict, results: list, filename: str |
 
 
 @app.get("/health", tags=["system"])
-def health() -> dict:
-    return {"status": "ok", "version": __version__}
+def health(response: Response) -> dict:
+    settings = get_settings()
+    payload = {
+        "status": "ok",
+        "version": __version__,
+        "database": "ok",
+        "blocklist_dns_mode": settings.blocklist_dns_mode,
+        "blocklist_monitor": "unknown",
+    }
+    try:
+        get_service().repository.ping()
+    except Exception:
+        response.status_code = 503
+        payload["status"] = "degraded"
+        payload["database"] = "unavailable"
+        return payload
+
+    try:
+        monitor = get_blocklist_scheduler().status()
+        payload["blocklist_monitor"] = monitor.status
+        if monitor.status in {"error", "missed"}:
+            response.status_code = 503
+            payload["status"] = "degraded"
+    except Exception:
+        response.status_code = 503
+        payload["status"] = "degraded"
+        payload["blocklist_monitor"] = "unavailable"
+    return payload
 
 
 @app.get("/api/v1/reason-codes", tags=["validation"])

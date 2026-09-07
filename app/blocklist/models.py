@@ -130,6 +130,7 @@ class BlocklistSummary(BaseModel):
 
 class BlocklistRunResponse(BaseModel):
     run_id: str
+    dns_mode: Literal["fake", "live"]
     source_filename: str | None = None
     summary: BlocklistSummary
     results: list[BlocklistCheckResult]

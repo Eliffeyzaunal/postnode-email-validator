@@ -23,6 +23,8 @@ from sqlalchemy import (
     select,
     update,
 )
+from sqlalchemy.dialects.mysql import insert as mysql_insert
+from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 
 from app.blocklist.models import (
     BlocklistCheckResult,
@@ -97,6 +99,15 @@ blocklist_states = Table(
     Column("return_codes_json", JSON, nullable=False),
     Column("reason", Text),
     Column("removal_url", String(1024)),
+    mysql_engine="InnoDB",
+    mysql_charset="utf8mb4",
+)
+
+blocklist_write_locks = Table(
+    "blocklist_write_locks",
+    metadata,
+    Column("name", String(100), primary_key=True),
+    Column("updated_at", DateTime, nullable=False),
     mysql_engine="InnoDB",
     mysql_charset="utf8mb4",
 )
@@ -197,6 +208,28 @@ class BlocklistRepository:
     def close(self) -> None:
         self.engine.dispose()
 
+    def ping(self) -> None:
+        with self.engine.connect() as connection:
+            connection.execute(select(1))
+
+    def _acquire_state_write_lock(self, connection, checked_at: datetime) -> None:
+        values = {
+            "name": "blocklist-state-writer",
+            "updated_at": _naive_utc(checked_at),
+        }
+        if self.engine.dialect.name == "mysql":
+            statement = mysql_insert(blocklist_write_locks).values(**values)
+            statement = statement.on_duplicate_key_update(
+                updated_at=statement.inserted.updated_at
+            )
+        else:
+            statement = sqlite_insert(blocklist_write_locks).values(**values)
+            statement = statement.on_conflict_do_update(
+                index_elements=[blocklist_write_locks.c.name],
+                set_={"updated_at": values["updated_at"]},
+            )
+        connection.execute(statement)
+
     def save_run(
         self,
         run_id: str,
@@ -208,6 +241,9 @@ class BlocklistRepository:
         notifications: list[BlocklistNotification] = []
 
         with self.engine.begin() as connection:
+            # API ve zamanlayıcı farklı süreçlerde çalışsa bile durum geçişlerini
+            # tek yazıcı üzerinden değerlendirerek mükerrer alarmı engeller.
+            self._acquire_state_write_lock(connection, completed_at)
             connection.execute(
                 insert(blocklist_runs).values(
                     id=run_id,
@@ -226,13 +262,22 @@ class BlocklistRepository:
                         blocklist_states.c.provider_id == result.provider_id,
                     )
                 ).mappings().first()
+                if previous is not None and (
+                    previous["asset_type"] != result.asset_type.value
+                    or previous["asset_value"] != result.asset_value
+                ):
+                    raise ValueError(
+                        f"'{result.asset_id}' varlık kimliği daha önce farklı bir "
+                        "IP veya alan adı için kullanılmış. Yeni bir kimlik kullanın."
+                    )
                 previous_status = (
                     CheckStatus(previous["status"]) if previous is not None else None
                 )
-                changed = previous_status != result.status
-                first_detected_at = self._first_detected_at(
-                    result, previous, previous_status
+                previous_was_listed = bool(
+                    previous is not None and previous["first_detected_at"] is not None
                 )
+                changed = previous_status != result.status
+                first_detected_at = self._first_detected_at(result, previous)
                 reason = (
                     result.reasons[0]
                     if result.reasons
@@ -262,6 +307,19 @@ class BlocklistRepository:
                     )
                 )
 
+                state_reason = reason
+                state_return_codes = result.return_codes
+                state_removal_url = result.removal_url
+                if (
+                    result.status in {CheckStatus.QUERY_ERROR, CheckStatus.UNAVAILABLE}
+                    and previous_was_listed
+                ):
+                    # Teknik hata kesin bir listeden çıkış değildir. Son doğrulanmış
+                    # listelenme bağlamını, sonraki kesin sonuç için koruruz.
+                    state_reason = previous["reason"]
+                    state_return_codes = previous["return_codes_json"]
+                    state_removal_url = previous["removal_url"]
+
                 state_values = {
                     "asset_type": result.asset_type.value,
                     "asset_value": result.asset_value,
@@ -273,9 +331,9 @@ class BlocklistRepository:
                         if changed or previous is None
                         else previous["last_changed_at"]
                     ),
-                    "return_codes_json": result.return_codes,
-                    "reason": reason,
-                    "removal_url": result.removal_url,
+                    "return_codes_json": state_return_codes,
+                    "reason": state_reason,
+                    "removal_url": state_removal_url,
                 }
                 if previous is None:
                     connection.execute(
@@ -295,7 +353,11 @@ class BlocklistRepository:
                         .values(**state_values)
                     )
 
-                event_type = self._notification_type(previous_status, result.status)
+                event_type = self._notification_type(
+                    previous_status,
+                    result.status,
+                    previous_was_listed,
+                )
                 if event_type is not None:
                     notification_first_detected = first_detected_at
                     notification_reason = reason
@@ -351,27 +413,36 @@ class BlocklistRepository:
     def _first_detected_at(
         result: BlocklistCheckResult,
         previous: Any,
-        previous_status: CheckStatus | None,
     ) -> datetime | None:
+        if previous is not None and previous["first_detected_at"] is not None:
+            if result.status in {
+                CheckStatus.LISTED,
+                CheckStatus.QUERY_ERROR,
+                CheckStatus.UNAVAILABLE,
+            }:
+                return previous["first_detected_at"]
         if result.status != CheckStatus.LISTED:
             return None
-        if (
-            previous is not None
-            and previous_status == CheckStatus.LISTED
-            and previous["first_detected_at"] is not None
-        ):
-            return previous["first_detected_at"]
         return _naive_utc(result.checked_at)
 
     @staticmethod
     def _notification_type(
-        previous: CheckStatus | None, current: CheckStatus
+        previous: CheckStatus | None,
+        current: CheckStatus,
+        previous_was_listed: bool = False,
     ) -> NotificationType | None:
         if previous == current:
             return None
         if current == CheckStatus.LISTED:
+            if (
+                previous in {CheckStatus.QUERY_ERROR, CheckStatus.UNAVAILABLE}
+                and previous_was_listed
+            ):
+                return NotificationType.RECOVERED
             return NotificationType.LISTED
-        if previous == CheckStatus.LISTED and current == CheckStatus.NOT_LISTED:
+        if current == CheckStatus.NOT_LISTED and (
+            previous == CheckStatus.LISTED or previous_was_listed
+        ):
             return NotificationType.DELISTED
         if current == CheckStatus.QUERY_ERROR:
             return NotificationType.QUERY_ERROR

@@ -1,0 +1,16 @@
+.git
+.github
+.env
+.venv
+__pycache__
+*.py[cod]
+*.db
+*.db-shm
+*.db-wal
+.pytest_cache
+benchmark
+docs
+evaluation
+outputs
+samples
+tests
