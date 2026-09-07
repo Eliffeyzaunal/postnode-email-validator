@@ -25,6 +25,7 @@ from sqlalchemy.dialects.mysql import insert as mysql_insert
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from sqlalchemy.engine import Engine
 
+from app.config import DEFAULT_EMAIL_HASH_SECRET
 from app.models import DNSResult, DNSState, InternalResult
 from app.privacy import email_hash, mask_email
 
@@ -82,8 +83,13 @@ def _iso_utc(value: datetime) -> str:
 class Repository:
     """MySQL üretim ve SQLite testleri için ortak SQLAlchemy repository katmanı."""
 
-    def __init__(self, database_url: str):
+    def __init__(
+        self,
+        database_url: str,
+        email_hash_secret: str = DEFAULT_EMAIL_HASH_SECRET,
+    ):
         self.database_url = database_url
+        self.email_hash_secret = email_hash_secret
         self.engine = create_engine(
             database_url,
             pool_pre_ping=True,
@@ -164,7 +170,7 @@ class Repository:
                 {
                     "batch_id": batch_id,
                     "row_number": item.row_number,
-                    "email_hash": email_hash(source_for_hash),
+                    "email_hash": email_hash(source_for_hash, self.email_hash_secret),
                     "masked_email": mask_email(source_for_hash),
                     "domain": item.domain,
                     "status": item.status.value,

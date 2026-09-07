@@ -36,7 +36,7 @@ def main() -> None:
             database_url=database_url,
             domain_concentration_min_list_size=100_000,
         )
-        repository = Repository(database_url)
+        repository = Repository(database_url, settings.email_hash_secret)
         try:
             service = EmailValidatorService(settings, repository, StaticDNSChecker(states))
             _, _, results = service.validate_many([row["email"] for row in rows], persist=False)

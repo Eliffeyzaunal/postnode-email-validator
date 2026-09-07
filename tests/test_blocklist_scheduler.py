@@ -62,3 +62,13 @@ def test_30_day_history_report_contains_provider_metrics(blocklist_service):
 def test_history_retention_cannot_be_shorter_than_30_days(blocklist_service):
     with pytest.raises(ValueError, match="en az 30 gün"):
         BlocklistScheduler(blocklist_service, retention_days=29)
+
+
+def test_scheduler_rejects_zero_interval(blocklist_service):
+    with pytest.raises(ValueError, match="en az 1 saniye"):
+        BlocklistScheduler(blocklist_service, interval_seconds=0)
+
+
+def test_scheduler_rejects_negative_grace(blocklist_service):
+    with pytest.raises(ValueError, match="negatif olamaz"):
+        BlocklistScheduler(blocklist_service, grace_seconds=-1)

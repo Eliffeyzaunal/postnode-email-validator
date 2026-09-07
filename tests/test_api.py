@@ -9,8 +9,44 @@ from app.main import (
 )
 
 
-def test_health():
-    assert TestClient(app).get("/health").status_code == 200
+def test_health(service, blocklist_service):
+    import app.main as main_module
+
+    original_service = main_module.get_service
+    original_scheduler = main_module.get_blocklist_scheduler
+    main_module.get_service = lambda: service
+    main_module.get_blocklist_scheduler = lambda: BlocklistScheduler(blocklist_service)
+    try:
+        response = TestClient(app).get("/health")
+        assert response.status_code == 200
+        assert response.json()["database"] == "ok"
+        assert response.json()["blocklist_dns_mode"] == "fake"
+        assert response.json()["blocklist_monitor"] == "not_started"
+    finally:
+        main_module.get_service = original_service
+        main_module.get_blocklist_scheduler = original_scheduler
+
+
+def test_health_reports_database_failure():
+    import app.main as main_module
+
+    class BrokenRepository:
+        @staticmethod
+        def ping():
+            raise RuntimeError("database unavailable")
+
+    class BrokenService:
+        repository = BrokenRepository()
+
+    original_service = main_module.get_service
+    main_module.get_service = lambda: BrokenService()
+    try:
+        response = TestClient(app).get("/health")
+        assert response.status_code == 503
+        assert response.json()["status"] == "degraded"
+        assert response.json()["database"] == "unavailable"
+    finally:
+        main_module.get_service = original_service
 
 
 def test_validate_endpoint(service):
@@ -60,6 +96,7 @@ def test_blocklist_api_and_history(blocklist_service):
         assert response.status_code == 200
         body = response.json()
         assert body["summary"]["total"] == 10
+        assert body["dns_mode"] == "fake"
 
         history = client.get(f"/api/v1/blocklists/runs/{body['run_id']}")
         assert history.status_code == 200

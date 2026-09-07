@@ -8,7 +8,7 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-postnode_dev_password}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-postnode_root_dev_password}
     ports:
-      - "3306:3306"
+      - "127.0.0.1:3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
     healthcheck:
@@ -32,7 +32,20 @@ services:
       - "8000:8000"
     environment:
       DATABASE_URL: mysql+pymysql://${MYSQL_USER:-postnode}:${MYSQL_PASSWORD:-postnode_dev_password}@mysql:3306/${MYSQL_DATABASE:-postnode_validator}?charset=utf8mb4
+      EMAIL_HASH_SECRET: ${EMAIL_HASH_SECRET:-postnode_dev_hash_secret_change_me}
       BLOCKLIST_DNS_MODE: ${BLOCKLIST_DNS_MODE:-fake}
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
 
   blocklist-monitor:
     build: .

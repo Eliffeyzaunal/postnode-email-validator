@@ -93,6 +93,7 @@ class BlocklistMonitorService:
         )
         return BlocklistRunResponse(
             run_id=run_id,
+            dns_mode=self.settings.blocklist_dns_mode,
             source_filename=(
                 (source_path or self.settings.blocklist_assets_path).name
                 if request is None or request.assets is None
