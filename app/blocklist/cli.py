@@ -27,7 +27,7 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> None:
     args = build_parser().parse_args()
     settings = Settings(**({"database_url": args.database_url} if args.database_url else {}))
-    repository = BlocklistRepository(settings.database_url)
+    repository = BlocklistRepository(settings.database_url, dns_mode=settings.blocklist_dns_mode)
     try:
         service = BlocklistMonitorService(settings, repository)
         report = service.run_once(source_path=args.assets)

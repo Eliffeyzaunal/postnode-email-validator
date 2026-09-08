@@ -56,7 +56,8 @@ def test_mysql_repository_round_trip():
 
 
 @pytest.mark.skipif(not MYSQL_URL, reason="MySQL entegrasyon adresi tanımlı değil.")
-def test_mysql_blocklist_repository_round_trip(tmp_path):
+@pytest.mark.parametrize("dns_mode", ["fake", "live"])
+def test_mysql_blocklist_repository_round_trip(tmp_path, dns_mode):
     asset_id = f"mysql-blocklist-{uuid.uuid4().hex}"
     monitor_name = f"mysql-monitor-{uuid.uuid4().hex}"
     assets_path = tmp_path / "mysql-assets.json"
@@ -67,12 +68,17 @@ def test_mysql_blocklist_repository_round_trip(tmp_path):
     )
     settings = Settings(
         database_url=MYSQL_URL,
+        blocklist_dns_mode=dns_mode,
         blocklist_providers_path=PROJECT_ROOT / "config" / "blocklists.json",
         blocklist_assets_path=assets_path,
         blocklist_fake_dns_path=PROJECT_ROOT / "data" / "blocklist_fake_dns.json",
     )
-    repository = BlocklistRepository(settings.database_url)
-    service = BlocklistMonitorService(settings, repository)
+    repository = BlocklistRepository(settings.database_url, dns_mode=dns_mode)
+    # Exercise MySQL mode partitions without making external DNS requests.
+    fake_settings = settings.model_copy(update={"blocklist_dns_mode": "fake"})
+    service = BlocklistMonitorService(
+        settings, repository, dns_client=BlocklistMonitorService._build_dns_client(fake_settings)
+    )
     run_id = ""
     try:
         request = BlocklistCheckRequest(
@@ -83,6 +89,7 @@ def test_mysql_blocklist_repository_round_trip(tmp_path):
         stored = repository.get_run(run_id)
 
         assert stored is not None
+        assert stored["dns_mode"] == dns_mode
         assert stored["total_checks"] == 4
         assert len(stored["results"]) == 4
         assert {item["status"] for item in stored["results"]} == {
@@ -96,6 +103,8 @@ def test_mysql_blocklist_repository_round_trip(tmp_path):
         history = scheduler.history_report(30)
 
         assert health.status == "healthy"
+        assert health.dns_mode == dns_mode
+        assert history.dns_mode == dns_mode
         assert history.total_runs >= 2
         assert history.total_checks >= 8
         repository.delete_run(scheduled_report.run_id)

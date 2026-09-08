@@ -33,7 +33,11 @@ class BlocklistMonitorService:
         dns_client: BlocklistDNSClient | None = None,
     ):
         self.settings = settings
-        self.repository = repository or BlocklistRepository(settings.database_url)
+        self.repository = repository or BlocklistRepository(
+            settings.database_url, dns_mode=settings.blocklist_dns_mode
+        )
+        if self.repository.dns_mode != settings.blocklist_dns_mode:
+            raise ValueError("Servis ve veritabanı DNS modu aynı olmalıdır.")
         self.providers = load_providers(settings.blocklist_providers_path)
         if dns_client is None:
             dns_client = self._build_dns_client(settings)

@@ -146,6 +146,44 @@ Zamanlayıcı her turun başlangıç, başarı ve hata zamanını kalıcı olara
 
 30 günlük rapordaki `availability_rate`, ilgili sağlayıcı için başarılı `listed + not_listed` cevaplarının tüm kontrollere oranıdır. `query_error` ve `unavailable` cevapları başarılı kabul edilmez. Örnek teslim çıktısı `samples/blocklist-30-day-report.json` dosyasındadır.
 
+### DNS modu, eski kayıtlar ve sağlık kontrolü
+
+- Yeni koşuların DNS modu `blocklist_run_modes` tablosunda kalıcı tutulur.
+  `blocklist_scoped_states` durumları `(asset_id, provider_id, dns_mode)` anahtarıyla
+  ayırır; zamanlayıcı kalp atışları da moda göre ayrılır. Aynı veritabanında `fake`
+  ve `live` kullanıldığında raporlar, durum geçişleri ve bildirimler birbirini etkilemez.
+- Geçmiş raporu varsayılan olarak etkin `BLOCKLIST_DNS_MODE` değerini kullanır.
+  `GET /api/v1/blocklists/reports/history?days=30&dns_mode=live` veya rapor CLI'ındaki
+  `--dns-mode live` seçeneğiyle belirli bir mod okunabilir. Koşu ve bildirim
+  ayrıntıları da kalıcı `dns_mode` bilgisi döndürür.
+- Güncellemeden önceki kayıtların modu bilinmediği için `legacy` olarak gösterilir.
+  Eski tablolar ve kayıtlar silinmez veya mevcut ayara bakılarak yeniden etiketlenmez.
+  Bunları `GET /api/v1/blocklists/reports/history?days=30&dns_mode=legacy` ya da
+  `python -m app.blocklist.report_cli --dns-mode legacy` ile okuyabilirsiniz.
+  Eski durumlar bu raporda arşiv anlık görüntüsüdür; güncel DNS doğrulaması değildir.
+  Yeni sürümde her modun ilk kontrolü yeni bir durum başlangıcı oluşturur; halen
+  listelenmiş varlıklar için bir kez yeni `listed` bildirimi üretilebilir.
+  Otomatik saklama temizliği yalnızca çalıştığı modun yeni geçmişine uygulanır;
+  `legacy` geçmişe dokunmaz.
+- Güncelleme sırasında API ve izleyiciyi birlikte durdurup birlikte yeni sürüme
+  geçirin; eski ve yeni sürümü aynı veritabanına eşzamanlı yazdırmayın. Compose
+  için `docker compose stop validator blocklist-monitor` ardından
+  `docker compose up -d --build` kullanın. Veritabanı hacmini silmek gerekmez.
+- `current_listings` son sorguda doğrulanmış listelenmeleri içerir.
+  `unresolved_listings`, daha önce listelenmiş ancak son sorgusu `query_error`
+  veya `unavailable` olan kayıtları; son bilinen durum, ilk tespit zamanı ve neden
+  bilgisiyle korur. Kesin `not_listed` sonucu gelmeden bunlar temizlenmiş sayılmaz.
+- Yalnız API/tek seferlik CLI kullanımında `BLOCKLIST_MONITOR_REQUIRED=false`
+  varsayılandır. Periyodik izleme bekleniyorsa `true` yapın: başlamamış, durmuş
+  veya gecikmiş izleyici `/health` üzerinden HTTP 503 üretir. Compose izleyiciyi
+  de başlattığı için API konteynerinde bu ayarı `true` tutar. Sağlıklı bir izleyici
+  kalp atışı, tüm DNS sağlayıcılarının erişilebilir olduğunu garanti etmez;
+  sağlayıcı hataları ayrıca raporda görünür.
+
+Dosya doğrulamasındaki ayrıştırma, DNS/veritabanı işlemleri ve yanıt hazırlama
+iş parçacığı havuzunda çalışır; büyük bir yükleme API olay döngüsünü bloke etmez.
+Dosya ve satır sınırları geçerliliğini korur.
+
 Canlı DNSBL sorgusu yalnızca sağlayıcının kullanım şartları ve uygun DNS çözümleyicisi doğrulandıktan sonra açılmalıdır:
 
 ```env

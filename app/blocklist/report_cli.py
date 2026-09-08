@@ -16,6 +16,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=Path("outputs/blocklist-30-day-report.json"),
     )
     parser.add_argument("--database-url")
+    parser.add_argument("--dns-mode", choices=["fake", "live", "legacy"], help="Raporun DNS modu; varsayılan etkin mod")
     return parser
 
 
@@ -24,12 +25,12 @@ def main() -> None:
     settings = Settings(
         **({"database_url": args.database_url} if args.database_url else {})
     )
-    repository = BlocklistRepository(settings.database_url)
+    repository = BlocklistRepository(settings.database_url, dns_mode=settings.blocklist_dns_mode)
     try:
         scheduler = BlocklistScheduler(
             BlocklistMonitorService(settings, repository)
         )
-        report = scheduler.history_report(args.days)
+        report = scheduler.history_report(args.days, dns_mode=args.dns_mode)
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(report.model_dump_json(indent=2), encoding="utf-8")
         print(report.model_dump_json(indent=2))
