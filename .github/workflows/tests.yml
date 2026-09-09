@@ -53,10 +53,19 @@ jobs:
         run: pip install -r requirements-dev.txt
 
       - name: Otomatik testleri çalıştır
-        run: pytest
+        run: pytest --junitxml=outputs/evidence/tests.xml
 
       - name: Değerlendirme kümesini çalıştır
-        run: python scripts/evaluate.py
+        run: python scripts/evaluate.py --output outputs/evidence/evaluation.json --markdown outputs/evidence/evaluation.md
 
       - name: 10.000 adres benchmark'ını çalıştır
-        run: python scripts/benchmark.py
+        run: python scripts/benchmark.py --require-mysql --output outputs/evidence/mysql-benchmark.json --markdown outputs/evidence/mysql-benchmark.md
+
+      - name: Ölçüm dosyalarını sakla
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: delivery-evidence-python-${{ matrix.python-version }}
+          path: outputs/evidence/
+          retention-days: 30
+          if-no-files-found: warn

@@ -10,6 +10,11 @@ set TEST_MYSQL_DATABASE_URL=mysql+pymysql://postnode:postnode_dev_password@127.0
 
 Gerçek müşteri adresi veya üretim IP'si kullanılmaz. Demo, `config/monitored-assets.example.json` ve belirleyici sahte DNS cevaplarıyla yapılır.
 
+Demo öncesi `collect_delivery_evidence.bat` ile yerel MySQL ölçümünü alın veya
+başarılı PR'ın `delivery-evidence-python-*` paketini indirin. Test sayısını o
+koşudan okuyun; eski bir sabit sayıyı tekrar etmeyin. API ile izleyici bekleniyorsa
+`run_windows.bat` veya Compose kullanın; ikisi de izleyiciyi sağlık koşulu yapar.
+
 ## 0:00-1:30 - Amaç ve kapsam
 
 - Görev 1'in gönderim öncesi adres riskini, Görev 2'nin ise gönderim altyapısının blocklist durumunu izlediğini anlat.
@@ -33,6 +38,8 @@ python -m app.blocklist.cli --output outputs\blocklist-report.json
 ## 6:00-8:00 - Durum değişikliği bildirimi
 
 - İlk listelenmede `listed` bildirimi oluştuğunu anlat.
+- Gösterim veritabanında bu kayıt önceden kontrol edildiyse ilk komut da alarm
+  üretmeyebilir; geçmişi açıklayın veya ayrılmış demo veritabanı kullanın.
 - Aynı sonuç tekrarlandığında yeni bildirim üretilmediğini göster.
 - `samples/blocklist-notification-listed.json` ve `samples/blocklist-notification-delisted.json` dosyalarıyla giriş/çıkış örneğini göster.
 
@@ -52,6 +59,9 @@ python -m app.blocklist.report_cli --days 30
 ```
 
 - Toplam koşu/kontrol sayısı, sağlayıcı bulunabilirliği, olay sayıları ve güncel listelenmeleri göster.
+- `dns_mode` ayrımını ve DNS hatasından sonra `unresolved_listings` içinde
+  korunan son bilinen listelenmeyi göster. Repodaki 720 saatlik örneğin sabit
+  saatle üretilmiş simülasyon olduğunu, canlı işletim geçmişi olmadığını söyle.
 - Geçmişin varsayılan 90 gün tutulduğunu ve 30 günden kısa saklama ayarının reddedildiğini belirt.
 
 ## 12:00-14:00 - Test ve otomasyon
@@ -60,7 +70,11 @@ python -m app.blocklist.report_cli --days 30
 python -m pytest
 ```
 
-- 45 testin geçtiğini söyle.
+- Terminaldeki gerçek başarılı/atlanan test sayısını göster. Yerel MySQL
+  entegrasyon testleri atlandıysa nedenini ve CI'daki sonucunu ayrı belirt.
+- `evaluation/results.json` içinde 258 adres ve 7 liste senaryosunu göster;
+  `human_review` alanındaki tamamlanan/bekleyen etiketleri doğru biçimde anlat.
+- `outputs/evidence/mysql-benchmark.md` dosyasında gerçekten ölçülmüş süreyi göster.
 - GitHub Actions'ta Python 3.11/3.12 ile MySQL entegrasyonu, değerlendirme ve benchmark adımlarını göster.
 - DNS hatasının temiz cevap sayılmadığını ve durum geçişlerinin test edildiğini vurgula.
 
@@ -69,6 +83,8 @@ python -m pytest
 - Varsayılan modun kasıtlı olarak sahte DNS olduğunu belirt.
 - Gerçek sorguya geçiş için uygun resolver, sağlayıcı kullanım izni ve sorgu limitlerinin doğrulanması gerektiğini söyle.
 - Bildirimin şu anda JSON/MySQL olduğunu; gerekirse sonraki aşamada webhook/e-posta kanalı eklenebileceğini belirt.
+- Doğukan Bey'in yönlendirmesiyle Görev 1'i Sefa'nın çözümüyle karşılaştırın;
+  senin Görev 2 ve Sefa'nın Görev 3 çalışmasını ortak sunumda paylaşın.
 
 ## Demo sırasında sorun olursa
 

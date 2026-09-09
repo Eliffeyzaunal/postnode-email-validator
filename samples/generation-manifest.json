@@ -1,0 +1,14 @@
+{
+  "simulation": true,
+  "dns_mode": "fake",
+  "database_backend": "temporary SQLite",
+  "clock": "accelerated, fixed; not real monitoring history",
+  "hours_simulated": 720,
+  "real_customer_data": false,
+  "generated_by": "scripts/generate_blocklist_samples.py",
+  "files": [
+    "blocklist-30-day-report.json",
+    "blocklist-notification-listed.json",
+    "blocklist-notification-delisted.json"
+  ]
+}

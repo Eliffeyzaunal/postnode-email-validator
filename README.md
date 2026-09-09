@@ -46,7 +46,7 @@ cp .env.example .env              # Windows CMD: copy .env.example .env
 uvicorn app.main:app --reload
 ```
 
-Windows'ta hızlı başlatmak için `run_windows.bat` dosyasına çift tıklanabilir; Docker'daki MySQL'i, sanal ortamı, bağımlılıkları, saatlik blocklist izleyicisini, API'yi ve Swagger ekranını sırayla başlatır.
+Windows'ta hızlı başlatmak için `run_windows.bat` dosyasına çift tıklanabilir; Docker'daki MySQL'i, sanal ortamı, bağımlılıkları, saatlik blocklist izleyicisini, API'yi ve Swagger ekranını sırayla başlatır. Bu yol izleyiciyi de çalıştırdığı için `BLOCKLIST_MONITOR_REQUIRED=true` ayarını API'ye aktarır; başlamamış veya durmuş izleyici sağlık kontrolünü başarısız yapar.
 
 ## API
 
@@ -144,7 +144,7 @@ Sağlayıcı tanımları `config/blocklists.json`, örnek varlıklar `config/mon
 
 Zamanlayıcı her turun başlangıç, başarı ve hata zamanını kalıcı olarak kaydeder. Sonraki turun zamanı `BLOCKLIST_INTERVAL_SECONDS` ile hesaplanır; bu zaman `BLOCKLIST_MISSED_GRACE_SECONDS` kadar aşılırsa `/monitor/status` cevabı `missed` olur. Böylece süreç aniden çöktüğünde eski kalp atışı üzerinden gecikme fark edilir. Geçmiş varsayılan 90 gün tutulur; 30 günden daha kısa saklama ayarı kabul edilmez.
 
-30 günlük rapordaki `availability_rate`, ilgili sağlayıcı için başarılı `listed + not_listed` cevaplarının tüm kontrollere oranıdır. `query_error` ve `unavailable` cevapları başarılı kabul edilmez. Örnek teslim çıktısı `samples/blocklist-30-day-report.json` dosyasındadır.
+30 günlük rapordaki `availability_rate`, ilgili sağlayıcı için başarılı `listed + not_listed` cevaplarının tüm kontrollere oranıdır. `query_error` ve `unavailable` cevapları başarılı kabul edilmez. Örnek teslim çıktısı `samples/blocklist-30-day-report.json` dosyasındadır. Bu örnek hızlandırılmış 720 saatlik **simülasyondan** üretilir; gerçek 30 günlük işletim geçmişi değildir. Yeniden üretim ve kaynak bilgisi [`samples/README.md`](samples/README.md) dosyasındadır.
 
 ### DNS modu, eski kayıtlar ve sağlık kontrolü
 
@@ -273,11 +273,24 @@ python scripts/evaluate.py
 python scripts/benchmark.py
 ```
 
-`evaluation/evaluation.csv` 200 sentetik ve elle gözden geçirilmiş etiket içerir. Değerlendirme gerçek DNS değişimlerinden etkilenmemek için aynı dosyadaki sabit DNS durumlarını kullanır. Bu sonuç bir kural-kapsam kontrolüdür; gerçek müşteri doğruluğu iddiası değildir.
+`evaluation/evaluation.csv` içindeki 200 sentetik örnek ve `evaluation/edge-cases.json`
+ile toplam 258 adres ölçülür; ayrıca 7 liste senaryosu varsayılan eşiklerle çalışır.
+Etiketler taslaktır; yapılmış insan incelemesi varsayılmaz. İnceleyen kişi
+`evaluation/human-review.csv` dosyasına gerçek kararını, adını ve tarihini girer.
+`python scripts/evaluate.py --require-human-review` komutu en az 200 onaylanmış
+etiket ve çözümlenmemiş uyuşmazlık olmamasını denetler. Ayrıntılar
+[`evaluation/REVIEW.md`](evaluation/REVIEW.md) dosyasındadır. Sabit DNS kullanılır;
+taslak etiketlerle uyum, gerçek müşteri doğruluğu iddiası değildir.
 
 `benchmark/emails-10000.csv` tam 10.000 satırdır. Benchmark, üretimde kullanılan MySQL kayıt yoluyla hem boş DNS cache ile ilk koşuyu hem de dolu cache ile ikinci koşuyu ölçer. Ağ değişkenliğini ortadan kaldırmak için DNS cevabı sabittir; ilk koşuda dört tekil alan adı için dört sorgu, ikinci koşuda ise kalıcı cache sayesinde sıfır sorgu beklenir. İki koşuda toplam 20.000 sonuç satırının MySQL'e yazıldığı doğrulanır ve benchmark kendi oluşturduğu satırları bitişte temizler.
 
 GitHub Actions, her `main` push ve pull request işleminde Python 3.11 ve 3.12 üzerinde SQLite birim testlerini, gerçek MySQL 8.4 entegrasyon testini, değerlendirmeyi ve MySQL benchmark'ını otomatik çalıştırır.
+
+CI, ölçülmüş süreleri `delivery-evidence-python-*` adlı indirilebilir dosya
+paketlerinde saklar. Windows'ta `collect_delivery_evidence.bat` aynı ölçümleri
+yerel geliştirme MySQL'i üzerinde çalıştırıp `outputs/evidence/` klasörüne yazar.
+MySQL bulunmazsa işlem başarısız olur; SQLite sonucu MySQL ölçümü gibi sunulmaz.
+İnsan etiket incelemesinin tamamlanması CI başarısından ayrı bir teslim şartıdır.
 
 Kara liste testleri IP ters çevirme sorgusunu, SURBL bit maskesini, Spamhaus hata kodlarını, SORBS `unavailable` sonucunu, mükerrer bildirim engelini, `listed → not_listed` geçişini, canlı DNS hata ayrımını, zamanlayıcı kalp atışını, kaçırılan turu, 30 günlük raporu, API geçmişini ve MySQL kayıt yolunu kapsar.
 

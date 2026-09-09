@@ -1,0 +1,84 @@
+{
+  "dataset_size": 258,
+  "dns_mode": "static",
+  "data_origin": "synthetic",
+  "labels": "proposed; human review tracked separately",
+  "dataset_sha256": "dc4078a13fb14a610b36c1f4666c677e2f207b64bdecfe0180ded2006f9114ad",
+  "accuracy": 1.0,
+  "false_positive_rate_valid_to_invalid": 0.0,
+  "valid_examples": 99,
+  "false_invalid_examples": 0,
+  "confusion": {
+    "gecerli->gecerli": 99,
+    "gecersiz->gecersiz": 83,
+    "supheli->supheli": 76
+  },
+  "category_counts": {
+    "combined": 3,
+    "disposable": 3,
+    "dns": 4,
+    "domain": 8,
+    "false_positive": 4,
+    "legacy_generated": 200,
+    "length_boundary": 6,
+    "local_part": 11,
+    "normalization": 4,
+    "role": 5,
+    "syntax": 6,
+    "typo": 4
+  },
+  "failures": [],
+  "list_scenarios": [
+    {
+      "id": "duplicate",
+      "size": 2,
+      "correct": 2,
+      "passed": true
+    },
+    {
+      "id": "sequence-below-threshold",
+      "size": 4,
+      "correct": 4,
+      "passed": true
+    },
+    {
+      "id": "sequence-at-threshold",
+      "size": 5,
+      "correct": 5,
+      "passed": true
+    },
+    {
+      "id": "sparse-numbers",
+      "size": 5,
+      "correct": 5,
+      "passed": true
+    },
+    {
+      "id": "concentration-below-minimum",
+      "size": 99,
+      "correct": 99,
+      "passed": true
+    },
+    {
+      "id": "concentration-69-percent",
+      "size": 100,
+      "correct": 100,
+      "passed": true
+    },
+    {
+      "id": "concentration-70-percent",
+      "size": 100,
+      "correct": 100,
+      "passed": true
+    }
+  ],
+  "human_review": {
+    "confirmed": 0,
+    "pending": 258,
+    "disagreements": [],
+    "stale_reviews": [],
+    "minimum_required": 200,
+    "acceptance_met": false
+  },
+  "scope": "Address cases run individually; list scenarios use default production thresholds. No real DNS or customer data."
+}

@@ -1,12 +1,16 @@
 {
+  "id": "bd9a8c6a-81e3-57ba-bf1b-2d496087d82b",
+  "dns_mode": "fake",
+  "run_id": "0a7040ec-1db3-51b3-b240-073201e49a21",
   "type": "listed",
   "asset_id": "spamhaus-test-ip",
   "asset_type": "ip",
   "asset_value": "127.0.0.2",
-  "provider_id": "spamhaus_zen",
+  "provider_id": "spamcop",
   "previous_status": null,
   "current_status": "listed",
-  "first_detected_at": "2026-09-03T10:00:00Z",
-  "reason": "Spamhaus resmî pozitif test girdisi: SBL, XBL ve PBL",
-  "removal_url": "https://check.spamhaus.org/listed/?searchterm=127.0.0.2"
+  "first_detected_at": "2026-08-09T10:00:00Z",
+  "reason": "SpamCop resmi DNSBL test girdisi",
+  "removal_url": "https://www.spamcop.net/bl.shtml?127.0.0.2",
+  "created_at": "2026-08-09T10:00:00Z"
 }
