@@ -13,6 +13,7 @@ IP_RE = re.compile(r"(?<![\d.])(?:\d{1,3}\.){3}\d{1,3}(?![\d.])")
 LONG_ID_RE = re.compile(r"(?i)\b(?:[a-f0-9]{12,}|\d{6,})\b")
 WHITESPACE_RE = re.compile(r"\s+")
 HASH_RE = re.compile(r"(?i)^[a-f0-9]{64}$")
+SAFE_EVENT_ID_RE = re.compile(r"^[A-Za-z0-9._:-]{1,200}$")
 DOMAIN_LABEL_RE = re.compile(r"(?i)^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$")
 
 
@@ -36,9 +37,9 @@ def _keyed_digest(value: str, secret: str) -> str:
 
 def safe_event_id(value: str, secret: str) -> str:
     value = value.strip()
-    if "@" in value:
-        return "hmac-sha256:" + _keyed_digest(value, secret)
-    return value[:200]
+    if SAFE_EVENT_ID_RE.fullmatch(value):
+        return value
+    return "hmac-sha256:" + _keyed_digest(value, secret)
 
 
 def _safe_domain(value: str | None) -> str | None:

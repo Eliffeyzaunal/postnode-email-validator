@@ -37,6 +37,23 @@ class EventClassifier:
         self.rules_path = rules_path or PROJECT_ROOT / "config" / "bounce_rules.json"
         self.hash_secret = hash_secret
         self.rules = load_rules(self.rules_path)
+        self._validate_rule_examples()
+
+    def _validate_rule_examples(self) -> None:
+        """Kural dosyası değiştiğinde bozuk veya gölgelenmiş örnekleri erken yakalar."""
+        for rule in self.rules:
+            trigger = self.normalize(rule.trigger_example)
+            if not rule_matches(rule, trigger):
+                raise ValueError(f"Kural olumlu ornegi kendi kosuluyla eslesmiyor: {rule.rule_id}")
+            selected = next((item for item in self.rules if rule_matches(item, trigger)), None)
+            if selected is None or selected.rule_id != rule.rule_id:
+                selected_id = selected.rule_id if selected else "none"
+                raise ValueError(
+                    f"Kural olumlu ornegi daha oncelikli bir kuralla golgeleniyor: "
+                    f"{rule.rule_id} -> {selected_id}"
+                )
+            if rule_matches(rule, self.normalize(rule.counter_example)):
+                raise ValueError(f"Kural karsi ornegiyle de eslesiyor: {rule.rule_id}")
 
     @staticmethod
     def unwrap_sns(event: dict[str, Any]) -> dict[str, Any]:

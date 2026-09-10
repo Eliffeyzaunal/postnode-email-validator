@@ -42,6 +42,8 @@ def load_rules(path: Path) -> list[ClassificationRule]:
     payload = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict) or not isinstance(payload.get("rules"), list):
         raise ValueError("Kural dosyasinin kokunde bir rules listesi bulunmalidir.")
+    if payload.get("schema_version") != 1:
+        raise ValueError("Desteklenmeyen bounce kural semasi; schema_version 1 olmalidir.")
     rules: list[ClassificationRule] = []
     seen_ids: set[str] = set()
     seen_priorities: set[int] = set()

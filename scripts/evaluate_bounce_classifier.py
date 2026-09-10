@@ -3,6 +3,7 @@ import csv
 import json
 import sys
 from collections import Counter
+from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -59,6 +60,16 @@ def evaluate(dataset: Path, review: Path | None = None) -> tuple[dict, dict]:
         human_label = review_row.get("human_category", "").strip()
         if reviewed and not human_label:
             raise ValueError(f"Onaylı satırda human_category boş: {event_id}")
+        if reviewed and not review_row.get("reviewer", "").strip():
+            raise ValueError(f"Onaylı satırda reviewer boş: {event_id}")
+        if reviewed:
+            reviewed_at = review_row.get("reviewed_at", "").strip()
+            try:
+                date.fromisoformat(reviewed_at)
+            except ValueError as exc:
+                raise ValueError(
+                    f"Onaylı satırda reviewed_at ISO tarih değil: {event_id}"
+                ) from exc
         expected = human_label if reviewed and human_label else row["expected_category"]
         if reviewed and human_label:
             EventCategory(human_label)
@@ -189,7 +200,8 @@ def unknown_markdown(report: dict) -> str:
         "|---:|---|---:|",
     ]
     for index, item in enumerate(report["top_20_patterns"], 1):
-        lines.append(f"| {index} | `{item['pattern']}` | {item['count']} |")
+        pattern = item["pattern"].replace("\\", "\\\\").replace("|", "\\|").replace("`", "\\`")
+        lines.append(f"| {index} | `{pattern}` | {item['count']} |")
     lines.extend(["", "## Sonraki adım", "", report["next_step"], ""])
     return "\n".join(lines)
 

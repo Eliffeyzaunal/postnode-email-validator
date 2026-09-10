@@ -12,6 +12,9 @@ test senaryosunun taslak şartname etiketidir; insan etiketi değildir.
 4. `reviewer` ve ISO tarih biçimindeki `reviewed_at` alanlarını doldurun.
 5. Taslakla uyuşmuyorsa gerekçeyi `note` alanına yazın; taslağı körlemesine kopyalamayın.
 
+`confirmed` işaretlenen satırlarda insan etiketiyle birlikte inceleyen adı ve ISO
+tarihi zorunludur; değerlendirme komutu eksik veya hatalı alanları reddeder.
+
 Geçerli etiketler:
 
 `permanent_invalid_address`, `mailbox_full`, `temporary_server_error`,

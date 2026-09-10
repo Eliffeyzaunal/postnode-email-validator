@@ -7,6 +7,13 @@ from scripts.evaluate_bounce_classifier import evaluate
 from scripts.generate_bounce_evaluation import generate
 
 
+def write_reviews(path: Path, rows: list[dict], fieldnames: list[str]) -> None:
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
 def test_committed_bounce_dataset_is_deterministic_and_large_enough():
     path = PROJECT_ROOT / "evaluation" / "bounce-evaluation.jsonl"
     committed = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
@@ -49,11 +56,36 @@ def test_human_acceptance_uses_only_confirmed_labels(tmp_path: Path):
         row["reviewer"] = "Test Reviewer"
         row["reviewed_at"] = "2026-09-10"
     review = tmp_path / "review.csv"
-    with review.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(rows)
+    write_reviews(review, rows, fieldnames)
     metrics, _ = evaluate(PROJECT_ROOT / "evaluation" / "bounce-evaluation.jsonl", review)
     assert metrics["human_review"]["confirmed"] == 300
     assert metrics["human_review"]["accuracy"] == 1.0
     assert metrics["human_review"]["acceptance_met"] is True
+
+
+def test_confirmed_review_requires_reviewer_and_iso_date(tmp_path: Path):
+    source = PROJECT_ROOT / "evaluation" / "bounce-human-review.csv"
+    with source.open(encoding="utf-8", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+        fieldnames = list(rows[0])
+    rows[0]["human_category"] = rows[0]["proposed_category"]
+    rows[0]["review_status"] = "confirmed"
+    review = tmp_path / "review.csv"
+
+    write_reviews(review, rows, fieldnames)
+    try:
+        evaluate(PROJECT_ROOT / "evaluation" / "bounce-evaluation.jsonl", review)
+    except ValueError as exc:
+        assert "reviewer boş" in str(exc)
+    else:
+        raise AssertionError("Eksik reviewer kabul edilmemeliydi.")
+
+    rows[0]["reviewer"] = "Test Reviewer"
+    rows[0]["reviewed_at"] = "10/09/2026"
+    write_reviews(review, rows, fieldnames)
+    try:
+        evaluate(PROJECT_ROOT / "evaluation" / "bounce-evaluation.jsonl", review)
+    except ValueError as exc:
+        assert "ISO tarih değil" in str(exc)
+    else:
+        raise AssertionError("Geçersiz reviewed_at kabul edilmemeliydi.")
