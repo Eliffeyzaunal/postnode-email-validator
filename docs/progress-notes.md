@@ -38,7 +38,15 @@ Bu notlar, Git commitleri ile test ve benchmark çıktılarından doğrulanabile
 - Değerlendirme kümesindeki 258 sentetik adres Elif Feyza Ünal tarafından kontrol edildi; tüm taslak kararlar doğrulandı.
 - İnsan incelemesi kontrolü 258 onaylı, 0 bekleyen ve 0 uyuşmazlık sonucu ile başarıyla tamamlandı.
 - Python 3.11 ve 3.12 GitHub Actions işlerinde test, değerlendirme ve MySQL benchmark adımları başarılı oldu.
-- PR #2 birleştirmeye hazır duruma geldi; ana dala birleştirme işlemi bekliyor.
+- PR #2 testlerden geçerek ana dala birleştirildi.
+
+## Gün 5 - 10 Eylül 2026
+
+- Görev 4 için SES bounce ve şikâyet olaylarını dokuz ana kategoriye ayıran kural tabanlı kütüphane, CLI ve API uçları eklendi.
+- 20 sıralı kural; SES alanı, RFC 3463 kodu ve sağlayıcı tanı metni örüntülerini kaynak/aksiyon/güven bilgisiyle dış JSON dosyasında topladı.
+- Açık e-posta ve tanı metnini sonuçtan çıkaran gizlilik katmanı; güvenli bilinmeyen örüntüsü ve mesaj parmak izi eklendi.
+- 360 anonim sentetik olayla kategori ve kalıcı/geçici ayrım raporu üretildi; geçiciyi kalıcı sayma metriği ayrıca izlendi.
+- İnsan inceleme CSV'si hazırlandı; kabul için gereken en az 300 bağımsız onay henüz tamamlanmadığından sonuç taslak olarak işaretlendi.
 
 ## Sonraki kayıt şablonu
 

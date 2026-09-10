@@ -1,4 +1,4 @@
-# 15 Dakikalık Demo Planı
+# 20 Dakikalık Demo Planı
 
 ## Demo öncesi hazırlık
 
@@ -78,7 +78,19 @@ python -m pytest
 - GitHub Actions'ta Python 3.11/3.12 ile MySQL entegrasyonu, değerlendirme ve benchmark adımlarını göster.
 - DNS hatasının temiz cevap sayılmadığını ve durum geçişlerinin test edildiğini vurgula.
 
-## 14:00-15:00 - Sınırlamalar ve sonraki adım
+## 14:00-18:00 - Görev 4 sınıflandırması
+
+```bat
+python -m app.bounce_classifier.cli samples\ses-events-task4.jsonl --output outputs\bounce-classifications.jsonl --report outputs\bounce-summary.json
+python scripts\evaluate_bounce_classifier.py
+```
+
+- Kalıcı/geçici hata, blocklist, oran sınırı, otomatik yanıt ve şikâyet örneklerini göster.
+- `config/bounce_rules.json` içinde kaynak, öncelik, olumlu ve karşı örnek alanlarını aç.
+- Bilinmeyen oranını ve en sık güvenli örüntüleri göster; çıktıdaki açık adres/tanı metni olmadığını vurgula.
+- 360 sentetik etiketin taslak olduğunu ve 300 bağımsız insan onayı beklediğini açıkça belirt.
+
+## 18:00-20:00 - Sınırlamalar ve sonraki adım
 
 - Varsayılan modun kasıtlı olarak sahte DNS olduğunu belirt.
 - Gerçek sorguya geçiş için uygun resolver, sağlayıcı kullanım izni ve sorgu limitlerinin doğrulanması gerektiğini söyle.
