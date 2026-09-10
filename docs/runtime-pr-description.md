@@ -17,7 +17,8 @@ kaybolabiliyordu. Bu değişiklik bu davranışları düzeltir ve görev teslimi
 
 Yerel doğrulama: 76 test başarılı, 4 MySQL testi ortam eksikliğinden atlandı.
 MySQL entegrasyonu ve süre ölçümü bu PR'ın CI kontrolünde doğrulanmalı.
-İnsan etiket incelemesi henüz tamamlanmadı; otomatik sonuç insan onayı değildir.
+258 sentetik adresin tamamı Elif Feyza Ünal tarafından kontrol edildi; inceleme
+sonucu 258 onaylı, 0 bekleyen ve 0 uyuşmazlıktır.
 Windows başlatıcısı burada Windows üzerinde çalıştırılmadı; değişiklik metin düzeyinde kontrol edildi.
 
 Güncellemede API ve izleyiciyi birlikte yeni sürüme geçirin. Eski durumlardan

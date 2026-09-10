@@ -275,8 +275,9 @@ python scripts/benchmark.py
 
 `evaluation/evaluation.csv` içindeki 200 sentetik örnek ve `evaluation/edge-cases.json`
 ile toplam 258 adres ölçülür; ayrıca 7 liste senaryosu varsayılan eşiklerle çalışır.
-Etiketler taslaktır; yapılmış insan incelemesi varsayılmaz. İnceleyen kişi
-`evaluation/human-review.csv` dosyasına gerçek kararını, adını ve tarihini girer.
+Etiketler önce taslak olarak hazırlanmış, ardından 258 örneğin tamamı Elif Feyza
+Ünal tarafından 10 Eylül 2026 tarihinde kontrol edilerek `evaluation/human-review.csv`
+dosyasına kaydedilmiştir.
 `python scripts/evaluate.py --require-human-review` komutu en az 200 onaylanmış
 etiket ve çözümlenmemiş uyuşmazlık olmamasını denetler. Ayrıntılar
 [`evaluation/REVIEW.md`](evaluation/REVIEW.md) dosyasındadır. Sabit DNS kullanılır;
@@ -290,7 +291,7 @@ CI, ölçülmüş süreleri `delivery-evidence-python-*` adlı indirilebilir dos
 paketlerinde saklar. Windows'ta `collect_delivery_evidence.bat` aynı ölçümleri
 yerel geliştirme MySQL'i üzerinde çalıştırıp `outputs/evidence/` klasörüne yazar.
 MySQL bulunmazsa işlem başarısız olur; SQLite sonucu MySQL ölçümü gibi sunulmaz.
-İnsan etiket incelemesinin tamamlanması CI başarısından ayrı bir teslim şartıdır.
+İnsan etiket incelemesi ve CI sonuçları ayrı kanıtlar olarak raporlanır.
 
 Kara liste testleri IP ters çevirme sorgusunu, SURBL bit maskesini, Spamhaus hata kodlarını, SORBS `unavailable` sonucunu, mükerrer bildirim engelini, `listed → not_listed` geçişini, canlı DNS hata ayrımını, zamanlayıcı kalp atışını, kaçırılan turu, 30 günlük raporu, API geçmişini ve MySQL kayıt yolunu kapsar.
 

@@ -6,9 +6,9 @@ Bu ölçüm sentetik veri ve sabit DNS cevaplarıyla üretilmiştir. Gerçek mü
 - Taslak etiketlere göre doğruluk: %100.00
 - Geçerli → geçersiz: 0/99
 - Liste senaryoları: 7/7 başarılı
-- İnsan tarafından doğrulanmış etiket: 0
-- İnsan incelemesi bekleyen: 258
-- En az 200 insan onaylı etiket şartı: henüz sağlanmadı
+- İnsan tarafından doğrulanmış etiket: 258
+- İnsan incelemesi bekleyen: 0
+- En az 200 insan onaylı etiket şartı: sağlandı
 
 Eski 200 üretilmiş örneğe farklı yazım, normalizasyon, DNS, rol, disposable ve uzunluk sınırı örnekleri eklenmiştir.
 Adresler tek tek ölçülür; yinelenme, ardışık üretim ve yoğunluk senaryoları ayrıca varsayılan eşiklerle ölçülür.

@@ -31,6 +31,12 @@ python scripts/evaluate.py --require-human-review --output evaluation/results.js
 ayrıca başarısız/bekliyor kalır. CI teknik davranışı ölçer, insan onayı uydurmaz.
 Taslaklara göre %100 sonuç, gerçek dünya veya bağımsız veri doğruluğu değildir.
 
+## Tamamlanma kaydı
+
+258 örneğin tamamı Elif Feyza Ünal tarafından 10 Eylül 2026 tarihinde kontrol
+edilmiş ve taslak kararlarla uyuştuğu kaydedilmiştir. Sonuç: 258 onaylı, 0
+bekleyen, 0 uyuşmazlık.
+
 Adres örnekleri tek başına çalıştırılır. Liste bağlamına bağlı yinelenme, ardışık
 üretim ve alan adı yoğunluğu kuralları ayrı senaryolarda kontrol edilir. Destek
 kapsamı dışındaki SMTPUTF8/Unicode yerel bölüm ve tırnaklı adres biçimleri bu

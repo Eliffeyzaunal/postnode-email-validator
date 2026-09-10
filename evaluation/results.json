@@ -73,12 +73,12 @@
     }
   ],
   "human_review": {
-    "confirmed": 0,
-    "pending": 258,
+    "confirmed": 258,
+    "pending": 0,
     "disagreements": [],
     "stale_reviews": [],
     "minimum_required": 200,
-    "acceptance_met": false
+    "acceptance_met": true
   },
   "scope": "Address cases run individually; list scenarios use default production thresholds. No real DNS or customer data."
 }

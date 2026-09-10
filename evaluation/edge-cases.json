@@ -1,5 +1,5 @@
 {
-  "description": "Sentetik adresler; etiketler taslak beklentidir, insan incelemesi bekler. DNS değerleri simülasyondur.",
+  "description": "Sentetik adresler; taslak etiketler insan incelemesiyle doğrulanmıştır. DNS değerleri simülasyondur.",
   "cases": [
     {"id":"valid-plus","email":"person+news@example.com","dns_state":"mx","expected_status":"gecerli","reason":"VALID","category":"local_part","rationale":"Artı etiketli yerel bölüm desteklenir."},
     {"id":"valid-hyphen","email":"first-last@example.com","dns_state":"mx","expected_status":"gecerli","reason":"VALID","category":"local_part","rationale":"Yerel bölümde tire desteklenir."},
