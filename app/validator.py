@@ -6,6 +6,7 @@ from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+from app.address_rules import is_disposable_domain, is_role_account, suggest_domain_typo
 from app.config import Settings
 from app.dns_checker import DNSChecker, DNSLookup
 from app.models import DNSState, InternalResult, Status
@@ -45,9 +46,11 @@ class EmailValidatorService:
         )
         self.disposable_domains = _read_lines(settings.disposable_domains_path)
         self.role_accounts = _read_lines(settings.role_accounts_path)
+        self.role_variant_suffixes = _read_lines(settings.role_variant_suffixes_path)
         self.domain_typos: dict[str, str] = json.loads(
             settings.domain_typos_path.read_text(encoding="utf-8")
         )
+        self.popular_email_domains = _read_lines(settings.popular_email_domains_path)
 
     def validate_many(
         self, emails: list[str], filename: str | None = None, persist: bool = True
@@ -62,7 +65,7 @@ class EmailValidatorService:
         unique_domains: set[str] = set()
 
         for row_number, raw in enumerate(emails, start=1):
-            syntax = validate_syntax(raw)
+            syntax = validate_syntax(raw, allow_smtputf8=self.settings.allow_smtputf8)
             if not syntax.valid:
                 results.append(
                     InternalResult(
@@ -78,6 +81,8 @@ class EmailValidatorService:
                     Status.VALID, []
                 )
             )
+            if syntax.requires_smtputf8:
+                results[-1].reason_codes.append(ReasonCode.SMTPUTF8_REQUIRED)
 
         dns_results = self._lookup_domains(unique_domains)
         self._apply_address_rules(results, dns_results)
@@ -117,12 +122,16 @@ class EmailValidatorService:
             elif dns_result.state == DNSState.ERROR:
                 item.reason_codes.append(ReasonCode.DNS_LOOKUP_ERROR)
 
-            if item.domain in self.disposable_domains:
+            if is_disposable_domain(item.domain, self.disposable_domains):
                 item.reason_codes.append(ReasonCode.DISPOSABLE_DOMAIN)
-            if item.local_part.casefold() in self.role_accounts:
+            if is_role_account(
+                item.local_part, self.role_accounts, self.role_variant_suffixes
+            ):
                 item.reason_codes.append(ReasonCode.ROLE_ACCOUNT)
-            if item.domain in self.domain_typos:
-                replacement = self.domain_typos[item.domain]
+            replacement = suggest_domain_typo(
+                item.domain, self.domain_typos, self.popular_email_domains
+            )
+            if replacement:
                 item.reason_codes.append(ReasonCode.DOMAIN_TYPO)
                 item.suggestion = f"{item.local_part}@{replacement}"
 

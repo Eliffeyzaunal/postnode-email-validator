@@ -1,0 +1,16 @@
+# Explicitly reviewed suffixes for role mailbox variants.
+auto
+automated
+bot
+case
+de
+eu
+fr
+mail
+notification
+notifications
+ticket
+tickets
+tr
+uk
+us

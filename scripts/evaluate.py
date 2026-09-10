@@ -19,6 +19,51 @@ from app.repository import Repository
 from app.validator import EmailValidatorService
 
 
+LABELS = tuple(status.value for status in Status)
+
+
+def classification_metrics(observations: list[tuple[str, str]], categories: list[str]) -> dict:
+    confusion = Counter(observations)
+    per_class = {}
+    for label in LABELS:
+        true_positive = confusion[(label, label)]
+        predicted_total = sum(confusion[(expected, label)] for expected in LABELS)
+        expected_total = sum(confusion[(label, actual)] for actual in LABELS)
+        precision = true_positive / predicted_total if predicted_total else 0.0
+        recall = true_positive / expected_total if expected_total else 0.0
+        f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
+        per_class[label] = {
+            "precision": round(precision, 4),
+            "recall": round(recall, 4),
+            "f1": round(f1, 4),
+            "support": expected_total,
+        }
+    category_totals = Counter(categories)
+    category_correct = Counter(
+        category for (expected, actual), category in zip(observations, categories, strict=True)
+        if expected == actual
+    )
+    return {
+        "per_class": per_class,
+        "macro_average": {
+            metric: round(sum(values[metric] for values in per_class.values()) / len(per_class), 4)
+            for metric in ("precision", "recall", "f1")
+        },
+        "confusion_matrix": {
+            expected: {actual: confusion[(expected, actual)] for actual in LABELS}
+            for expected in LABELS
+        },
+        "category_success": {
+            category: {
+                "correct": category_correct[category],
+                "total": total,
+                "accuracy": round(category_correct[category] / total, 4),
+            }
+            for category, total in sorted(category_totals.items())
+        },
+    }
+
+
 def load_cases() -> list[dict]:
     with (ROOT / "evaluation/evaluation.csv").open(encoding="utf-8", newline="") as stream:
         cases = [dict(row, id=f"core-{index:03d}", category="legacy_generated",
@@ -107,7 +152,7 @@ def list_scenarios() -> list[tuple[str, list[str], list[str], str | None]]:
 
 
 def evaluate(cases: list[dict], review_path: Path) -> dict:
-    observations, failures, batch_reports = [], [], []
+    observations, categories, failures, batch_reports = [], [], [], []
     with TemporaryDirectory(prefix="postnode-evaluation-") as directory:
         settings = Settings(_env_file=None, database_url=f"sqlite:///{Path(directory) / 'evaluation.db'}")
         repository = Repository(settings.database_url, settings.email_hash_secret)
@@ -123,6 +168,7 @@ def evaluate(cases: list[dict], review_path: Path) -> dict:
                 service = EmailValidatorService(settings, repository, StaticDNSChecker(states, default=DNSState.ERROR))
                 _, _, actual = service.validate_one(case["email"], persist=False)
                 observations.append((case["expected_status"], actual.status.value))
+                categories.append(case["category"])
                 expected_reason = case.get("reason")
                 if actual.status.value != case["expected_status"] or (
                     expected_reason and expected_reason not in actual.reason_codes
@@ -141,14 +187,21 @@ def evaluate(cases: list[dict], review_path: Path) -> dict:
     confusion = Counter(observations)
     valid_total = sum(wanted == "gecerli" for wanted, _ in observations)
     false_invalid = confusion[("gecerli", "gecersiz")]
+    false_nonvalid = sum(
+        count for (wanted, actual), count in confusion.items()
+        if wanted == "gecerli" and actual != "gecerli"
+    )
+    metrics = classification_metrics(observations, categories)
     return {
         "dataset_size": len(cases), "dns_mode": "static", "data_origin": "synthetic",
         "labels": "proposed; human review tracked separately",
         "dataset_sha256": hashlib.sha256("".join(case_digest(case) for case in cases).encode()).hexdigest(),
         "accuracy": round(sum(wanted == actual for wanted, actual in observations) / len(cases), 4),
         "false_positive_rate_valid_to_invalid": round(false_invalid / valid_total, 4) if valid_total else None,
+        "false_positive_rate_valid_to_nonvalid": round(false_nonvalid / valid_total, 4) if valid_total else None,
         "valid_examples": valid_total, "false_invalid_examples": false_invalid,
         "confusion": {f"{wanted}->{actual}": count for (wanted, actual), count in sorted(confusion.items())},
+        **metrics,
         "category_counts": dict(sorted(Counter(case["category"] for case in cases).items())),
         "failures": failures, "list_scenarios": batch_reports,
         "human_review": review_summary(cases, review_path),
@@ -157,19 +210,47 @@ def evaluate(cases: list[dict], review_path: Path) -> dict:
 
 
 def write_markdown(report: dict, path: Path) -> None:
+    class_rows = [
+        f"| `{label}` | %{values['precision'] * 100:.2f} | %{values['recall'] * 100:.2f} | %{values['f1'] * 100:.2f} | {values['support']} |"
+        for label, values in report["per_class"].items()
+    ]
+    category_rows = [
+        f"| `{category}` | {values['correct']}/{values['total']} | %{values['accuracy'] * 100:.2f} |"
+        for category, values in report["category_success"].items()
+    ]
+    matrix = report["confusion_matrix"]
     text = "\n".join([
         "# Değerlendirme Raporu", "",
         "Bu ölçüm sentetik veri ve sabit DNS cevaplarıyla üretilmiştir. Gerçek müşteri doğruluğu iddiası değildir.", "",
         f"- Adres örneği: {report['dataset_size']}",
         f"- Taslak etiketlere göre doğruluk: %{report['accuracy'] * 100:.2f}",
+        f"- Macro precision: %{report['macro_average']['precision'] * 100:.2f}",
+        f"- Macro recall: %{report['macro_average']['recall'] * 100:.2f}",
+        f"- Macro F1: %{report['macro_average']['f1'] * 100:.2f}",
         f"- Geçerli → geçersiz: {report['false_invalid_examples']}/{report['valid_examples']}",
+        f"- Geçerli → geçersiz yanlış pozitif oranı: %{report['false_positive_rate_valid_to_invalid'] * 100:.2f}",
         f"- Liste senaryoları: {sum(item['passed'] for item in report['list_scenarios'])}/{len(report['list_scenarios'])} başarılı",
         f"- İnsan tarafından doğrulanmış etiket: {report['human_review']['confirmed']}",
         f"- İnsan incelemesi bekleyen: {report['human_review']['pending']}",
         f"- En az 200 insan onaylı etiket şartı: {'sağlandı' if report['human_review']['acceptance_met'] else 'henüz sağlanmadı'}", "",
+        "## Sınıf metrikleri", "",
+        "| Sınıf | Precision | Recall | F1 | Destek |",
+        "|---|---:|---:|---:|---:|",
+        *class_rows, "",
+        "## Confusion matrix", "",
+        "| Beklenen \\ Üretilen | `gecerli` | `supheli` | `gecersiz` |",
+        "|---|---:|---:|---:|",
+        *[
+            f"| `{expected}` | {matrix[expected]['gecerli']} | {matrix[expected]['supheli']} | {matrix[expected]['gecersiz']} |"
+            for expected in LABELS
+        ], "",
+        "## Kategori bazlı başarı", "",
+        "| Kategori | Doğru/Toplam | Başarı |",
+        "|---|---:|---:|",
+        *category_rows, "",
         "Eski 200 üretilmiş örneğe farklı yazım, normalizasyon, DNS, rol, disposable ve uzunluk sınırı örnekleri eklenmiştir.",
         "Adresler tek tek ölçülür; yinelenme, ardışık üretim ve yoğunluk senaryoları ayrıca varsayılan eşiklerle ölçülür.",
-        "Unicode/SMTPUTF8 yerel bölüm ve tırnaklı posta kutusu gibi destek kapsamı dışındaki biçimler bu ölçüme dahil değildir.", "",
+        "SMTPUTF8 yerel bölüm desteği ayrıca birim testlerle doğrulanır; bu 258 satırlık ölçüme dahil değildir. Tırnaklı posta kutusu/dot-atom dışı biçimler destek kapsamı dışındadır.", "",
         "İnsan incelemesi: `evaluation/human-review.csv` içindeki reviewed_status, reviewer ve reviewed_at alanlarını gerçek inceleyen doldurur.",
         "Çelişen veya değişmiş örneğe ait incelemeler otomatik onay sayılmaz. Ayrıntılar `evaluation/results.json` dosyasındadır.", "",
         "Yeniden üretim: `python scripts/evaluate.py --output evaluation/results.json --markdown evaluation/report.md`", "",

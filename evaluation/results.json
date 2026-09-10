@@ -6,12 +6,117 @@
   "dataset_sha256": "dc4078a13fb14a610b36c1f4666c677e2f207b64bdecfe0180ded2006f9114ad",
   "accuracy": 1.0,
   "false_positive_rate_valid_to_invalid": 0.0,
+  "false_positive_rate_valid_to_nonvalid": 0.0,
   "valid_examples": 99,
   "false_invalid_examples": 0,
   "confusion": {
     "gecerli->gecerli": 99,
     "gecersiz->gecersiz": 83,
     "supheli->supheli": 76
+  },
+  "per_class": {
+    "gecerli": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 99
+    },
+    "supheli": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 76
+    },
+    "gecersiz": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 83
+    }
+  },
+  "macro_average": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+  },
+  "confusion_matrix": {
+    "gecerli": {
+      "gecerli": 99,
+      "supheli": 0,
+      "gecersiz": 0
+    },
+    "supheli": {
+      "gecerli": 0,
+      "supheli": 76,
+      "gecersiz": 0
+    },
+    "gecersiz": {
+      "gecerli": 0,
+      "supheli": 0,
+      "gecersiz": 83
+    }
+  },
+  "category_success": {
+    "combined": {
+      "correct": 3,
+      "total": 3,
+      "accuracy": 1.0
+    },
+    "disposable": {
+      "correct": 3,
+      "total": 3,
+      "accuracy": 1.0
+    },
+    "dns": {
+      "correct": 4,
+      "total": 4,
+      "accuracy": 1.0
+    },
+    "domain": {
+      "correct": 8,
+      "total": 8,
+      "accuracy": 1.0
+    },
+    "false_positive": {
+      "correct": 4,
+      "total": 4,
+      "accuracy": 1.0
+    },
+    "legacy_generated": {
+      "correct": 200,
+      "total": 200,
+      "accuracy": 1.0
+    },
+    "length_boundary": {
+      "correct": 6,
+      "total": 6,
+      "accuracy": 1.0
+    },
+    "local_part": {
+      "correct": 11,
+      "total": 11,
+      "accuracy": 1.0
+    },
+    "normalization": {
+      "correct": 4,
+      "total": 4,
+      "accuracy": 1.0
+    },
+    "role": {
+      "correct": 5,
+      "total": 5,
+      "accuracy": 1.0
+    },
+    "syntax": {
+      "correct": 6,
+      "total": 6,
+      "accuracy": 1.0
+    },
+    "typo": {
+      "correct": 4,
+      "total": 4,
+      "accuracy": 1.0
+    }
   },
   "category_counts": {
     "combined": 3,

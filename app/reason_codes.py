@@ -9,6 +9,7 @@ class ReasonCode(StrEnum):
     LOCAL_PART_TOO_LONG = "LOCAL_PART_TOO_LONG"
     INVALID_LOCAL_PART = "INVALID_LOCAL_PART"
     INVALID_DOMAIN = "INVALID_DOMAIN"
+    SMTPUTF8_REQUIRED = "SMTPUTF8_REQUIRED"
     DOMAIN_NXDOMAIN = "DOMAIN_NXDOMAIN"
     DOMAIN_NO_MAIL_HOST = "DOMAIN_NO_MAIL_HOST"
     DOMAIN_A_FALLBACK = "DOMAIN_A_FALLBACK"
@@ -29,6 +30,7 @@ REASON_DESCRIPTIONS: dict[ReasonCode, str] = {
     ReasonCode.LOCAL_PART_TOO_LONG: "@ işaretinden önceki bölüm 64 karakteri aşıyor.",
     ReasonCode.INVALID_LOCAL_PART: "Yerel bölümde geçersiz karakter veya nokta kullanımı var.",
     ReasonCode.INVALID_DOMAIN: "Alan adı geçerli etiket ve uzunluk kurallarına uymuyor.",
+    ReasonCode.SMTPUTF8_REQUIRED: "Unicode yerel bölüm geçerli; gönderim sunucusunun SMTPUTF8 desteği doğrulanmalıdır.",
     ReasonCode.DOMAIN_NXDOMAIN: "Alan adı DNS'te bulunamadı.",
     ReasonCode.DOMAIN_NO_MAIL_HOST: "Alan adında MX, A veya AAAA kaydı bulunamadı.",
     ReasonCode.DOMAIN_A_FALLBACK: "MX yok; RFC uyumlu A/AAAA geri dönüşü bulundu ve adres şüpheli sayıldı.",
@@ -40,4 +42,3 @@ REASON_DESCRIPTIONS: dict[ReasonCode, str] = {
     ReasonCode.GENERATED_SEQUENCE: "Yerel bölüm aynı kökten türetilmiş ardışık sayı örüntüsüne dahil.",
     ReasonCode.DOMAIN_CONCENTRATION: "Bir alan adının listedeki oranı yapılandırılmış anomali eşiğini aşıyor.",
 }
-

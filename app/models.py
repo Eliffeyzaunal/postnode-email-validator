@@ -49,6 +49,11 @@ class BatchRequest(BaseModel):
     emails: list[str] = Field(min_length=1, max_length=10_000)
 
 
+class ReasonDetail(BaseModel):
+    code: ReasonCode
+    description: str
+
+
 class ResultResponse(BaseModel):
     row_number: int
     masked_email: str
@@ -56,6 +61,7 @@ class ResultResponse(BaseModel):
     domain: str | None
     status: Status
     reason_codes: list[ReasonCode]
+    reason_details: list[ReasonDetail]
     suggestion: str | None = None
 
 
@@ -81,4 +87,3 @@ class BatchMetadataResponse(BaseModel):
     filename: str | None
     created_at: str
     summary: dict[str, Any]
-
