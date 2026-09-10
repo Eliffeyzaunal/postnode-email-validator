@@ -52,6 +52,20 @@ blocklist_runs = Table(
     mysql_charset="utf8mb4",
 )
 
+# Additive storage: an unmapped pre-upgrade run has unknown (legacy) provenance.
+# Never infer its DNS mode from the current process configuration.
+blocklist_run_modes = Table(
+    "blocklist_run_modes",
+    metadata,
+    Column(
+        "run_id", String(36),
+        ForeignKey("blocklist_runs.id", ondelete="CASCADE"), primary_key=True,
+    ),
+    Column("dns_mode", String(16), nullable=False, index=True),
+    mysql_engine="InnoDB",
+    mysql_charset="utf8mb4",
+)
+
 blocklist_results = Table(
     "blocklist_results",
     metadata,
@@ -101,6 +115,15 @@ blocklist_states = Table(
     Column("removal_url", String(1024)),
     mysql_engine="InnoDB",
     mysql_charset="utf8mb4",
+)
+
+# Preserve the original states as a read-only legacy snapshot. New transitions
+# have a composite key including DNS mode, without rebuilding existing tables.
+blocklist_scoped_states = blocklist_states.to_metadata(
+    metadata, name="blocklist_scoped_states"
+)
+blocklist_scoped_states.append_column(
+    Column("dns_mode", String(16), primary_key=True)
 )
 
 blocklist_write_locks = Table(
@@ -185,7 +208,10 @@ def _aware_utc(value: datetime | None) -> datetime | None:
 
 
 class BlocklistRepository:
-    def __init__(self, database_url: str):
+    def __init__(self, database_url: str, *, dns_mode: str = "fake"):
+        if dns_mode not in {"fake", "live"}:
+            raise ValueError("DNS modu fake veya live olmalıdır.")
+        self.dns_mode = dns_mode
         self.database_url = database_url
         self.engine = create_engine(
             database_url,
@@ -211,6 +237,23 @@ class BlocklistRepository:
     def ping(self) -> None:
         with self.engine.connect() as connection:
             connection.execute(select(1))
+
+    def _run_mode_filter(self, dns_mode: str | None = None):
+        mode = dns_mode or self.dns_mode
+        if mode == "legacy":
+            return blocklist_runs.c.id.not_in(select(blocklist_run_modes.c.run_id))
+        if mode not in {"fake", "live"}:
+            raise ValueError("DNS modu fake, live veya legacy olmalıdır.")
+        return blocklist_runs.c.id.in_(
+            select(blocklist_run_modes.c.run_id).where(blocklist_run_modes.c.dns_mode == mode)
+        )
+
+    def _monitor_key(self, name: str, dns_mode: str | None = None) -> str:
+        mode = dns_mode or self.dns_mode
+        key = name if mode == "legacy" else f"{mode}:{name}"
+        if len(key) > 100:
+            raise ValueError("İzleyici adı DNS modu dahil en fazla 100 karakter olabilir.")
+        return key
 
     def _acquire_state_write_lock(self, connection, checked_at: datetime) -> None:
         values = {
@@ -254,12 +297,16 @@ class BlocklistRepository:
                     total_checks=len(results),
                 )
             )
+            connection.execute(
+                insert(blocklist_run_modes).values(run_id=run_id, dns_mode=self.dns_mode)
+            )
 
             for result in results:
                 previous = connection.execute(
-                    select(blocklist_states).where(
-                        blocklist_states.c.asset_id == result.asset_id,
-                        blocklist_states.c.provider_id == result.provider_id,
+                    select(blocklist_scoped_states).where(
+                        blocklist_scoped_states.c.dns_mode == self.dns_mode,
+                        blocklist_scoped_states.c.asset_id == result.asset_id,
+                        blocklist_scoped_states.c.provider_id == result.provider_id,
                     )
                 ).mappings().first()
                 if previous is not None and (
@@ -337,7 +384,8 @@ class BlocklistRepository:
                 }
                 if previous is None:
                     connection.execute(
-                        insert(blocklist_states).values(
+                        insert(blocklist_scoped_states).values(
+                            dns_mode=self.dns_mode,
                             asset_id=result.asset_id,
                             provider_id=result.provider_id,
                             **state_values,
@@ -345,10 +393,11 @@ class BlocklistRepository:
                     )
                 else:
                     connection.execute(
-                        update(blocklist_states)
+                        update(blocklist_scoped_states)
                         .where(
-                            blocklist_states.c.asset_id == result.asset_id,
-                            blocklist_states.c.provider_id == result.provider_id,
+                            blocklist_scoped_states.c.dns_mode == self.dns_mode,
+                            blocklist_scoped_states.c.asset_id == result.asset_id,
+                            blocklist_scoped_states.c.provider_id == result.provider_id,
                         )
                         .values(**state_values)
                     )
@@ -371,6 +420,7 @@ class BlocklistRepository:
                             notification_reason = previous["reason"]
                     notification = BlocklistNotification(
                         id=str(uuid.uuid4()),
+                        dns_mode=self.dns_mode,
                         run_id=run_id,
                         type=event_type,
                         asset_id=result.asset_id,
@@ -453,7 +503,9 @@ class BlocklistRepository:
     def get_run(self, run_id: str) -> dict[str, Any] | None:
         with self.engine.connect() as connection:
             run = connection.execute(
-                select(blocklist_runs).where(blocklist_runs.c.id == run_id)
+                select(blocklist_runs, blocklist_run_modes.c.dns_mode)
+                .outerjoin(blocklist_run_modes)
+                .where(blocklist_runs.c.id == run_id)
             ).mappings().first()
             if run is None:
                 return None
@@ -464,6 +516,7 @@ class BlocklistRepository:
             ).mappings().all()
         return {
             "run_id": run["id"],
+            "dns_mode": run["dns_mode"] or "legacy",
             "source_filename": run["source_filename"],
             "status": run["status"],
             "started_at": _aware_utc(run["started_at"]).isoformat(),
@@ -475,11 +528,18 @@ class BlocklistRepository:
     def get_notifications(self, run_id: str) -> list[dict[str, Any]]:
         with self.engine.connect() as connection:
             rows = connection.execute(
-                select(blocklist_notifications)
+                select(blocklist_notifications, blocklist_run_modes.c.dns_mode)
+                .outerjoin(
+                    blocklist_run_modes,
+                    blocklist_notifications.c.run_id == blocklist_run_modes.c.run_id,
+                )
                 .where(blocklist_notifications.c.run_id == run_id)
                 .order_by(blocklist_notifications.c.created_at)
             ).mappings().all()
-        return [dict(row["payload_json"]) for row in rows]
+        return [
+            dict(row["payload_json"], dns_mode=row["dns_mode"] or "legacy")
+            for row in rows
+        ]
 
     @staticmethod
     def _result_dict(row: Any) -> dict[str, Any]:
@@ -508,7 +568,10 @@ class BlocklistRepository:
             return
         with self.engine.begin() as connection:
             connection.execute(
-                delete(blocklist_states).where(blocklist_states.c.asset_id.in_(asset_ids))
+                delete(blocklist_scoped_states).where(
+                    blocklist_scoped_states.c.dns_mode == self.dns_mode,
+                    blocklist_scoped_states.c.asset_id.in_(asset_ids),
+                )
             )
 
     def mark_monitor_started(
@@ -601,6 +664,7 @@ class BlocklistRepository:
         detail: str | None = None,
     ) -> None:
         now_db = _naive_utc(now)
+        name = self._monitor_key(name)
         with self.engine.begin() as connection:
             previous = connection.execute(
                 select(blocklist_monitor_status).where(
@@ -649,17 +713,20 @@ class BlocklistRepository:
         interval_seconds: int,
         grace_seconds: int,
         now: datetime | None = None,
+        *,
+        dns_mode: str | None = None,
     ) -> MonitorHealth:
         now = now or datetime.now(UTC)
         with self.engine.connect() as connection:
             row = connection.execute(
                 select(blocklist_monitor_status).where(
-                    blocklist_monitor_status.c.name == name
+                    blocklist_monitor_status.c.name == self._monitor_key(name, dns_mode)
                 )
             ).mappings().first()
         if row is None:
             return MonitorHealth(
                 name=name,
+                dns_mode=dns_mode or self.dns_mode,
                 status="not_started",
                 interval_seconds=interval_seconds,
                 missed=True,
@@ -673,6 +740,7 @@ class BlocklistRepository:
         )
         return MonitorHealth(
             name=name,
+            dns_mode=dns_mode or self.dns_mode,
             status="missed" if missed else row["status"],
             interval_seconds=row["interval_seconds"],
             last_started_at=_aware_utc(row["last_started_at"]),
@@ -691,14 +759,20 @@ class BlocklistRepository:
         interval_seconds: int,
         grace_seconds: int,
         now: datetime | None = None,
+        *,
+        dns_mode: str | None = None,
     ) -> BlocklistHistoryReport:
         now = now or datetime.now(UTC)
         start = now - timedelta(days=days)
         start_db = _naive_utc(start)
         end_db = _naive_utc(now + timedelta(seconds=1))
+        mode = dns_mode or self.dns_mode
+        mode_filter = self._run_mode_filter(mode)
+        mode_run_ids = select(blocklist_runs.c.id).where(mode_filter)
         with self.engine.connect() as connection:
             runs = connection.execute(
                 select(blocklist_runs.c.id).where(
+                    mode_filter,
                     blocklist_runs.c.completed_at >= start_db,
                     blocklist_runs.c.completed_at <= end_db,
                 )
@@ -708,21 +782,25 @@ class BlocklistRepository:
                     blocklist_results.c.provider_id,
                     blocklist_results.c.status,
                 ).where(
+                    blocklist_results.c.run_id.in_(mode_run_ids),
                     blocklist_results.c.checked_at >= start_db,
                     blocklist_results.c.checked_at <= end_db,
                 )
             ).mappings().all()
             notification_rows = connection.execute(
                 select(blocklist_notifications.c.event_type).where(
+                    blocklist_notifications.c.run_id.in_(mode_run_ids),
                     blocklist_notifications.c.created_at >= start_db,
                     blocklist_notifications.c.created_at <= end_db,
                 )
             ).mappings().all()
-            current_rows = connection.execute(
-                select(blocklist_states).where(
-                    blocklist_states.c.status == CheckStatus.LISTED.value
-                )
-            ).mappings().all()
+            state_table = blocklist_states if mode == "legacy" else blocklist_scoped_states
+            state_query = select(state_table).where(
+                state_table.c.first_detected_at.is_not(None)
+            )
+            if mode != "legacy":
+                state_query = state_query.where(state_table.c.dns_mode == mode)
+            current_rows = connection.execute(state_query).mappings().all()
 
         by_provider: dict[str, Counter] = defaultdict(Counter)
         for row in result_rows:
@@ -743,12 +821,15 @@ class BlocklistRepository:
                 )
             )
         event_counts = Counter(row["event_type"] for row in notification_rows)
-        current_listings = [
+        known_listings = [
             {
                 "asset_id": row["asset_id"],
                 "asset_type": row["asset_type"],
                 "asset_value": row["asset_value"],
                 "provider_id": row["provider_id"],
+                "status": row["status"],
+                "last_known_status": CheckStatus.LISTED.value,
+                "last_checked_at": _aware_utc(row["last_checked_at"]).isoformat(),
                 "first_detected_at": (
                     _aware_utc(row["first_detected_at"]).isoformat()
                     if row["first_detected_at"]
@@ -760,6 +841,7 @@ class BlocklistRepository:
             for row in current_rows
         ]
         return BlocklistHistoryReport(
+            dns_mode=mode,
             days=days,
             period_start=start,
             period_end=now,
@@ -770,12 +852,18 @@ class BlocklistRepository:
             delisted_events=event_counts[NotificationType.DELISTED.value],
             query_error_events=event_counts[NotificationType.QUERY_ERROR.value],
             providers=providers,
-            current_listings=current_listings,
+            current_listings=[
+                row for row in known_listings if row["status"] == CheckStatus.LISTED.value
+            ],
+            unresolved_listings=[
+                row for row in known_listings if row["status"] != CheckStatus.LISTED.value
+            ],
             monitor=self.get_monitor_health(
                 monitor_name,
                 interval_seconds,
                 grace_seconds,
                 now,
+                dns_mode=mode,
             ),
         )
 
@@ -783,16 +871,20 @@ class BlocklistRepository:
         cutoff_db = _naive_utc(cutoff)
         with self.engine.begin() as connection:
             connection.execute(
-                delete(blocklist_runs).where(blocklist_runs.c.completed_at < cutoff_db)
+                delete(blocklist_runs).where(
+                    self._run_mode_filter(),
+                    blocklist_runs.c.completed_at < cutoff_db,
+                )
             )
             connection.execute(
                 delete(blocklist_monitor_events).where(
-                    blocklist_monitor_events.c.monitor_name == monitor_name,
+                    blocklist_monitor_events.c.monitor_name == self._monitor_key(monitor_name),
                     blocklist_monitor_events.c.occurred_at < cutoff_db,
                 )
             )
 
     def delete_monitor(self, name: str) -> None:
+        name = self._monitor_key(name)
         with self.engine.begin() as connection:
             connection.execute(
                 delete(blocklist_monitor_events).where(

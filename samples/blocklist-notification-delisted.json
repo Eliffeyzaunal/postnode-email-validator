@@ -1,4 +1,7 @@
 {
+  "id": "19fd021d-bcc9-5a4f-b7ab-22c1876dba13",
+  "dns_mode": "fake",
+  "run_id": "d0790546-c5a9-5d95-b382-9b7ee80a04d9",
   "type": "delisted",
   "asset_id": "spamhaus-test-ip",
   "asset_type": "ip",
@@ -6,7 +9,8 @@
   "provider_id": "spamcop",
   "previous_status": "listed",
   "current_status": "not_listed",
-  "first_detected_at": "2026-09-03T10:00:00Z",
-  "reason": "SpamCop resmî DNSBL test girdisi",
-  "removal_url": "https://www.spamcop.net/bl.shtml?127.0.0.2"
+  "first_detected_at": "2026-08-09T10:00:00Z",
+  "reason": "SpamCop resmi DNSBL test girdisi",
+  "removal_url": "https://www.spamcop.net/bl.shtml?127.0.0.2",
+  "created_at": "2026-08-09T20:00:00Z"
 }

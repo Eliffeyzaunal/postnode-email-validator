@@ -1,16 +1,20 @@
 # Değerlendirme Raporu
 
-Veri kümesi 200 sentetik, elle gözden geçirilmiş örnek içerir. Ağ yerine sabit DNS durumları kullanılarak ölçüm belirleyici tutulur.
+Bu ölçüm sentetik veri ve sabit DNS cevaplarıyla üretilmiştir. Gerçek müşteri doğruluğu iddiası değildir.
 
-## Sonuç
+- Adres örneği: 258
+- Taslak etiketlere göre doğruluk: %100.00
+- Geçerli → geçersiz: 0/99
+- Liste senaryoları: 7/7 başarılı
+- İnsan tarafından doğrulanmış etiket: 258
+- İnsan incelemesi bekleyen: 0
+- En az 200 insan onaylı etiket şartı: sağlandı
 
-| Ölçüm | Değer |
-|---|---:|
-| Örnek sayısı | 200 |
-| Doğruluk | %100,00 |
-| Geçerli -> geçersiz yanlış pozitif oranı | %0,00 |
-| Geçerli doğru sınıflandırma | 80/80 |
-| Şüpheli doğru sınıflandırma | 60/60 |
-| Geçersiz doğru sınıflandırma | 60/60 |
+Eski 200 üretilmiş örneğe farklı yazım, normalizasyon, DNS, rol, disposable ve uzunluk sınırı örnekleri eklenmiştir.
+Adresler tek tek ölçülür; yinelenme, ardışık üretim ve yoğunluk senaryoları ayrıca varsayılan eşiklerle ölçülür.
+Unicode/SMTPUTF8 yerel bölüm ve tırnaklı posta kutusu gibi destek kapsamı dışındaki biçimler bu ölçüme dahil değildir.
 
-Bu küme kural kapsamını doğrulamak içindir; gerçek müşteri dağılımını temsil eden anonimleştirilmiş bir örneklemle ayrıca ölçüm yapılmalıdır.
+İnsan incelemesi: `evaluation/human-review.csv` içindeki reviewed_status, reviewer ve reviewed_at alanlarını gerçek inceleyen doldurur.
+Çelişen veya değişmiş örneğe ait incelemeler otomatik onay sayılmaz. Ayrıntılar `evaluation/results.json` dosyasındadır.
+
+Yeniden üretim: `python scripts/evaluate.py --output evaluation/results.json --markdown evaluation/report.md`

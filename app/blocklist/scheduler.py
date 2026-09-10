@@ -90,6 +90,8 @@ class BlocklistScheduler:
         self,
         days: int = 30,
         now: datetime | None = None,
+        *,
+        dns_mode: str | None = None,
     ) -> BlocklistHistoryReport:
         if not 1 <= days <= self.retention_days:
             raise ValueError(
@@ -101,6 +103,7 @@ class BlocklistScheduler:
             self.interval_seconds,
             self.grace_seconds,
             now,
+            dns_mode=dns_mode,
         )
 
     def run_forever(self, stop_event: Event | None = None) -> None:

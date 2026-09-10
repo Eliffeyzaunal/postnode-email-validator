@@ -34,7 +34,7 @@ def main() -> None:
     if args.interval:
         overrides["blocklist_interval_seconds"] = args.interval
     settings = Settings(**overrides)
-    repository = BlocklistRepository(settings.database_url)
+    repository = BlocklistRepository(settings.database_url, dns_mode=settings.blocklist_dns_mode)
     service = BlocklistMonitorService(settings, repository)
     scheduler = BlocklistScheduler(service)
     stop_event = Event()

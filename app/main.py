@@ -1,9 +1,11 @@
 import csv
 import io
 from functools import lru_cache
+from typing import Literal
 
 from fastapi import FastAPI, File, HTTPException, Query, Response, UploadFile
 from fastapi.responses import StreamingResponse
+from starlette.concurrency import run_in_threadpool
 
 from app import __version__
 from app.config import get_settings
@@ -56,7 +58,7 @@ def get_blocklist_service() -> BlocklistMonitorService:
     settings = get_settings()
     return BlocklistMonitorService(
         settings,
-        BlocklistRepository(settings.database_url),
+        BlocklistRepository(settings.database_url, dns_mode=settings.blocklist_dns_mode),
     )
 
 
@@ -96,6 +98,7 @@ def health(response: Response) -> dict:
         "database": "ok",
         "blocklist_dns_mode": settings.blocklist_dns_mode,
         "blocklist_monitor": "unknown",
+        "blocklist_monitor_required": settings.blocklist_monitor_required,
     }
     try:
         get_service().repository.ping()
@@ -108,7 +111,10 @@ def health(response: Response) -> dict:
     try:
         monitor = get_blocklist_scheduler().status()
         payload["blocklist_monitor"] = monitor.status
-        if monitor.status in {"error", "missed"}:
+        if monitor.status in {"error", "missed"} or (
+            settings.blocklist_monitor_required
+            and (monitor.missed or monitor.status not in {"running", "healthy"})
+        ):
             response.status_code = 503
             payload["status"] = "degraded"
     except Exception:
@@ -179,9 +185,10 @@ def get_blocklist_monitor_status() -> MonitorHealth:
 )
 def get_blocklist_history_report(
     days: int = Query(30, ge=1, le=90),
+    dns_mode: Literal["fake", "live", "legacy"] | None = Query(None),
 ) -> BlocklistHistoryReport:
     try:
-        return get_blocklist_scheduler().history_report(days)
+        return get_blocklist_scheduler().history_report(days, dns_mode=dns_mode)
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
@@ -207,12 +214,17 @@ async def validate_file(file: UploadFile = File(...)) -> BatchResponse:
     content = await file.read(settings.max_upload_bytes + 1)
     if len(content) > settings.max_upload_bytes:
         raise HTTPException(status_code=413, detail="Dosya boyutu sınırı aşıldı.")
+    return await run_in_threadpool(_validate_uploaded_content, content, file.filename)
+
+
+def _validate_uploaded_content(content: bytes, filename: str | None) -> BatchResponse:
+    settings = get_settings()
     try:
-        emails = parse_bytes(content, file.filename or "upload.csv", settings.max_batch_size)
+        emails = parse_bytes(content, filename or "upload.csv", settings.max_batch_size)
     except InputError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
-    batch_id, summary, results = get_service().validate_many(emails, filename=file.filename)
-    return _batch_response(batch_id, summary, results, file.filename)
+    batch_id, summary, results = get_service().validate_many(emails, filename=filename)
+    return _batch_response(batch_id, summary, results, filename)
 
 
 @app.get("/api/v1/batches/{batch_id}", response_model=BatchMetadataResponse, tags=["history"])

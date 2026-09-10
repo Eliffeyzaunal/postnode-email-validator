@@ -106,6 +106,7 @@ class BlocklistCheckResult(BaseModel):
 
 class BlocklistNotification(BaseModel):
     id: str
+    dns_mode: Literal["fake", "live", "legacy"] = "legacy"
     run_id: str
     type: NotificationType
     asset_id: str
@@ -143,6 +144,7 @@ class BlocklistCheckRequest(BaseModel):
 
 class MonitorHealth(BaseModel):
     name: str
+    dns_mode: Literal["fake", "live", "legacy"] = "legacy"
     status: Literal["not_started", "running", "healthy", "error", "missed", "stopped"]
     interval_seconds: int
     last_started_at: datetime | None = None
@@ -165,6 +167,7 @@ class ProviderHistorySummary(BaseModel):
 
 
 class BlocklistHistoryReport(BaseModel):
+    dns_mode: Literal["fake", "live", "legacy"]
     days: int
     period_start: datetime
     period_end: datetime
@@ -176,4 +179,5 @@ class BlocklistHistoryReport(BaseModel):
     query_error_events: int
     providers: list[ProviderHistorySummary]
     current_listings: list[dict]
+    unresolved_listings: list[dict] = Field(default_factory=list)
     monitor: MonitorHealth

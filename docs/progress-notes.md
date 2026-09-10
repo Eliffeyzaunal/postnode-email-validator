@@ -18,6 +18,28 @@ Bu notlar, Git commitleri ile test ve benchmark çıktılarından doğrulanabile
 - Canlı DNS istemcisinde TXT sebep kaydı, NXDOMAIN ve teknik hata ayrımı test edildi; canlı mod varsayılan olarak kapalı tutuldu.
 - MySQL tarih hassasiyeti düzeltildi; yerelde 45 test ve GitHub Actions başarıyla tamamlandı.
 
+## Gün 3 - 7 Eylül 2026
+
+- Blocklist durum geçişleri, eşzamanlı kayıt ve DNS hatası sonrası listeden çıkış takibi güçlendirildi.
+- API/çıktı gizliliği, HMAC ayarı ve Docker dosya kapsamı güncellendi.
+- Paylaşılan yerel test çıktısında 51 test geçti; 3 MySQL testi bağlantı tanımlı olmadığı için atlandı.
+- İlk düzeltme dalı PR #1 ile ana dala aktarıldı.
+
+## Gün 4 - 8 Eylül 2026
+
+- DNS modu ayrımı, dosya doğrulamasında olay döngüsü bloklaması ve doğrulanamayan listelenme raporları düzeltildi; Windows başlatıcısı izleyici sağlığını zorunlu hale getirdi.
+- Değerlendirme 258 sentetik adres ve 7 liste senaryosuna genişletildi; insan incelemesi dosyası hazırlandı, henüz yapılmamış inceleme onaylı gösterilmedi.
+- 720 saatlik örnek rapor gerçek kayıt mantığı ve hızlandırılmış sahte saatle yeniden üretildi; simülasyon olduğu belgelendi.
+- Teslim hazırlığı testlerinde 76 test geçti, 4 MySQL testi ortam olmadığı için atlandı; SQLite ile benchmark kayıt/çıktı yolu doğrulandı, MySQL performansı olarak sunulmadı.
+- MySQL sürelerini ve test çıktılarını saklayan CI/Windows akışı eklendi. Güncel MySQL ölçümü, PR/birleştirme ve en az 200 etiketin insan incelemesi bekliyor.
+
+## Gün 5 - 10 Eylül 2026
+
+- Değerlendirme kümesindeki 258 sentetik adres Elif Feyza Ünal tarafından kontrol edildi; tüm taslak kararlar doğrulandı.
+- İnsan incelemesi kontrolü 258 onaylı, 0 bekleyen ve 0 uyuşmazlık sonucu ile başarıyla tamamlandı.
+- Python 3.11 ve 3.12 GitHub Actions işlerinde test, değerlendirme ve MySQL benchmark adımları başarılı oldu.
+- PR #2 birleştirmeye hazır duruma geldi; ana dala birleştirme işlemi bekliyor.
+
 ## Sonraki kayıt şablonu
 
 ```text
