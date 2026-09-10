@@ -2,7 +2,7 @@
 
 [![Testler](https://github.com/Eliffeyzaunal/postnode-email-validator/actions/workflows/tests.yml/badge.svg)](https://github.com/Eliffeyzaunal/postnode-email-validator/actions/workflows/tests.yml)
 
-PDF'deki Görev 1 için liste hijyeni/adres doğrulama, Görev 2 için periyodik kara liste izleme ve alarm sağlayan bağımsız FastAPI servisidir. Üretimde MySQL, otomatik birim testlerinde aynı SQLAlchemy repository kodu üzerinden geçici SQLite kullanılır.
+PDF'deki Görev 1 için liste hijyeni/adres doğrulama, Görev 2 için periyodik kara liste izleme ve Görev 4 için SES bounce/şikâyet sınıflandırması sağlayan bağımsız FastAPI/CLI servisidir. Üretimde MySQL, otomatik birim testlerinde aynı SQLAlchemy repository kodu üzerinden geçici SQLite kullanılır.
 
 ## Özellikler
 
@@ -22,6 +22,9 @@ PDF'deki Görev 1 için liste hijyeni/adres doğrulama, Görev 2 için periyodik
 - Varsayılan saatlik izleme, kalıcı kalp atışı ve kaçırılan tur tespiti
 - 90 gün saklanan geçmişten 30 günlük özet rapor
 - Test için belirleyici sahte DNS, açıkça etkinleştirildiğinde canlı DNSBL istemcisi
+- SES, SMTP ve RFC 3463 alanlarını kullanan kural tabanlı bounce/şikâyet sınıflandırması
+- Kod değişmeden genişletilebilen kaynaklı kural tablosu ve bilinmeyen örüntü raporu
+- Kalıcı/geçici hata güvenlik ölçümü ve 360 anonim sentetik değerlendirme olayı
 
 SMTP `RCPT TO`, catch-all tespiti ve ücretli doğrulama servisi özellikle kullanılmaz.
 
@@ -66,6 +69,9 @@ Windows'ta hızlı başlatmak için `run_windows.bat` dosyasına çift tıklanab
 | GET | `/api/v1/blocklists/runs/{id}/notifications` | Durum değişikliği bildirimleri |
 | GET | `/api/v1/blocklists/monitor/status` | Zamanlayıcı sağlığı ve kaçırılan tur bilgisi |
 | GET | `/api/v1/blocklists/reports/history?days=30` | Geçmiş/sağlayıcı bulunabilirlik raporu |
+| POST | `/api/v1/events/classify` | Tek SES-benzeri olayı sınıflandırma |
+| POST | `/api/v1/events/classify/batch` | En fazla 1.000 olayı toplu sınıflandırma |
+| GET | `/api/v1/events/rules` | Etkin kurallar, aksiyonlar ve kaynaklar |
 
 Tek adres örneği:
 
@@ -126,6 +132,21 @@ Son 30 günün JSON raporunu üretmek için:
 ```bash
 python -m app.blocklist.report_cli --days 30
 ```
+
+Görev 4 örnek olaylarını sınıflandırmak için:
+
+```bash
+python -m app.bounce_classifier.cli samples/ses-events-task4.jsonl \
+  --output outputs/bounce-classifications.jsonl \
+  --report outputs/bounce-summary.json
+```
+
+CLI, düz JSON/JSONL ile Amazon SES'in `notificationType/eventType`, `bounce`,
+`complaint` ve alıcı nesnelerini; ayrıca SNS `Notification` zarfındaki SES JSON'unu
+kabul eder. Çok alıcılı bildirimler CLI ve toplu API'de alıcı başına ayrılır; tek olay
+API'si bu girdiyi açıklayıcı bir `422` yanıtıyla toplu uca yönlendirir. Çıktıya açık
+e-posta veya tanı metni yazılmaz; anahtarlı alıcı özeti, doğrulanmış alan adı, karar,
+aksiyon, güven ve kural kimliği yazılır.
 
 Docker ile `docker compose up --build` çalıştırıldığında API'den ayrı `blocklist-monitor` servisi de başlar. Böylece birden fazla API worker'ının aynı kontrolü tetiklemesi engellenir.
 
@@ -207,6 +228,34 @@ Canlı moda geçiş öncesi uygulanacak güvenli doğrulama sırası ve başarı
 
 Kaynaklar: [Spamhaus Fair Use](https://www.spamhaus.org/blocklists/dnsbl-fair-use-policy/), [SURBL Usage Policy](https://surbl.org/usage-policy), [SpamCop SCBL açıklaması](https://www.spamcop.net/fom-serve/cache/297.html), [Barracuda lookup](https://www.barracudacentral.org/lookups), [SORBS EOL](https://proofpoint.my.site.com/community/s/article/End-of-Life-EOL-process-for-the-Spam-and-Open-Relay-Blocking-System-SORBS-service).
 
+## Görev 4 - bounce ve şikâyet sınıflandırma
+
+`app/bounce_classifier` kütüphanesi olayları yalnızca açıklanabilir kurallarla dokuz
+ana kategoriye ayırır: kalıcı geçersiz adres, kutu dolu, geçici sunucu hatası,
+içerik/politika reddi, blocklist reddi, itibar/oran sınırı, otomatik yanıt, şikâyet
+ve bilinmeyen. Her sonuç alt sebep, önerilen aksiyon, güven düzeyi, kalıcılık ve
+eşleşen kural kimliğini içerir.
+
+Kural öncelikleri ve kaynakları [`docs/bounce-rule-table.md`](docs/bounce-rule-table.md),
+makinece okunan asıl tanımlar `config/bounce_rules.json` içindedir. Her tanımda
+sağlayıcı kapsamı, resmî kaynak, olumlu örnek ve karşı örnek zorunludur. SES
+`not-spam` ve `auth-failure` geri bildirimleri kalıcı spam baskılamasından önce
+ayrı değerlendirilir. Yeni bir tanı metni kuralı JSON'a eklenebilir; Python kodu değişmez.
+
+360 anonim sentetik olayın taslak ölçümünü yeniden üretmek için:
+
+```bash
+python scripts/generate_bounce_evaluation.py
+python scripts/evaluate_bounce_classifier.py
+```
+
+Rapor kategori doğruluğunu, bilinmeyen oranını, en sık 20 güvenli bilinmeyen
+örüntüyü ve kalıcı/geçici ayrımını ayrı gösterir. Özellikle geçici bir olayı kalıcı
+sayma oranı ölçülür. Mevcut taslak değerlendirme %100 şartname uyumu ve sıfır
+geçici→kalıcı hata göstermektedir; bu gerçek müşteri doğruluğu iddiası değildir.
+Görev kabulü için en az 300 satırlık bağımsız insan kontrolü hâlâ gereklidir;
+akış [`evaluation/bounce-REVIEW.md`](evaluation/bounce-REVIEW.md) içinde açıklanır.
+
 ## Süreç ve demo belgeleri
 
 - Günlük 3-5 satırlık çalışma kayıtları: [`docs/progress-notes.md`](docs/progress-notes.md)
@@ -270,6 +319,7 @@ Tahmini bounce oranı gerçek teslimat ölçümü değildir; `invalid + 0.25 × 
 ```bash
 pytest
 python scripts/evaluate.py
+python scripts/evaluate_bounce_classifier.py
 python scripts/benchmark.py
 ```
 
@@ -295,6 +345,10 @@ MySQL bulunmazsa işlem başarısız olur; SQLite sonucu MySQL ölçümü gibi s
 
 Kara liste testleri IP ters çevirme sorgusunu, SURBL bit maskesini, Spamhaus hata kodlarını, SORBS `unavailable` sonucunu, mükerrer bildirim engelini, `listed → not_listed` geçişini, canlı DNS hata ayrımını, zamanlayıcı kalp atışını, kaçırılan turu, 30 günlük raporu, API geçmişini ve MySQL kayıt yolunu kapsar.
 
+Görev 4 testleri 22 kuralın olumlu ve karşı örneğini, kural önceliğini, düz ve
+yerel SES olaylarını, API/CLI çıktısındaki gizliliği, JSON üzerinden kod değişmeden
+kural eklenmesini, 360 satırlık veri bütünlüğünü ve kalıcı/geçici hata metriklerini kapsar.
+
 ## Liste kaynakları ve güncelleme
 
 `data/disposable_domains.txt` küçük başlangıç listesidir. Üretim öncesinde açık kaynak [disposable_email_blocklist.conf](https://github.com/disposable-email-domains/disposable-email-domains/blob/main/disposable_email_blocklist.conf) dosyasıyla ayda bir güncellenmeli; değişiklik test ve kod incelemesinden geçmelidir. Uygulama çalışırken internetten otomatik indirme yapmaz; bu, sonucun denetlenebilir ve belirleyici kalmasını sağlar.
@@ -317,3 +371,7 @@ Kara liste testleri IP ters çevirme sorgusunu, SURBL bit maskesini, Spamhaus ha
 MX kaydı mailbox'ın gerçekten var olduğunu kanıtlamaz. Disposable listesi güncelliği kadar güçlüdür. Rol hesapları ve liste anomalileri risk sinyalidir; kesin geçersizlik değildir. DNS çıktısı TTL süresince önbellekten gelir.
 
 Görev 2 sahte DNS modunda gerçek DNSBL ağına sorgu göndermez. Canlı mod dış ağ durumuna ve sağlayıcı politikasına bağlı olduğu için belirleyici değildir; yalnızca bilinçli olarak etkinleştirilir. Zamanlayıcı tek ayrı süreç olarak çalıştırılmalıdır. Bildirimler JSON/veritabanı kaydıdır; e-posta ve webhook kanalları kapsam dışıdır. SORBS hizmet sonlandırma nedeniyle sorgulanamaz ve `unavailable` raporlanır.
+
+Görev 4 değerlendirmesi anonim sentetik olaylardan oluşur. Gerçek `ses_events`
+dışa aktarımı sağlanmadan sağlayıcı dağılımı ve üretim doğruluğu ölçülemez; gerçek
+veri geldiğinde önce anonimleştirilmeli, ardından aynı CLI ve insan inceleme akışında çalıştırılmalıdır.

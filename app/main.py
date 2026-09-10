@@ -19,6 +19,13 @@ from app.blocklist.models import (
 from app.blocklist.repository import BlocklistRepository
 from app.blocklist.scheduler import BlocklistScheduler
 from app.blocklist.service import BlocklistMonitorService
+from app.bounce_classifier.classifier import EventClassifier
+from app.bounce_classifier.models import (
+    ClassificationResult,
+    EventBatchClassificationRequest,
+    EventBatchClassificationResponse,
+    EventClassificationRequest,
+)
 from app.models import (
     BatchMetadataResponse,
     BatchRequest,
@@ -39,7 +46,8 @@ app = FastAPI(
     version=__version__,
     description=(
         "Liste hijyeni/adres doğrulama ile belirleyici veya seçilebilir canlı DNS "
-        "üzerinden periyodik kara liste izleme servislerini sunar."
+        "üzerinden periyodik kara liste izleme ve SES bounce/şikâyet "
+        "sınıflandırma servislerini sunar."
     ),
 )
 
@@ -65,6 +73,12 @@ def get_blocklist_service() -> BlocklistMonitorService:
 @lru_cache
 def get_blocklist_scheduler() -> BlocklistScheduler:
     return BlocklistScheduler(get_blocklist_service())
+
+
+@lru_cache
+def get_event_classifier() -> EventClassifier:
+    settings = get_settings()
+    return EventClassifier(settings.bounce_rules_path, settings.email_hash_secret)
 
 
 def _response_item(item) -> ResultResponse:
@@ -127,6 +141,50 @@ def health(response: Response) -> dict:
 @app.get("/api/v1/reason-codes", tags=["validation"])
 def reason_codes() -> dict[str, str]:
     return {code.value: description for code, description in REASON_DESCRIPTIONS.items()}
+
+
+@app.get("/api/v1/events/rules", tags=["event-classification"])
+def event_classification_rules() -> list[dict]:
+    """Etkin kurallari, aksiyonlari ve kaynaklarini oncelik sirasiyla dondurur."""
+    return [
+        {
+            "id": rule.rule_id,
+            "priority": rule.priority,
+            "category": rule.category,
+            "subreason": rule.subreason,
+            "recommended_action": rule.action,
+            "confidence": rule.confidence,
+            "permanence": rule.permanence,
+            "providers": rule.providers,
+            "sources": rule.sources,
+        }
+        for rule in get_event_classifier().rules
+    ]
+
+
+@app.post(
+    "/api/v1/events/classify",
+    response_model=ClassificationResult,
+    tags=["event-classification"],
+)
+def classify_event(request: EventClassificationRequest) -> ClassificationResult:
+    """Duz veya SES bicimindeki tek olayi acik e-posta dondurmeden siniflandirir."""
+    try:
+        return get_event_classifier().classify(request.event)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post(
+    "/api/v1/events/classify/batch",
+    response_model=EventBatchClassificationResponse,
+    tags=["event-classification"],
+)
+def classify_event_batch(
+    request: EventBatchClassificationRequest,
+) -> EventBatchClassificationResponse:
+    """En fazla 1.000 olayi ayni belirleyici kurallarla siniflandirir."""
+    return get_event_classifier().classify_many(request.events)
 
 
 @app.get("/api/v1/blocklists/providers", tags=["blocklist"])

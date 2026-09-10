@@ -15,3 +15,16 @@ veya gerçek varlıkların kara listede olduğunu göstermez.
 listelenmiş olup son sorgusu başarısız olan kaydı içerir. Sayılar elle yazılmamıştır;
 senaryo değişirse komutla yeniden üretilir. Tekrarlanan listelenme ve çıkış
 bildirim örnekleri aynı 720 saatlik senaryodan alınır.
+
+## Görev 4 örnekleri
+
+`ses-events-task4.jsonl`, dokuz ana kategorinin her biri için açık adres içermeyen
+bir SES-benzeri örnek barındırır. `bounce-classifications-task4.jsonl` güvenli
+çıktıyı, `bounce-summary-task4.json` ise kategori dağılımı ile bilinmeyen oranını
+gösterir. Yeniden üretmek için:
+
+```bash
+python -m app.bounce_classifier.cli samples/ses-events-task4.jsonl \
+  --output samples/bounce-classifications-task4.jsonl \
+  --report samples/bounce-summary-task4.json
+```

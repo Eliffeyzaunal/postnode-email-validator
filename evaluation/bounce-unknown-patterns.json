@@ -1,0 +1,88 @@
+{
+  "dataset_size": 360,
+  "unknown_count": 40,
+  "unknown_rate": 0.1111,
+  "top_20_patterns": [
+    {
+      "pattern": "599 vendor response alpha trace <id>",
+      "count": 2
+    },
+    {
+      "pattern": "550 undocumented transport condition beta trace <id>",
+      "count": 2
+    },
+    {
+      "pattern": "custom gateway state gamma trace <id>",
+      "count": 2
+    },
+    {
+      "pattern": "opaque remote code delta trace <id>",
+      "count": 2
+    },
+    {
+      "pattern": "unmapped relay note epsilon trace <id>",
+      "count": 2
+    },
+    {
+      "pattern": "unexpected delivery state zeta trace <id>",
+      "count": 2
+    },
+    {
+      "pattern": "proprietary response eta trace <id>",
+      "count": 2
+    },
+    {
+      "pattern": "gateway marker theta trace <id>",
+      "count": 2
+    },
+    {
+      "pattern": "receiver note iota trace <id>",
+      "count": 2
+    },
+    {
+      "pattern": "transport marker kappa trace <id>",
+      "count": 2
+    },
+    {
+      "pattern": "vendor signal lambda trace <id>",
+      "count": 2
+    },
+    {
+      "pattern": "remote state mu trace <id>",
+      "count": 2
+    },
+    {
+      "pattern": "mail system note nu trace <id>",
+      "count": 2
+    },
+    {
+      "pattern": "downstream marker xi trace <id>",
+      "count": 2
+    },
+    {
+      "pattern": "opaque condition omicron trace <id>",
+      "count": 2
+    },
+    {
+      "pattern": "custom response pi trace <id>",
+      "count": 2
+    },
+    {
+      "pattern": "vendor flag rho trace <id>",
+      "count": 2
+    },
+    {
+      "pattern": "receiver code sigma trace <id>",
+      "count": 2
+    },
+    {
+      "pattern": "gateway result tau trace <id>",
+      "count": 2
+    },
+    {
+      "pattern": "unmapped state upsilon trace <id>",
+      "count": 2
+    }
+  ],
+  "next_step": "Her örüntüyü sağlayıcı ve gerçek teslim sonucu ile doğrula; tekrarlanan ve güvenilir olanlar için config/bounce_rules.json dosyasına kaynaklı kural, olumlu örnek ve karşı örnek ekle."
+}

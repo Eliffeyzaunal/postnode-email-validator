@@ -1,0 +1,21 @@
+{
+  "total": 9,
+  "category_counts": {
+    "automatic_response": 1,
+    "blocklist_rejection": 1,
+    "complaint": 1,
+    "content_policy_rejection": 1,
+    "mailbox_full": 1,
+    "permanent_invalid_address": 1,
+    "reputation_rate_limit": 1,
+    "temporary_server_error": 1,
+    "unknown": 1
+  },
+  "unknown_rate": 0.1111,
+  "top_unknown_patterns": [
+    {
+      "pattern": "599 undocumented vendor state",
+      "count": 1
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "dataset_size": 360,
+  "data_origin": "synthetic_anonymized_ses_like_events",
+  "label_basis": "synthetic_specification_with_pending_human_review",
+  "accuracy": 1.0,
+  "category_counts": {
+    "automatic_response": 40,
+    "blocklist_rejection": 40,
+    "complaint": 40,
+    "content_policy_rejection": 40,
+    "mailbox_full": 40,
+    "permanent_invalid_address": 40,
+    "reputation_rate_limit": 40,
+    "temporary_server_error": 40,
+    "unknown": 40
+  },
+  "predicted_counts": {
+    "automatic_response": 40,
+    "blocklist_rejection": 40,
+    "complaint": 40,
+    "content_policy_rejection": 40,
+    "mailbox_full": 40,
+    "permanent_invalid_address": 40,
+    "reputation_rate_limit": 40,
+    "temporary_server_error": 40,
+    "unknown": 40
+  },
+  "per_category": {
+    "automatic_response": {
+      "count": 40,
+      "correct": 40,
+      "recall": 1.0
+    },
+    "blocklist_rejection": {
+      "count": 40,
+      "correct": 40,
+      "recall": 1.0
+    },
+    "complaint": {
+      "count": 40,
+      "correct": 40,
+      "recall": 1.0
+    },
+    "content_policy_rejection": {
+      "count": 40,
+      "correct": 40,
+      "recall": 1.0
+    },
+    "mailbox_full": {
+      "count": 40,
+      "correct": 40,
+      "recall": 1.0
+    },
+    "permanent_invalid_address": {
+      "count": 40,
+      "correct": 40,
+      "recall": 1.0
+    },
+    "reputation_rate_limit": {
+      "count": 40,
+      "correct": 40,
+      "recall": 1.0
+    },
+    "temporary_server_error": {
+      "count": 40,
+      "correct": 40,
+      "recall": 1.0
+    },
+    "unknown": {
+      "count": 40,
+      "correct": 40,
+      "recall": 1.0
+    }
+  },
+  "confusion": {
+    "automatic_response->automatic_response": 40,
+    "blocklist_rejection->blocklist_rejection": 40,
+    "complaint->complaint": 40,
+    "content_policy_rejection->content_policy_rejection": 40,
+    "mailbox_full->mailbox_full": 40,
+    "permanent_invalid_address->permanent_invalid_address": 40,
+    "reputation_rate_limit->reputation_rate_limit": 40,
+    "temporary_server_error->temporary_server_error": 40,
+    "unknown->unknown": 40
+  },
+  "unknown_rate": 0.1111,
+  "permanence_metrics": {
+    "permanent_examples": 80,
+    "permanent_recall": 1.0,
+    "transient_examples": 160,
+    "transient_recall": 1.0,
+    "transient_as_permanent_count": 0,
+    "transient_as_permanent_rate": 0.0
+  },
+  "human_review": {
+    "confirmed": 0,
+    "pending": 360,
+    "minimum_required": 300,
+    "accuracy": 0.0,
+    "stale_review_ids": [],
+    "acceptance_met": false
+  },
+  "automated_checks": {
+    "dataset_size_at_least_300": true,
+    "draft_accuracy_at_least_90_percent": true,
+    "no_clear_email_in_dataset": true
+  },
+  "errors": []
+}

@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     blocklist_providers_path: Path = PROJECT_ROOT / "config" / "blocklists.json"
     blocklist_assets_path: Path = PROJECT_ROOT / "config" / "monitored-assets.example.json"
     blocklist_fake_dns_path: Path = PROJECT_ROOT / "data" / "blocklist_fake_dns.json"
+    bounce_rules_path: Path = PROJECT_ROOT / "config" / "bounce_rules.json"
     blocklist_dns_mode: Literal["fake", "live"] = "fake"
     blocklist_monitor_required: bool = False
     blocklist_nameservers: str | None = None

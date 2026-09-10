@@ -58,6 +58,14 @@ jobs:
       - name: Değerlendirme kümesini çalıştır
         run: python scripts/evaluate.py --output outputs/evidence/evaluation.json --markdown outputs/evidence/evaluation.md
 
+      - name: Bounce sınıflandırıcı değerlendirmesini çalıştır
+        run: >-
+          python scripts/evaluate_bounce_classifier.py
+          --output outputs/evidence/bounce-evaluation.json
+          --markdown outputs/evidence/bounce-evaluation.md
+          --unknown-output outputs/evidence/bounce-unknown-patterns.json
+          --unknown-markdown outputs/evidence/bounce-unknown-patterns.md
+
       - name: 10.000 adres benchmark'ını çalıştır
         run: python scripts/benchmark.py --require-mysql --output outputs/evidence/mysql-benchmark.json --markdown outputs/evidence/mysql-benchmark.md
 
