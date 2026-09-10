@@ -9,7 +9,7 @@
 - Dokuz ana kategori, alt sebep, aksiyon, güven, kalıcılık ve eşleşen kural kimliği
 - SES alanları, SMTP kodları, RFC 3463 durumları ve tanı metni kullanan 22 sıralı kural
 - Gmail, Outlook, Yahoo, Yandex, SES ve kurumsal kapsam notlarıyla resmî kaynaklar
-- Python kodu değiştirmeden JSON üzerinden yeni kural ekleme ve hatalı kural alanını başlangıçta reddetme desteği
+- Python kodu değiştirmeden JSON üzerinden yeni kural ekleme; hatalı veya öncelik nedeniyle gölgelenen kuralı başlangıçta reddetme desteği
 - Her kural için otomatik olumlu/karşı örnek testi ve öncelik çakışması testleri
 - Açık e-posta/tanı metni çıkarmayan; alıcıyı HMAC, mesajı SHA-256 ile eşleyen gizlilik katmanı
 - 360 anonim sentetik olay, kategori metrikleri ve kalıcı/geçici hata ayrımı
@@ -17,7 +17,7 @@
 
 ## Yerel doğrulama
 
-- `147 passed, 4 skipped`
+- `150 passed, 4 skipped`
 - Atlanan dört test, yalnızca gerçek MySQL bağlantısı tanımlandığında çalışan entegrasyon testleridir.
 - Görev 4 taslak veri kümesi: 360 olay, %100 sentetik şartname uyumu
 - Kalıcı hata recall: %100

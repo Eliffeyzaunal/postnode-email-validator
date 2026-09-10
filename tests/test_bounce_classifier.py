@@ -101,6 +101,21 @@ def test_event_id_cannot_leak_an_email(classifier: EventClassifier):
     assert "private@example.com" not in result.model_dump_json()
 
 
+def test_long_event_ids_are_hashed_without_recipient_suffix_collisions(classifier: EventClassifier):
+    event = {
+        "event_id": "x" * 250,
+        "bounce": {
+            "bouncedRecipients": [
+                {"emailAddress": "one@example.com", "status": "4.2.2"},
+                {"emailAddress": "two@example.net", "status": "5.1.1"},
+            ]
+        },
+    }
+    results = classifier.classify_many([event]).results
+    assert len({result.event_id for result in results}) == 2
+    assert all(result.event_id.startswith("hmac-sha256:") for result in results)
+
+
 @pytest.mark.parametrize(
     ("event_id", "diagnostic"),
     [
@@ -202,6 +217,30 @@ def test_unknown_match_field_is_rejected_instead_of_matching_every_event(tmp_pat
     path = tmp_path / "rules.json"
     path.write_text(json.dumps(source), encoding="utf-8")
     with pytest.raises(ValueError, match="Desteklenmeyen eslesme alani"):
+        EventClassifier(path)
+
+
+def test_shadowed_rule_trigger_is_rejected_at_startup(tmp_path: Path):
+    source = json.loads((PROJECT_ROOT / "config" / "bounce_rules.json").read_text())
+    source["rules"].insert(1, {
+        "id": "shadowed_not_spam",
+        "priority": 6,
+        "category": "complaint",
+        "category_label": "Test",
+        "subreason": "Test",
+        "action": "Test",
+        "confidence": "high",
+        "permanence": "neutral",
+        "providers": ["ses"],
+        "sources": ["https://docs.aws.amazon.com/ses/latest/dg/notification-contents.html"],
+        "match": {"event_types": ["complaint"], "feedback_types": ["not-spam"]},
+        "example_message": "Complaint / not-spam",
+        "trigger_example": {"event_type": "complaint", "feedback_type": "not-spam"},
+        "counter_example": {"event_type": "bounce"},
+    })
+    path = tmp_path / "rules.json"
+    path.write_text(json.dumps(source), encoding="utf-8")
+    with pytest.raises(ValueError, match="golgeleniyor"):
         EventClassifier(path)
 
 

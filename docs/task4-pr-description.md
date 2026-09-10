@@ -18,7 +18,7 @@ sınıflandıran kütüphane, CLI ve API uçları eklendi.
 
 ## Doğrulama
 
-- Yerel: `147 passed, 4 skipped`
+- Yerel: `150 passed, 4 skipped`
 - 4 atlama: yerelde MySQL bağlantısı bulunmadığı için entegrasyon testleri
 - Sentetik taslak doğruluk: `%100`
 - Geçiciyi kalıcı sayma: `0 / 160`
