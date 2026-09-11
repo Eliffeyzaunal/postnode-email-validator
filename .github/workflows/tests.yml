@@ -130,6 +130,7 @@ jobs:
           tests/test_bounce_io.py
           tests/test_bounce_privacy.py
           tests/test_bounce_rule_validation.py
+          tests/test_bounce_automated_acceptance.py
           --cov=app.bounce_classifier
           --cov-report=term-missing
           --cov-report=xml:outputs/evidence/task4-coverage.xml
@@ -143,6 +144,13 @@ jobs:
           --markdown outputs/evidence/bounce-evaluation.md
           --unknown-output outputs/evidence/bounce-unknown-patterns.json
           --unknown-markdown outputs/evidence/bounce-unknown-patterns.md
+
+      - name: Görev 4 otomatik kabul kontrolünü çalıştır
+        run: >-
+          python scripts/evaluate_bounce_automated.py
+          --output outputs/evidence/bounce-automated-evaluation.json
+          --markdown outputs/evidence/bounce-automated-evaluation.md
+          --require-acceptance
 
       - name: 10.000 adres benchmark'ını çalıştır
         run: python scripts/benchmark.py --require-mysql --output outputs/evidence/mysql-benchmark.json --markdown outputs/evidence/mysql-benchmark.md

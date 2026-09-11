@@ -256,14 +256,18 @@ ayrı değerlendirilir. Yeni bir tanı metni kuralı JSON'a eklenebilir; Python 
 ```bash
 python scripts/generate_bounce_evaluation.py
 python scripts/evaluate_bounce_classifier.py
+python scripts/evaluate_bounce_automated.py --require-acceptance
 ```
 
 Rapor kategori doğruluğunu, bilinmeyen oranını, en sık 20 güvenli bilinmeyen
 örüntüyü ve kalıcı/geçici ayrımını ayrı gösterir. Özellikle geçici bir olayı kalıcı
-sayma oranı ölçülür. Mevcut taslak değerlendirme %100 şartname uyumu ve sıfır
-geçici→kalıcı hata göstermektedir; bu gerçek müşteri doğruluğu iddiası değildir.
-Görev kabulü için en az 300 satırlık bağımsız insan kontrolü hâlâ gereklidir;
-akış [`evaluation/bounce-REVIEW.md`](evaluation/bounce-REVIEW.md) içinde açıklanır.
+sayma oranı ölçülür. Mevcut otomatik değerlendirme sentetik şartname uyumunu ve geçici→kalıcı
+güvenlik hatasını ölçer; bu gerçek müşteri doğruluğu iddiası değildir.
+Repo içi Görev 4 doğrulaması `scripts/evaluate_bounce_automated.py --require-acceptance`
+ile otomatik yapılır; 360 sentetik olayın yanında her kuralın olumlu ve karşı
+örneği de kontrol edilir. İnsan incelemesi yalnızca istenirse ek kalite auditi
+olarak kullanılabilir; otomatik CI kabulünün parçası değildir. Ayrıntılar
+[`evaluation/bounce-AUTOMATED.md`](evaluation/bounce-AUTOMATED.md) dosyasındadır.
 
 ## Süreç ve demo belgeleri
 
