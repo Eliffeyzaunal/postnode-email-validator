@@ -1,0 +1,935 @@
+{
+  "measured_at": "2026-09-11T07:55:13.492181+00:00",
+  "platform": "Windows",
+  "python_version": "3.13.1",
+  "evaluation_mode": "independent_strict_syntax_with_shared_live_dns_snapshot",
+  "reference": "python-email-validator==2.3.0 strict syntax + shared live DNS snapshot",
+  "dataset_size": 200,
+  "dataset_sha256": "c3cd5673d6cdf29dd2f611cb4f70a17aee52c76d62d268112e06e822cb01939e",
+  "scored_cases": 200,
+  "unscored_cases": 0,
+  "measurement_valid": true,
+  "accuracy": 0.95,
+  "policy_aligned_accuracy": 1.0,
+  "documented_policy_case_count": 10,
+  "false_positive_rate_valid_to_nonvalid": 0.0,
+  "per_class": {
+    "gecerli": {
+      "precision": 0.8611,
+      "recall": 1.0,
+      "f1": 0.9254,
+      "support": 62
+    },
+    "supheli": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 81
+    },
+    "gecersiz": {
+      "precision": 1.0,
+      "recall": 0.8246,
+      "f1": 0.9038,
+      "support": 57
+    }
+  },
+  "macro_average": {
+    "precision": 0.9537,
+    "recall": 0.9415,
+    "f1": 0.9431
+  },
+  "confusion_matrix": {
+    "gecerli": {
+      "gecerli": 62,
+      "supheli": 0,
+      "gecersiz": 0
+    },
+    "supheli": {
+      "gecerli": 0,
+      "supheli": 81,
+      "gecersiz": 0
+    },
+    "gecersiz": {
+      "gecerli": 10,
+      "supheli": 0,
+      "gecersiz": 47
+    }
+  },
+  "category_success": {
+    "disposable_domain": {
+      "correct": 20,
+      "total": 20,
+      "accuracy": 1.0
+    },
+    "invalid_syntax": {
+      "correct": 25,
+      "total": 25,
+      "accuracy": 1.0
+    },
+    "neutral_public_domain": {
+      "correct": 60,
+      "total": 60,
+      "accuracy": 1.0
+    },
+    "nonexistent_subdomain": {
+      "correct": 15,
+      "total": 15,
+      "accuracy": 1.0
+    },
+    "provider_typo": {
+      "correct": 20,
+      "total": 20,
+      "accuracy": 1.0
+    },
+    "role_account": {
+      "correct": 40,
+      "total": 40,
+      "accuracy": 1.0
+    },
+    "smtputf8": {
+      "correct": 10,
+      "total": 10,
+      "accuracy": 1.0
+    },
+    "strict_outer_space": {
+      "correct": 0,
+      "total": 10,
+      "accuracy": 0.0
+    }
+  },
+  "reference_evidence_counts": {
+    "independent_strict_syntax": 35,
+    "shared_live_dns_a_fallback+disposable_domain": 4,
+    "shared_live_dns_a_fallback+provider_typo": 5,
+    "shared_live_dns_mx": 62,
+    "shared_live_dns_mx+disposable_domain": 16,
+    "shared_live_dns_mx+provider_typo": 6,
+    "shared_live_dns_mx+role_account": 40,
+    "shared_live_dns_mx+smtputf8": 10,
+    "shared_live_dns_no_mail_host": 8,
+    "shared_live_dns_nxdomain": 14
+  },
+  "failures": [
+    {
+      "case_id": "live-191",
+      "category": "strict_outer_space",
+      "email": "  outer.space1@gmail.com  ",
+      "expected": "gecersiz",
+      "actual": "gecerli",
+      "reference_evidence": "independent_strict_syntax",
+      "project_reason_codes": [
+        "VALID"
+      ]
+    },
+    {
+      "case_id": "live-192",
+      "category": "strict_outer_space",
+      "email": "  outer.space2@outlook.com  ",
+      "expected": "gecersiz",
+      "actual": "gecerli",
+      "reference_evidence": "independent_strict_syntax",
+      "project_reason_codes": [
+        "VALID"
+      ]
+    },
+    {
+      "case_id": "live-193",
+      "category": "strict_outer_space",
+      "email": "  outer.space3@yahoo.com  ",
+      "expected": "gecersiz",
+      "actual": "gecerli",
+      "reference_evidence": "independent_strict_syntax",
+      "project_reason_codes": [
+        "VALID"
+      ]
+    },
+    {
+      "case_id": "live-194",
+      "category": "strict_outer_space",
+      "email": "  outer.space4@proton.me  ",
+      "expected": "gecersiz",
+      "actual": "gecerli",
+      "reference_evidence": "independent_strict_syntax",
+      "project_reason_codes": [
+        "VALID"
+      ]
+    },
+    {
+      "case_id": "live-195",
+      "category": "strict_outer_space",
+      "email": "  outer.space5@protonmail.com  ",
+      "expected": "gecersiz",
+      "actual": "gecerli",
+      "reference_evidence": "independent_strict_syntax",
+      "project_reason_codes": [
+        "VALID"
+      ]
+    },
+    {
+      "case_id": "live-196",
+      "category": "strict_outer_space",
+      "email": "  outer.space6@fastmail.com  ",
+      "expected": "gecersiz",
+      "actual": "gecerli",
+      "reference_evidence": "independent_strict_syntax",
+      "project_reason_codes": [
+        "VALID"
+      ]
+    },
+    {
+      "case_id": "live-197",
+      "category": "strict_outer_space",
+      "email": "  outer.space7@icloud.com  ",
+      "expected": "gecersiz",
+      "actual": "gecerli",
+      "reference_evidence": "independent_strict_syntax",
+      "project_reason_codes": [
+        "VALID"
+      ]
+    },
+    {
+      "case_id": "live-198",
+      "category": "strict_outer_space",
+      "email": "  outer.space8@zoho.com  ",
+      "expected": "gecersiz",
+      "actual": "gecerli",
+      "reference_evidence": "independent_strict_syntax",
+      "project_reason_codes": [
+        "VALID"
+      ]
+    },
+    {
+      "case_id": "live-199",
+      "category": "strict_outer_space",
+      "email": "  outer.space9@gmx.com  ",
+      "expected": "gecersiz",
+      "actual": "gecerli",
+      "reference_evidence": "independent_strict_syntax",
+      "project_reason_codes": [
+        "VALID"
+      ]
+    },
+    {
+      "case_id": "live-200",
+      "category": "strict_outer_space",
+      "email": "  outer.space10@mail.com  ",
+      "expected": "gecersiz",
+      "actual": "gecerli",
+      "reference_evidence": "independent_strict_syntax",
+      "project_reason_codes": [
+        "VALID"
+      ]
+    }
+  ],
+  "unscored": [],
+  "limitations": [
+    "No SMTP RCPT TO or mailbox-existence probe is performed.",
+    "Only public domain-level DNS is queried; no customer data is used.",
+    "The shared DNS snapshot prevents transient resolver bias but does not independently validate the project's DNS algorithm.",
+    "Role, disposable, typo and SMTPUTF8 are risk-policy labels, not proof of non-delivery.",
+    "DNS changes over time; the timestamp, resolver and corpus hash must accompany the metric.",
+    "This result is not directly comparable with a different project's differently labeled corpus."
+  ],
+  "resolver_nameservers": [
+    "1.1.1.1",
+    "8.8.8.8",
+    "9.9.9.9"
+  ],
+  "nameserver_probes": [
+    {
+      "nameserver": "1.1.1.1",
+      "success": true,
+      "elapsed_ms": 25.63,
+      "error": null
+    },
+    {
+      "nameserver": "8.8.8.8",
+      "success": true,
+      "elapsed_ms": 21.21,
+      "error": null
+    },
+    {
+      "nameserver": "9.9.9.9",
+      "success": true,
+      "elapsed_ms": 47.99,
+      "error": null
+    }
+  ],
+  "dns_timeout_seconds": 5.0,
+  "dns_retries": 2,
+  "dns_snapshot": {
+    "domain_count": 59,
+    "state_counts": {
+      "a_fallback": 7,
+      "mx": 30,
+      "no_mail_host": 8,
+      "nxdomain": 14
+    },
+    "technical_error_count": 0,
+    "technical_error_domains": [],
+    "attempts": {
+      "10minutemail.com": 1,
+      "aol.com": 1,
+      "fastmail.com": 1,
+      "gamil.com": 1,
+      "gmai.com": 1,
+      "gmail.co": 1,
+      "gmail.com": 1,
+      "gmail.con": 1,
+      "gmail.om": 1,
+      "gmailc.om": 1,
+      "gmaill.com": 1,
+      "gmal.com": 1,
+      "gmial.com": 2,
+      "gmx.com": 1,
+      "guerrillamail.com": 1,
+      "guerrillamailblock.com": 1,
+      "hitmail.com": 1,
+      "hotmai.com": 1,
+      "hotmail.co": 1,
+      "hotmail.com": 1,
+      "hotmail.con": 1,
+      "hotmial.com": 1,
+      "iclod.com": 1,
+      "icloud.com": 1,
+      "mail.com": 1,
+      "mailinator.com": 1,
+      "moakt.com": 1,
+      "outllok.com": 1,
+      "outlok.com": 1,
+      "outlook.co": 1,
+      "outlook.com": 1,
+      "postnode-eval-a01.gmail.com": 1,
+      "postnode-eval-a02.outlook.com": 1,
+      "postnode-eval-a03.yahoo.com": 1,
+      "postnode-eval-a04.proton.me": 1,
+      "postnode-eval-a05.fastmail.com": 1,
+      "postnode-eval-a06.icloud.com": 1,
+      "postnode-eval-a07.zoho.com": 1,
+      "postnode-eval-a08.gmx.com": 1,
+      "postnode-eval-a09.mail.com": 1,
+      "postnode-eval-a10.yandex.com": 1,
+      "postnode-eval-a11.aol.com": 1,
+      "postnode-eval-a12.hotmail.com": 1,
+      "postnode-eval-a13.tutanota.com": 1,
+      "postnode-eval-a14.t-online.de": 1,
+      "postnode-eval-a15.protonmail.com": 1,
+      "proton.me": 1,
+      "protonmail.com": 1,
+      "sharklasers.com": 1,
+      "t-online.de": 1,
+      "temp-mail.org": 1,
+      "tutanota.com": 1,
+      "yahho.com": 1,
+      "yaho.com": 1,
+      "yahoo.com": 1,
+      "yandex.com": 1,
+      "yopmail.com": 1,
+      "yopmail.fr": 1,
+      "zoho.com": 1
+    },
+    "resolved_via": {
+      "10minutemail.com": "1.1.1.1",
+      "aol.com": "1.1.1.1",
+      "fastmail.com": "1.1.1.1",
+      "gamil.com": "1.1.1.1",
+      "gmai.com": "1.1.1.1",
+      "gmail.co": "1.1.1.1",
+      "gmail.com": "1.1.1.1",
+      "gmail.con": "1.1.1.1",
+      "gmail.om": "1.1.1.1",
+      "gmailc.om": "1.1.1.1",
+      "gmaill.com": "1.1.1.1",
+      "gmal.com": "1.1.1.1",
+      "gmial.com": "8.8.8.8",
+      "gmx.com": "1.1.1.1",
+      "guerrillamail.com": "1.1.1.1",
+      "guerrillamailblock.com": "1.1.1.1",
+      "hitmail.com": "1.1.1.1",
+      "hotmai.com": "1.1.1.1",
+      "hotmail.co": "1.1.1.1",
+      "hotmail.com": "1.1.1.1",
+      "hotmail.con": "1.1.1.1",
+      "hotmial.com": "1.1.1.1",
+      "iclod.com": "1.1.1.1",
+      "icloud.com": "1.1.1.1",
+      "mail.com": "1.1.1.1",
+      "mailinator.com": "1.1.1.1",
+      "moakt.com": "1.1.1.1",
+      "outllok.com": "1.1.1.1",
+      "outlok.com": "1.1.1.1",
+      "outlook.co": "1.1.1.1",
+      "outlook.com": "1.1.1.1",
+      "postnode-eval-a01.gmail.com": "1.1.1.1",
+      "postnode-eval-a02.outlook.com": "1.1.1.1",
+      "postnode-eval-a03.yahoo.com": "1.1.1.1",
+      "postnode-eval-a04.proton.me": "1.1.1.1",
+      "postnode-eval-a05.fastmail.com": "1.1.1.1",
+      "postnode-eval-a06.icloud.com": "1.1.1.1",
+      "postnode-eval-a07.zoho.com": "1.1.1.1",
+      "postnode-eval-a08.gmx.com": "1.1.1.1",
+      "postnode-eval-a09.mail.com": "1.1.1.1",
+      "postnode-eval-a10.yandex.com": "1.1.1.1",
+      "postnode-eval-a11.aol.com": "1.1.1.1",
+      "postnode-eval-a12.hotmail.com": "1.1.1.1",
+      "postnode-eval-a13.tutanota.com": "1.1.1.1",
+      "postnode-eval-a14.t-online.de": "1.1.1.1",
+      "postnode-eval-a15.protonmail.com": "1.1.1.1",
+      "proton.me": "1.1.1.1",
+      "protonmail.com": "1.1.1.1",
+      "sharklasers.com": "1.1.1.1",
+      "t-online.de": "1.1.1.1",
+      "temp-mail.org": "1.1.1.1",
+      "tutanota.com": "1.1.1.1",
+      "yahho.com": "1.1.1.1",
+      "yaho.com": "1.1.1.1",
+      "yahoo.com": "1.1.1.1",
+      "yandex.com": "1.1.1.1",
+      "yopmail.com": "1.1.1.1",
+      "yopmail.fr": "1.1.1.1",
+      "zoho.com": "1.1.1.1"
+    },
+    "resolver_attempts": {
+      "10minutemail.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "a_fallback",
+          "detail": "A kaydı bulundu"
+        }
+      ],
+      "aol.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "fastmail.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "gamil.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "gmai.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "gmail.co": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "no_mail_host",
+          "detail": "Null MX kaydı bulundu"
+        }
+      ],
+      "gmail.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "gmail.con": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "nxdomain",
+          "detail": "Alan adı bulunamadı"
+        }
+      ],
+      "gmail.om": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "nxdomain",
+          "detail": "Alan adı bulunamadı"
+        }
+      ],
+      "gmailc.om": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "no_mail_host",
+          "detail": "MX, A ve AAAA kaydı yok"
+        }
+      ],
+      "gmaill.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "no_mail_host",
+          "detail": "MX, A ve AAAA kaydı yok"
+        }
+      ],
+      "gmal.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "no_mail_host",
+          "detail": "MX, A ve AAAA kaydı yok"
+        }
+      ],
+      "gmial.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "error",
+          "detail": "NoNameservers"
+        },
+        {
+          "round": 1,
+          "nameserver": "8.8.8.8",
+          "state": "a_fallback",
+          "detail": "A kaydı bulundu"
+        }
+      ],
+      "gmx.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "guerrillamail.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "guerrillamailblock.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "hitmail.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "a_fallback",
+          "detail": "A kaydı bulundu"
+        }
+      ],
+      "hotmai.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "hotmail.co": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "no_mail_host",
+          "detail": "MX, A ve AAAA kaydı yok"
+        }
+      ],
+      "hotmail.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "hotmail.con": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "nxdomain",
+          "detail": "Alan adı bulunamadı"
+        }
+      ],
+      "hotmial.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "a_fallback",
+          "detail": "A kaydı bulundu"
+        }
+      ],
+      "iclod.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "icloud.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "mail.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "mailinator.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "moakt.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "a_fallback",
+          "detail": "A kaydı bulundu"
+        }
+      ],
+      "outllok.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "outlok.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "a_fallback",
+          "detail": "A kaydı bulundu"
+        }
+      ],
+      "outlook.co": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "outlook.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "postnode-eval-a01.gmail.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "nxdomain",
+          "detail": "Alan adı bulunamadı"
+        }
+      ],
+      "postnode-eval-a02.outlook.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "no_mail_host",
+          "detail": "MX, A ve AAAA kaydı yok"
+        }
+      ],
+      "postnode-eval-a03.yahoo.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "nxdomain",
+          "detail": "Alan adı bulunamadı"
+        }
+      ],
+      "postnode-eval-a04.proton.me": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "nxdomain",
+          "detail": "Alan adı bulunamadı"
+        }
+      ],
+      "postnode-eval-a05.fastmail.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "postnode-eval-a06.icloud.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "nxdomain",
+          "detail": "Alan adı bulunamadı"
+        }
+      ],
+      "postnode-eval-a07.zoho.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "nxdomain",
+          "detail": "Alan adı bulunamadı"
+        }
+      ],
+      "postnode-eval-a08.gmx.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "nxdomain",
+          "detail": "Alan adı bulunamadı"
+        }
+      ],
+      "postnode-eval-a09.mail.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "nxdomain",
+          "detail": "Alan adı bulunamadı"
+        }
+      ],
+      "postnode-eval-a10.yandex.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "postnode-eval-a11.aol.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "nxdomain",
+          "detail": "Alan adı bulunamadı"
+        }
+      ],
+      "postnode-eval-a12.hotmail.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "nxdomain",
+          "detail": "Alan adı bulunamadı"
+        }
+      ],
+      "postnode-eval-a13.tutanota.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "no_mail_host",
+          "detail": "MX, A ve AAAA kaydı yok"
+        }
+      ],
+      "postnode-eval-a14.t-online.de": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "nxdomain",
+          "detail": "Alan adı bulunamadı"
+        }
+      ],
+      "postnode-eval-a15.protonmail.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "nxdomain",
+          "detail": "Alan adı bulunamadı"
+        }
+      ],
+      "proton.me": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "protonmail.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "sharklasers.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "t-online.de": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "temp-mail.org": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "tutanota.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "yahho.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "no_mail_host",
+          "detail": "Null MX kaydı bulundu"
+        }
+      ],
+      "yaho.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "a_fallback",
+          "detail": "A kaydı bulundu"
+        }
+      ],
+      "yahoo.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "yandex.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "yopmail.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "yopmail.fr": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ],
+      "zoho.com": [
+        {
+          "round": 1,
+          "nameserver": "1.1.1.1",
+          "state": "mx",
+          "detail": "MX kaydı bulundu"
+        }
+      ]
+    },
+    "details": {
+      "10minutemail.com": "A kaydı bulundu",
+      "aol.com": "MX kaydı bulundu",
+      "fastmail.com": "MX kaydı bulundu",
+      "gamil.com": "MX kaydı bulundu",
+      "gmai.com": "MX kaydı bulundu",
+      "gmail.co": "Null MX kaydı bulundu",
+      "gmail.com": "MX kaydı bulundu",
+      "gmail.con": "Alan adı bulunamadı",
+      "gmail.om": "Alan adı bulunamadı",
+      "gmailc.om": "MX, A ve AAAA kaydı yok",
+      "gmaill.com": "MX, A ve AAAA kaydı yok",
+      "gmal.com": "MX, A ve AAAA kaydı yok",
+      "gmial.com": "A kaydı bulundu",
+      "gmx.com": "MX kaydı bulundu",
+      "guerrillamail.com": "MX kaydı bulundu",
+      "guerrillamailblock.com": "MX kaydı bulundu",
+      "hitmail.com": "A kaydı bulundu",
+      "hotmai.com": "MX kaydı bulundu",
+      "hotmail.co": "MX, A ve AAAA kaydı yok",
+      "hotmail.com": "MX kaydı bulundu",
+      "hotmail.con": "Alan adı bulunamadı",
+      "hotmial.com": "A kaydı bulundu",
+      "iclod.com": "MX kaydı bulundu",
+      "icloud.com": "MX kaydı bulundu",
+      "mail.com": "MX kaydı bulundu",
+      "mailinator.com": "MX kaydı bulundu",
+      "moakt.com": "A kaydı bulundu",
+      "outllok.com": "MX kaydı bulundu",
+      "outlok.com": "A kaydı bulundu",
+      "outlook.co": "MX kaydı bulundu",
+      "outlook.com": "MX kaydı bulundu",
+      "postnode-eval-a01.gmail.com": "Alan adı bulunamadı",
+      "postnode-eval-a02.outlook.com": "MX, A ve AAAA kaydı yok",
+      "postnode-eval-a03.yahoo.com": "Alan adı bulunamadı",
+      "postnode-eval-a04.proton.me": "Alan adı bulunamadı",
+      "postnode-eval-a05.fastmail.com": "MX kaydı bulundu",
+      "postnode-eval-a06.icloud.com": "Alan adı bulunamadı",
+      "postnode-eval-a07.zoho.com": "Alan adı bulunamadı",
+      "postnode-eval-a08.gmx.com": "Alan adı bulunamadı",
+      "postnode-eval-a09.mail.com": "Alan adı bulunamadı",
+      "postnode-eval-a10.yandex.com": "MX kaydı bulundu",
+      "postnode-eval-a11.aol.com": "Alan adı bulunamadı",
+      "postnode-eval-a12.hotmail.com": "Alan adı bulunamadı",
+      "postnode-eval-a13.tutanota.com": "MX, A ve AAAA kaydı yok",
+      "postnode-eval-a14.t-online.de": "Alan adı bulunamadı",
+      "postnode-eval-a15.protonmail.com": "Alan adı bulunamadı",
+      "proton.me": "MX kaydı bulundu",
+      "protonmail.com": "MX kaydı bulundu",
+      "sharklasers.com": "MX kaydı bulundu",
+      "t-online.de": "MX kaydı bulundu",
+      "temp-mail.org": "MX kaydı bulundu",
+      "tutanota.com": "MX kaydı bulundu",
+      "yahho.com": "Null MX kaydı bulundu",
+      "yaho.com": "A kaydı bulundu",
+      "yahoo.com": "MX kaydı bulundu",
+      "yandex.com": "MX kaydı bulundu",
+      "yopmail.com": "MX kaydı bulundu",
+      "yopmail.fr": "MX kaydı bulundu",
+      "zoho.com": "MX kaydı bulundu"
+    }
+  },
+  "result_status": "valid"
+}

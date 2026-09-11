@@ -329,6 +329,8 @@ Tahmini bounce oranı gerçek teslimat ölçümü değildir; `invalid + 0.25 × 
 ```bash
 pytest
 python scripts/evaluate.py
+python scripts/evaluate_task1_holdout.py
+python scripts/evaluate_task1_syntax_reference.py
 python scripts/evaluate_bounce_classifier.py
 python scripts/benchmark.py
 ```
@@ -350,19 +352,60 @@ recall ve macro F1 ile `%0` geçerli→geçersiz FPR'dır. Ayrıntılar
 [`evaluation/report.md`](evaluation/report.md) ve [`TASK1-REPORT.md`](TASK1-REPORT.md)
 içindedir; bu sayılar üretim doğruluğu olarak sunulmaz.
 
+Kabul setinden ayrı `evaluation/task1-holdout.csv`, her karar sınıfında 100 olmak
+üzere 300 dondurulmuş örnek içerir ve kabul setiyle sıfır adres örtüşmesine sahiptir.
+Güncel statik-senaryo sonucu `%100` accuracy/macro F1 ve `%0` geçerli→geçerli
+olmayan FPR'dır. Bu da müşteri trafiği değildir.
+
+Syntax kararları ayrıca Unlicense lisanslı `python-email-validator==2.3.0` ile
+473 deterministik örnekte karşılaştırılır. Ham uyum `%89,43`, açıkça belgelenmiş
+ürün/RFC politika farkları hariç uyum `%100`'dür. İlk çalıştırma geçersiz Punycode
+A-label kabulünü ortaya çıkarmış ve açık IDNA doğrulamasıyla düzeltilmiştir.
+Ham farklar rapordan çıkarılmaz. Veri ayrımı, kaynaklar ve sınırlamalar
+[`docs/task1-holdout-methodology.md`](docs/task1-holdout-methodology.md) içindedir.
+
 `benchmark/emails-10000.csv` tam 10.000 satırdır. Benchmark, üretimde kullanılan MySQL kayıt yoluyla hem boş DNS cache ile ilk koşuyu hem de dolu cache ile ikinci koşuyu ölçer. Ağ değişkenliğini ortadan kaldırmak için DNS cevabı sabittir; ilk koşuda dört tekil alan adı için dört sorgu, ikinci koşuda ise kalıcı cache sayesinde sıfır sorgu beklenir. İki koşuda toplam 20.000 sonuç satırının MySQL'e yazıldığı doğrulanır ve benchmark kendi oluşturduğu satırları bitişte temizler.
 
 GitHub Actions, her `main` push ve pull request işleminde Python 3.11 ve 3.12 üzerinde SQLite birim testlerini, gerçek MySQL 8.4 entegrasyon testini, değerlendirmeyi ve MySQL benchmark'ını otomatik çalıştırır.
 
 Ayrı Görev 1 coverage adımı yalnızca adres doğrulama modüllerini ölçer, XML/JSON
 kanıtı üretir ve toplam kapsam `%85` altına düşerse CI'ı başarısız yapar. Güncel
-yerel ölçüm `%86,35`'tir.
+yerel ölçüm `%88,39`'dur.
 
 Gerçek DNS gecikmesini ölçmek için `python scripts/benchmark_live_dns.py
 --acknowledge-live-dns` kullanılabilir. Bu ölçüm herkese açık 20 alan adıyla,
 müşteri verisi olmadan çalışır ve tüm cevaplar teknik hata ise geçersiz sayılır.
 Gerçek DNS sonucu, deterministik 10.000 adres/MySQL benchmark'ıyla hız üstünlüğü
 iddiası amacıyla karşılaştırılmaz.
+
+### 200 adreslik canlı DNS karşılaştırması
+
+Sentetik `%100` kabul ölçümünden ayrı, dış syntax referansı ve gerçek DNS kullanan üç sınıflı
+değerlendirme aşağıdaki komutla çalıştırılır:
+
+```bash
+python scripts/evaluate_task1_live_challenge.py --acknowledge-live-dns
+```
+
+Komut; 200 satırlık dondurulmuş corpus için accuracy, macro precision/recall/F1,
+geçerli adres yanlış-pozitif oranı, confusion matrix ve kategori başarısını üretir.
+Geçerli domainler tekilleştirilir; çalışan yapılandırılmış resolver'lar yoklanır,
+teknik hatalar yeniden denenir ve iki karar tarafına aynı canlı DNS snapshot'ı verilir.
+Bu, geçici resolver farkının taraflardan birini kayırmasını önler; projenin DNS
+algoritması için bağımsız doğrulama iddiası taşımaz. Bir teknik hata bile kalırsa
+ilgili satır puana gizlice eklenmez ve `measurement_valid=false` ile komut başarısız
+olur. Mailbox/SMTP bağlantısı kurulmaz; yalnız herkese açık domain DNS kayıtları
+sorgulanır. Sonuçlar
+`evaluation/task1-live-challenge-results.json` ve
+`evaluation/task1-live-challenge-report.md` dosyalarına yazılır.
+
+Yerel resolver teknik hata verirse açıkça seçilmiş resolver ve daha geniş yeniden
+deneme bütçesi kullanılabilir:
+
+```bash
+python scripts/evaluate_task1_live_challenge.py --acknowledge-live-dns \
+  --nameserver 1.1.1.1 --nameserver 8.8.8.8 --dns-timeout 5 --dns-retries 3
+```
 
 CI, ölçülmüş süreleri `delivery-evidence-python-*` adlı indirilebilir dosya
 paketlerinde saklar. Windows'ta `collect_delivery_evidence.bat` aynı ölçümleri

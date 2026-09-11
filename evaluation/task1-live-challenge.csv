@@ -1,0 +1,201 @@
+case_id,email,category,risk_if_deliverable,rationale
+live-001,task1.audit@gmail.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-002,quality.check@gmail.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-003,sample+tag@gmail.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-004,mail.validation@gmail.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-005,task1.audit@outlook.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-006,quality.check@outlook.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-007,sample+tag@outlook.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-008,mail.validation@outlook.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-009,task1.audit@yahoo.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-010,quality.check@yahoo.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-011,sample+tag@yahoo.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-012,mail.validation@yahoo.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-013,task1.audit@proton.me,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-014,quality.check@proton.me,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-015,sample+tag@proton.me,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-016,mail.validation@proton.me,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-017,task1.audit@protonmail.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-018,quality.check@protonmail.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-019,sample+tag@protonmail.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-020,mail.validation@protonmail.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-021,task1.audit@fastmail.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-022,quality.check@fastmail.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-023,sample+tag@fastmail.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-024,mail.validation@fastmail.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-025,task1.audit@icloud.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-026,quality.check@icloud.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-027,sample+tag@icloud.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-028,mail.validation@icloud.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-029,task1.audit@zoho.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-030,quality.check@zoho.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-031,sample+tag@zoho.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-032,mail.validation@zoho.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-033,task1.audit@gmx.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-034,quality.check@gmx.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-035,sample+tag@gmx.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-036,mail.validation@gmx.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-037,task1.audit@mail.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-038,quality.check@mail.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-039,sample+tag@mail.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-040,mail.validation@mail.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-041,task1.audit@yandex.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-042,quality.check@yandex.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-043,sample+tag@yandex.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-044,mail.validation@yandex.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-045,task1.audit@aol.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-046,quality.check@aol.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-047,sample+tag@aol.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-048,mail.validation@aol.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-049,task1.audit@hotmail.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-050,quality.check@hotmail.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-051,sample+tag@hotmail.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-052,mail.validation@hotmail.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-053,task1.audit@tutanota.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-054,quality.check@tutanota.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-055,sample+tag@tutanota.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-056,mail.validation@tutanota.com,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-057,task1.audit@t-online.de,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-058,quality.check@t-online.de,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-059,sample+tag@t-online.de,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-060,mail.validation@t-online.de,neutral_public_domain,none,Tarafsız yerel bölüm; bağımsız referans syntax ve canlı DNS sonucunu belirler.
+live-061,info@gmail.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-062,info@outlook.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-063,info@proton.me,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-064,info@fastmail.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-065,support@gmail.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-066,support@outlook.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-067,support@proton.me,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-068,support@fastmail.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-069,sales-eu@gmail.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-070,sales-eu@outlook.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-071,sales-eu@proton.me,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-072,sales-eu@fastmail.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-073,hr@gmail.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-074,hr@outlook.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-075,hr@proton.me,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-076,hr@fastmail.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-077,security@gmail.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-078,security@outlook.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-079,security@proton.me,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-080,security@fastmail.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-081,postmaster@gmail.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-082,postmaster@outlook.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-083,postmaster@proton.me,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-084,postmaster@fastmail.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-085,hostmaster@gmail.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-086,hostmaster@outlook.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-087,hostmaster@proton.me,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-088,hostmaster@fastmail.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-089,billing@gmail.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-090,billing@outlook.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-091,billing@proton.me,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-092,billing@fastmail.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-093,careers@gmail.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-094,careers@outlook.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-095,careers@proton.me,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-096,careers@fastmail.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-097,iletisim@gmail.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-098,iletisim@outlook.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-099,iletisim@proton.me,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-100,iletisim@fastmail.com,role_account,role_account,Canlı DNS kabul ederse ortak/rol hesabı olarak şüpheli beklenir.
+live-101,challenge.alpha@mailinator.com,disposable_domain,disposable_domain,Canlı DNS kabul ederse bağımsız disposable kategorisi nedeniyle şüpheli beklenir.
+live-102,challenge.beta@mailinator.com,disposable_domain,disposable_domain,Canlı DNS kabul ederse bağımsız disposable kategorisi nedeniyle şüpheli beklenir.
+live-103,challenge.alpha@guerrillamail.com,disposable_domain,disposable_domain,Canlı DNS kabul ederse bağımsız disposable kategorisi nedeniyle şüpheli beklenir.
+live-104,challenge.beta@guerrillamail.com,disposable_domain,disposable_domain,Canlı DNS kabul ederse bağımsız disposable kategorisi nedeniyle şüpheli beklenir.
+live-105,challenge.alpha@guerrillamailblock.com,disposable_domain,disposable_domain,Canlı DNS kabul ederse bağımsız disposable kategorisi nedeniyle şüpheli beklenir.
+live-106,challenge.beta@guerrillamailblock.com,disposable_domain,disposable_domain,Canlı DNS kabul ederse bağımsız disposable kategorisi nedeniyle şüpheli beklenir.
+live-107,challenge.alpha@sharklasers.com,disposable_domain,disposable_domain,Canlı DNS kabul ederse bağımsız disposable kategorisi nedeniyle şüpheli beklenir.
+live-108,challenge.beta@sharklasers.com,disposable_domain,disposable_domain,Canlı DNS kabul ederse bağımsız disposable kategorisi nedeniyle şüpheli beklenir.
+live-109,challenge.alpha@yopmail.com,disposable_domain,disposable_domain,Canlı DNS kabul ederse bağımsız disposable kategorisi nedeniyle şüpheli beklenir.
+live-110,challenge.beta@yopmail.com,disposable_domain,disposable_domain,Canlı DNS kabul ederse bağımsız disposable kategorisi nedeniyle şüpheli beklenir.
+live-111,challenge.alpha@yopmail.fr,disposable_domain,disposable_domain,Canlı DNS kabul ederse bağımsız disposable kategorisi nedeniyle şüpheli beklenir.
+live-112,challenge.beta@yopmail.fr,disposable_domain,disposable_domain,Canlı DNS kabul ederse bağımsız disposable kategorisi nedeniyle şüpheli beklenir.
+live-113,challenge.alpha@10minutemail.com,disposable_domain,disposable_domain,Canlı DNS kabul ederse bağımsız disposable kategorisi nedeniyle şüpheli beklenir.
+live-114,challenge.beta@10minutemail.com,disposable_domain,disposable_domain,Canlı DNS kabul ederse bağımsız disposable kategorisi nedeniyle şüpheli beklenir.
+live-115,challenge.alpha@temp-mail.org,disposable_domain,disposable_domain,Canlı DNS kabul ederse bağımsız disposable kategorisi nedeniyle şüpheli beklenir.
+live-116,challenge.beta@temp-mail.org,disposable_domain,disposable_domain,Canlı DNS kabul ederse bağımsız disposable kategorisi nedeniyle şüpheli beklenir.
+live-117,challenge.gamma@yopmail.fr,disposable_domain,disposable_domain,Canlı DNS kabul ederse bağımsız disposable kategorisi nedeniyle şüpheli beklenir.
+live-118,challenge.delta@yopmail.fr,disposable_domain,disposable_domain,Canlı DNS kabul ederse bağımsız disposable kategorisi nedeniyle şüpheli beklenir.
+live-119,challenge.alpha@moakt.com,disposable_domain,disposable_domain,Canlı DNS kabul ederse bağımsız disposable kategorisi nedeniyle şüpheli beklenir.
+live-120,challenge.beta@moakt.com,disposable_domain,disposable_domain,Canlı DNS kabul ederse bağımsız disposable kategorisi nedeniyle şüpheli beklenir.
+live-121,typo.audit1@gamil.com,provider_typo,provider_typo,Canlı DNS kabul ederse gözden geçirilmiş sağlayıcı typo'su nedeniyle şüpheli beklenir.
+live-122,typo.audit2@gmai.com,provider_typo,provider_typo,Canlı DNS kabul ederse gözden geçirilmiş sağlayıcı typo'su nedeniyle şüpheli beklenir.
+live-123,typo.audit3@gmail.co,provider_typo,provider_typo,Canlı DNS kabul ederse gözden geçirilmiş sağlayıcı typo'su nedeniyle şüpheli beklenir.
+live-124,typo.audit4@gmail.con,provider_typo,provider_typo,Canlı DNS kabul ederse gözden geçirilmiş sağlayıcı typo'su nedeniyle şüpheli beklenir.
+live-125,typo.audit5@gmail.om,provider_typo,provider_typo,Canlı DNS kabul ederse gözden geçirilmiş sağlayıcı typo'su nedeniyle şüpheli beklenir.
+live-126,typo.audit6@gmailc.om,provider_typo,provider_typo,Canlı DNS kabul ederse gözden geçirilmiş sağlayıcı typo'su nedeniyle şüpheli beklenir.
+live-127,typo.audit7@gmal.com,provider_typo,provider_typo,Canlı DNS kabul ederse gözden geçirilmiş sağlayıcı typo'su nedeniyle şüpheli beklenir.
+live-128,typo.audit8@gmial.com,provider_typo,provider_typo,Canlı DNS kabul ederse gözden geçirilmiş sağlayıcı typo'su nedeniyle şüpheli beklenir.
+live-129,typo.audit9@gmaill.com,provider_typo,provider_typo,Canlı DNS kabul ederse gözden geçirilmiş sağlayıcı typo'su nedeniyle şüpheli beklenir.
+live-130,typo.audit10@hitmail.com,provider_typo,provider_typo,Canlı DNS kabul ederse gözden geçirilmiş sağlayıcı typo'su nedeniyle şüpheli beklenir.
+live-131,typo.audit11@hotmai.com,provider_typo,provider_typo,Canlı DNS kabul ederse gözden geçirilmiş sağlayıcı typo'su nedeniyle şüpheli beklenir.
+live-132,typo.audit12@hotmail.co,provider_typo,provider_typo,Canlı DNS kabul ederse gözden geçirilmiş sağlayıcı typo'su nedeniyle şüpheli beklenir.
+live-133,typo.audit13@hotmail.con,provider_typo,provider_typo,Canlı DNS kabul ederse gözden geçirilmiş sağlayıcı typo'su nedeniyle şüpheli beklenir.
+live-134,typo.audit14@hotmial.com,provider_typo,provider_typo,Canlı DNS kabul ederse gözden geçirilmiş sağlayıcı typo'su nedeniyle şüpheli beklenir.
+live-135,typo.audit15@iclod.com,provider_typo,provider_typo,Canlı DNS kabul ederse gözden geçirilmiş sağlayıcı typo'su nedeniyle şüpheli beklenir.
+live-136,typo.audit16@outlok.com,provider_typo,provider_typo,Canlı DNS kabul ederse gözden geçirilmiş sağlayıcı typo'su nedeniyle şüpheli beklenir.
+live-137,typo.audit17@outllok.com,provider_typo,provider_typo,Canlı DNS kabul ederse gözden geçirilmiş sağlayıcı typo'su nedeniyle şüpheli beklenir.
+live-138,typo.audit18@outlook.co,provider_typo,provider_typo,Canlı DNS kabul ederse gözden geçirilmiş sağlayıcı typo'su nedeniyle şüpheli beklenir.
+live-139,typo.audit19@yahho.com,provider_typo,provider_typo,Canlı DNS kabul ederse gözden geçirilmiş sağlayıcı typo'su nedeniyle şüpheli beklenir.
+live-140,typo.audit20@yaho.com,provider_typo,provider_typo,Canlı DNS kabul ederse gözden geçirilmiş sağlayıcı typo'su nedeniyle şüpheli beklenir.
+live-141,missing-at.example.com,invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-142,double@@gmail.com,invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-143,@gmail.com,invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-144,.leading@gmail.com,invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-145,trailing.@gmail.com,invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-146,two..dots@gmail.com,invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-147,white space@gmail.com,invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-148,"comma,name@gmail.com",invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-149,colon:name@gmail.com,invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-150,semi;name@gmail.com,invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-151,paren(name)@gmail.com,invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-152,bracket[name]@gmail.com,invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-153,back\slash@gmail.com,invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-154,angle<name>@gmail.com,invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-155,tab	inside@gmail.com,invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-156,"quote""inside@gmail.com",invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-157,local@localhost,invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-158,local@-leading.com,invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-159,local@trailing-.com,invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-160,local@under_score.com,invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-161,local@two..dots.com,invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-162,local@space name.com,invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-163,local@bad!character.com,invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-164,local@xn--0.example,invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-165,xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@gmail.com,invalid_syntax,none,Bağımsız strict syntax referansının reddetmesi beklenen örnek.
+live-166,dns.audit1@postnode-eval-a01.gmail.com,nonexistent_subdomain,none,Syntax geçerli; bağımsız canlı DNS referansının reddetmesi beklenir.
+live-167,dns.audit2@postnode-eval-a02.outlook.com,nonexistent_subdomain,none,Syntax geçerli; bağımsız canlı DNS referansının reddetmesi beklenir.
+live-168,dns.audit3@postnode-eval-a03.yahoo.com,nonexistent_subdomain,none,Syntax geçerli; bağımsız canlı DNS referansının reddetmesi beklenir.
+live-169,dns.audit4@postnode-eval-a04.proton.me,nonexistent_subdomain,none,Syntax geçerli; bağımsız canlı DNS referansının reddetmesi beklenir.
+live-170,dns.audit5@postnode-eval-a05.fastmail.com,nonexistent_subdomain,none,Syntax geçerli; bağımsız canlı DNS referansının reddetmesi beklenir.
+live-171,dns.audit6@postnode-eval-a06.icloud.com,nonexistent_subdomain,none,Syntax geçerli; bağımsız canlı DNS referansının reddetmesi beklenir.
+live-172,dns.audit7@postnode-eval-a07.zoho.com,nonexistent_subdomain,none,Syntax geçerli; bağımsız canlı DNS referansının reddetmesi beklenir.
+live-173,dns.audit8@postnode-eval-a08.gmx.com,nonexistent_subdomain,none,Syntax geçerli; bağımsız canlı DNS referansının reddetmesi beklenir.
+live-174,dns.audit9@postnode-eval-a09.mail.com,nonexistent_subdomain,none,Syntax geçerli; bağımsız canlı DNS referansının reddetmesi beklenir.
+live-175,dns.audit10@postnode-eval-a10.yandex.com,nonexistent_subdomain,none,Syntax geçerli; bağımsız canlı DNS referansının reddetmesi beklenir.
+live-176,dns.audit11@postnode-eval-a11.aol.com,nonexistent_subdomain,none,Syntax geçerli; bağımsız canlı DNS referansının reddetmesi beklenir.
+live-177,dns.audit12@postnode-eval-a12.hotmail.com,nonexistent_subdomain,none,Syntax geçerli; bağımsız canlı DNS referansının reddetmesi beklenir.
+live-178,dns.audit13@postnode-eval-a13.tutanota.com,nonexistent_subdomain,none,Syntax geçerli; bağımsız canlı DNS referansının reddetmesi beklenir.
+live-179,dns.audit14@postnode-eval-a14.t-online.de,nonexistent_subdomain,none,Syntax geçerli; bağımsız canlı DNS referansının reddetmesi beklenir.
+live-180,dns.audit15@postnode-eval-a15.protonmail.com,nonexistent_subdomain,none,Syntax geçerli; bağımsız canlı DNS referansının reddetmesi beklenir.
+live-181,élif@gmail.com,smtputf8,smtputf8,Canlı DNS kabul ederse SMTPUTF8 gereksinimi nedeniyle şüpheli beklenir.
+live-182,müller@outlook.com,smtputf8,smtputf8,Canlı DNS kabul ederse SMTPUTF8 gereksinimi nedeniyle şüpheli beklenir.
+live-183,çağrı@proton.me,smtputf8,smtputf8,Canlı DNS kabul ederse SMTPUTF8 gereksinimi nedeniyle şüpheli beklenir.
+live-184,josé@fastmail.com,smtputf8,smtputf8,Canlı DNS kabul ederse SMTPUTF8 gereksinimi nedeniyle şüpheli beklenir.
+live-185,naïve@icloud.com,smtputf8,smtputf8,Canlı DNS kabul ederse SMTPUTF8 gereksinimi nedeniyle şüpheli beklenir.
+live-186,δοκιμή@gmail.com,smtputf8,smtputf8,Canlı DNS kabul ederse SMTPUTF8 gereksinimi nedeniyle şüpheli beklenir.
+live-187,пользователь@outlook.com,smtputf8,smtputf8,Canlı DNS kabul ederse SMTPUTF8 gereksinimi nedeniyle şüpheli beklenir.
+live-188,用户@proton.me,smtputf8,smtputf8,Canlı DNS kabul ederse SMTPUTF8 gereksinimi nedeniyle şüpheli beklenir.
+live-189,résumé@fastmail.com,smtputf8,smtputf8,Canlı DNS kabul ederse SMTPUTF8 gereksinimi nedeniyle şüpheli beklenir.
+live-190,françois@icloud.com,smtputf8,smtputf8,Canlı DNS kabul ederse SMTPUTF8 gereksinimi nedeniyle şüpheli beklenir.
+live-191,  outer.space1@gmail.com  ,strict_outer_space,none,Strict harici referans boşluklu girdiyi reddeder; servis bilinçli olarak trim eder.
+live-192,  outer.space2@outlook.com  ,strict_outer_space,none,Strict harici referans boşluklu girdiyi reddeder; servis bilinçli olarak trim eder.
+live-193,  outer.space3@yahoo.com  ,strict_outer_space,none,Strict harici referans boşluklu girdiyi reddeder; servis bilinçli olarak trim eder.
+live-194,  outer.space4@proton.me  ,strict_outer_space,none,Strict harici referans boşluklu girdiyi reddeder; servis bilinçli olarak trim eder.
+live-195,  outer.space5@protonmail.com  ,strict_outer_space,none,Strict harici referans boşluklu girdiyi reddeder; servis bilinçli olarak trim eder.
+live-196,  outer.space6@fastmail.com  ,strict_outer_space,none,Strict harici referans boşluklu girdiyi reddeder; servis bilinçli olarak trim eder.
+live-197,  outer.space7@icloud.com  ,strict_outer_space,none,Strict harici referans boşluklu girdiyi reddeder; servis bilinçli olarak trim eder.
+live-198,  outer.space8@zoho.com  ,strict_outer_space,none,Strict harici referans boşluklu girdiyi reddeder; servis bilinçli olarak trim eder.
+live-199,  outer.space9@gmx.com  ,strict_outer_space,none,Strict harici referans boşluklu girdiyi reddeder; servis bilinçli olarak trim eder.
+live-200,  outer.space10@mail.com  ,strict_outer_space,none,Strict harici referans boşluklu girdiyi reddeder; servis bilinçli olarak trim eder.

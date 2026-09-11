@@ -2,6 +2,8 @@ import re
 import unicodedata
 from dataclasses import dataclass
 
+import idna
+
 from app.reason_codes import ReasonCode
 
 
@@ -57,8 +59,10 @@ def validate_syntax(raw: str, allow_smtputf8: bool = True) -> SyntaxResult:
         return SyntaxResult(None, local, raw_domain.casefold(), [ReasonCode.INVALID_LOCAL_PART])
 
     try:
-        domain = raw_domain.rstrip(".").encode("idna").decode("ascii").casefold()
-    except UnicodeError:
+        # The stdlib codec can pass malformed pre-encoded A-labels through.
+        # idna.encode validates both Unicode labels and existing ``xn--`` labels.
+        domain = idna.encode(raw_domain.rstrip("."), uts46=True).decode("ascii").casefold()
+    except (idna.IDNAError, UnicodeError):
         return SyntaxResult(None, local, raw_domain.casefold(), [ReasonCode.INVALID_DOMAIN])
 
     labels = domain.split(".")
