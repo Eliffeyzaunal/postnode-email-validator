@@ -72,3 +72,44 @@ def test_scheduler_rejects_zero_interval(blocklist_service):
 def test_scheduler_rejects_negative_grace(blocklist_service):
     with pytest.raises(ValueError, match="negatif olamaz"):
         BlocklistScheduler(blocklist_service, grace_seconds=-1)
+
+def test_history_report_rejects_days_outside_retention(blocklist_service):
+    scheduler = BlocklistScheduler(blocklist_service, retention_days=30)
+
+    with pytest.raises(ValueError, match="1 ile 30"):
+        scheduler.history_report(0)
+    with pytest.raises(ValueError, match="1 ile 30"):
+        scheduler.history_report(31)
+
+
+def test_run_forever_stops_cleanly_after_one_cycle(blocklist_service, monkeypatch):
+    from threading import Event
+
+    scheduler = BlocklistScheduler(blocklist_service, interval_seconds=1)
+    stop_event = Event()
+    calls = []
+
+    def one_cycle():
+        calls.append("cycle")
+        stop_event.set()
+
+    monkeypatch.setattr(scheduler, "run_cycle", one_cycle)
+    scheduler.run_forever(stop_event)
+
+    assert calls == ["cycle"]
+
+
+def test_run_forever_catches_cycle_failure_and_stops(blocklist_service, monkeypatch, caplog):
+    from threading import Event
+
+    scheduler = BlocklistScheduler(blocklist_service, interval_seconds=1)
+    stop_event = Event()
+
+    def fail_once():
+        stop_event.set()
+        raise RuntimeError("simulated loop failure")
+
+    monkeypatch.setattr(scheduler, "run_cycle", fail_once)
+    scheduler.run_forever(stop_event)
+
+    assert "simulated loop failure" in caplog.text

@@ -64,6 +64,7 @@ jobs:
           tests/test_evaluation_evidence.py
           tests/test_parser.py
           tests/test_privacy.py
+          tests/test_repository.py
           tests/test_syntax.py
           tests/test_task1_address_rules.py
           tests/test_task1_holdout_evaluation.py
@@ -80,7 +81,23 @@ jobs:
           --cov-report=term-missing
           --cov-report=xml:outputs/evidence/task1-coverage.xml
           --cov-report=json:outputs/evidence/task1-coverage.json
-          --cov-fail-under=85
+          --cov-fail-under=95
+
+
+      - name: Görev 2 blocklist kapsam kanıtını üret
+        run: >-
+          pytest
+          tests/test_blocklist_checker.py
+          tests/test_blocklist_dns_live.py
+          tests/test_blocklist_scheduler.py
+          tests/test_blocklist_service.py
+          tests/test_blocklist_cli.py
+          tests/test_mysql_integration.py
+          --cov=app.blocklist
+          --cov-report=term-missing
+          --cov-report=xml:outputs/evidence/task2-coverage.xml
+          --cov-report=json:outputs/evidence/task2-coverage.json
+          --cov-fail-under=90
 
       - name: Değerlendirme kümesini çalıştır
         run: python scripts/evaluate.py --output outputs/evidence/evaluation.json --markdown outputs/evidence/evaluation.md
@@ -101,6 +118,23 @@ jobs:
 
       # The 200-address live challenge is intentionally not run in CI: DNS
       # availability and resolver policy would make the metric non-deterministic.
+
+
+      - name: Görev 4 bounce sınıflandırıcı kapsam kanıtını üret
+        run: >-
+          pytest
+          tests/test_bounce_api.py
+          tests/test_bounce_classifier.py
+          tests/test_bounce_cli.py
+          tests/test_bounce_evaluation.py
+          tests/test_bounce_io.py
+          tests/test_bounce_privacy.py
+          tests/test_bounce_rule_validation.py
+          --cov=app.bounce_classifier
+          --cov-report=term-missing
+          --cov-report=xml:outputs/evidence/task4-coverage.xml
+          --cov-report=json:outputs/evidence/task4-coverage.json
+          --cov-fail-under=90
 
       - name: Bounce sınıflandırıcı değerlendirmesini çalıştır
         run: >-
