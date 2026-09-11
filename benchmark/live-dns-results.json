@@ -1,0 +1,24 @@
+{
+  "measured_at": "2026-09-10T18:03:32.371292+00:00",
+  "platform": "Windows",
+  "python_version": "3.13.1",
+  "dns_mode": "live_public_domains",
+  "customer_data": false,
+  "resolver_nameservers": [
+    "10.157.112.139",
+    "192.168.1.1"
+  ],
+  "domain_count": 20,
+  "cold_elapsed_seconds": 2.1438,
+  "cold_queries_per_second": 9.33,
+  "warm_elapsed_seconds": 0.0115,
+  "warm_queries_per_second": 1737.36,
+  "cold_state_counts": {
+    "mx": 15,
+    "no_mail_host": 3,
+    "nxdomain": 2
+  },
+  "successful_dns_results": 20,
+  "measurement_valid": true,
+  "warm_cache_hits": 20
+}

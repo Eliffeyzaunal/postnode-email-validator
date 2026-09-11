@@ -55,8 +55,52 @@ jobs:
       - name: Otomatik testleri çalıştır
         run: pytest --junitxml=outputs/evidence/tests.xml
 
+      - name: Görev 1 kapsam kanıtını üret
+        run: >-
+          pytest
+          tests/test_api.py
+          tests/test_dns_cache.py
+          tests/test_dns_checker.py
+          tests/test_evaluation_evidence.py
+          tests/test_parser.py
+          tests/test_privacy.py
+          tests/test_syntax.py
+          tests/test_task1_address_rules.py
+          tests/test_task1_holdout_evaluation.py
+          tests/test_task1_live_challenge.py
+          tests/test_task1_live_dns_benchmark.py
+          tests/test_validator.py
+          --cov=app.address_rules
+          --cov=app.dns_checker
+          --cov=app.parser
+          --cov=app.privacy
+          --cov=app.repository
+          --cov=app.syntax
+          --cov=app.validator
+          --cov-report=term-missing
+          --cov-report=xml:outputs/evidence/task1-coverage.xml
+          --cov-report=json:outputs/evidence/task1-coverage.json
+          --cov-fail-under=85
+
       - name: Değerlendirme kümesini çalıştır
         run: python scripts/evaluate.py --output outputs/evidence/evaluation.json --markdown outputs/evidence/evaluation.md
+
+      - name: Görev 1 dondurulmuş holdout setini çalıştır
+        run: >-
+          python scripts/evaluate_task1_holdout.py
+          --output outputs/evidence/task1-holdout.json
+          --markdown outputs/evidence/task1-holdout.md
+          --min-accuracy 0.90
+
+      - name: Görev 1 bağımsız syntax referansını çalıştır
+        run: >-
+          python scripts/evaluate_task1_syntax_reference.py
+          --output outputs/evidence/task1-syntax-reference.json
+          --markdown outputs/evidence/task1-syntax-reference.md
+          --min-agreement 0.85
+
+      # The 200-address live challenge is intentionally not run in CI: DNS
+      # availability and resolver policy would make the metric non-deterministic.
 
       - name: Bounce sınıflandırıcı değerlendirmesini çalıştır
         run: >-

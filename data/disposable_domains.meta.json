@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/disposable-email-domains/disposable-email-domains",
+  "source_file": "disposable_email_blocklist.conf",
+  "source_commit": "2ce7e2c89184e5f613bab0222f37911daae30ae0",
+  "retrieved_on": "2026-09-10",
+  "domain_count": 8746,
+  "sha256": "6c53535775820483f93a583a26d48d34c94bce9a3c1c5eb3147e00cf211b8205",
+  "license": "Public Domain dedication; vendored text in docs/licenses/disposable-email-domains-LICENSE.txt",
+  "runtime_network_access": false
+}

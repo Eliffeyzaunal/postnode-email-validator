@@ -1,0 +1,301 @@
+case_id,email,dns_state,expected_status,category,origin,reference,notes
+valid-neutral-000,person.0+holdout@mail0.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-001,person.1+holdout@mail1.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-002,person.2+holdout@mail2.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-003,person.3+holdout@mail3.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-004,person.4+holdout@mail4.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-005,person.5+holdout@mail5.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-006,person.6+holdout@mail6.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-007,person.7+holdout@mail7.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-008,person.8+holdout@mail8.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-009,person.9+holdout@mail9.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-010,person.10+holdout@mail10.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-011,person.11+holdout@mail11.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-012,person.12+holdout@mail12.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-013,person.13+holdout@mail13.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-014,person.14+holdout@mail14.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-015,person.15+holdout@mail15.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-016,person.16+holdout@mail16.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-017,person.17+holdout@mail17.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-018,person.18+holdout@mail18.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-019,person.19+holdout@mail19.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-020,person.20+holdout@mail20.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-021,person.21+holdout@mail21.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-022,person.22+holdout@mail22.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-023,person.23+holdout@mail23.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-024,person.24+holdout@mail24.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-025,person.25+holdout@mail25.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-026,person.26+holdout@mail26.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-027,person.27+holdout@mail27.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-028,person.28+holdout@mail28.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-neutral-029,person.29+holdout@mail29.independent.example,mx,gecerli,valid_neutral,curated_holdout,project-policy,Neutral dot-atom address with an MX result.
+valid-role-decoy-000,information@people0.independent.example,mx,gecerli,role_false_positive,curated_adversarial,project-policy,Contains role-like text but is not a configured role mailbox.
+valid-role-decoy-001,administrator2@people1.independent.example,mx,gecerli,role_false_positive,curated_adversarial,project-policy,Contains role-like text but is not a configured role mailbox.
+valid-role-decoy-002,supporter@people2.independent.example,mx,gecerli,role_false_positive,curated_adversarial,project-policy,Contains role-like text but is not a configured role mailbox.
+valid-role-decoy-003,salesperson@people3.independent.example,mx,gecerli,role_false_positive,curated_adversarial,project-policy,Contains role-like text but is not a configured role mailbox.
+valid-role-decoy-004,marketer@people4.independent.example,mx,gecerli,role_false_positive,curated_adversarial,project-policy,Contains role-like text but is not a configured role mailbox.
+valid-role-decoy-005,securityresearch@people5.independent.example,mx,gecerli,role_false_positive,curated_adversarial,project-policy,Contains role-like text but is not a configured role mailbox.
+valid-role-decoy-006,billingaddress@people6.independent.example,mx,gecerli,role_false_positive,curated_adversarial,project-policy,Contains role-like text but is not a configured role mailbox.
+valid-role-decoy-007,newsletterreader@people7.independent.example,mx,gecerli,role_false_positive,curated_adversarial,project-policy,Contains role-like text but is not a configured role mailbox.
+valid-role-decoy-008,helpfully@people8.independent.example,mx,gecerli,role_false_positive,curated_adversarial,project-policy,Contains role-like text but is not a configured role mailbox.
+valid-role-decoy-009,contactperson@people9.independent.example,mx,gecerli,role_false_positive,curated_adversarial,project-policy,Contains role-like text but is not a configured role mailbox.
+valid-role-decoy-010,officer@people10.independent.example,mx,gecerli,role_false_positive,curated_adversarial,project-policy,Contains role-like text but is not a configured role mailbox.
+valid-role-decoy-011,technicalwriter@people11.independent.example,mx,gecerli,role_false_positive,curated_adversarial,project-policy,Contains role-like text but is not a configured role mailbox.
+valid-role-decoy-012,privacyengineer@people12.independent.example,mx,gecerli,role_false_positive,curated_adversarial,project-policy,Contains role-like text but is not a configured role mailbox.
+valid-role-decoy-013,rooted@people13.independent.example,mx,gecerli,role_false_positive,curated_adversarial,project-policy,Contains role-like text but is not a configured role mailbox.
+valid-role-decoy-014,teamplayer@people14.independent.example,mx,gecerli,role_false_positive,curated_adversarial,project-policy,Contains role-like text but is not a configured role mailbox.
+valid-role-decoy-015,careerscoach@people15.independent.example,mx,gecerli,role_false_positive,curated_adversarial,project-policy,Contains role-like text but is not a configured role mailbox.
+valid-role-decoy-016,pressing@people16.independent.example,mx,gecerli,role_false_positive,curated_adversarial,project-policy,Contains role-like text but is not a configured role mailbox.
+valid-role-decoy-017,serviceable@people17.independent.example,mx,gecerli,role_false_positive,curated_adversarial,project-policy,Contains role-like text but is not a configured role mailbox.
+valid-role-decoy-018,accountant@people18.independent.example,mx,gecerli,role_false_positive,curated_adversarial,project-policy,Contains role-like text but is not a configured role mailbox.
+valid-role-decoy-019,webmastering@people19.independent.example,mx,gecerli,role_false_positive,curated_adversarial,project-policy,Contains role-like text but is not a configured role mailbox.
+valid-idn-000,ascii.user0@bücher.example,mx,gecerli,idn_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5890/5891,ASCII local part with an internationalized domain.
+valid-idn-001,ascii.user1@臺網中心.tw,mx,gecerli,idn_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5890/5891,ASCII local part with an internationalized domain.
+valid-idn-002,ascii.user2@郵件.商務,mx,gecerli,idn_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5890/5891,ASCII local part with an internationalized domain.
+valid-idn-003,ascii.user3@εχαμπλε.ψομ,mx,gecerli,idn_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5890/5891,ASCII local part with an internationalized domain.
+valid-idn-004,ascii.user4@пример.рф,mx,gecerli,idn_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5890/5891,ASCII local part with an internationalized domain.
+valid-idn-005,ascii.user5@müller.example,mx,gecerli,idn_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5890/5891,ASCII local part with an internationalized domain.
+valid-idn-006,ascii.user6@例子.测试,mx,gecerli,idn_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5890/5891,ASCII local part with an internationalized domain.
+valid-idn-007,ascii.user7@παράδειγμα.δοκιμή,mx,gecerli,idn_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5890/5891,ASCII local part with an internationalized domain.
+valid-idn-008,ascii.user8@مثال.إختبار,mx,gecerli,idn_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5890/5891,ASCII local part with an internationalized domain.
+valid-idn-009,ascii.user9@उदाहरण.परीक्षा,mx,gecerli,idn_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5890/5891,ASCII local part with an internationalized domain.
+valid-idn-010,ascii.user10@bücher.example,mx,gecerli,idn_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5890/5891,ASCII local part with an internationalized domain.
+valid-idn-011,ascii.user11@臺網中心.tw,mx,gecerli,idn_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5890/5891,ASCII local part with an internationalized domain.
+valid-idn-012,ascii.user12@郵件.商務,mx,gecerli,idn_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5890/5891,ASCII local part with an internationalized domain.
+valid-idn-013,ascii.user13@εχαμπλε.ψομ,mx,gecerli,idn_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5890/5891,ASCII local part with an internationalized domain.
+valid-idn-014,ascii.user14@пример.рф,mx,gecerli,idn_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5890/5891,ASCII local part with an internationalized domain.
+valid-idn-015,ascii.user15@müller.example,mx,gecerli,idn_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5890/5891,ASCII local part with an internationalized domain.
+valid-idn-016,ascii.user16@例子.测试,mx,gecerli,idn_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5890/5891,ASCII local part with an internationalized domain.
+valid-idn-017,ascii.user17@παράδειγμα.δοκιμή,mx,gecerli,idn_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5890/5891,ASCII local part with an internationalized domain.
+valid-idn-018,ascii.user18@مثال.إختبار,mx,gecerli,idn_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5890/5891,ASCII local part with an internationalized domain.
+valid-idn-019,ascii.user19@उदाहरण.परीक्षा,mx,gecerli,idn_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5890/5891,ASCII local part with an internationalized domain.
+valid-punctuation-000,alpha!beta@syntax0.independent.example,mx,gecerli,ascii_dot_atom,external_reference_adapted,python-email-validator:test_syntax; RFC 5322 dot-atom,Supported ASCII atext character in the local part.
+valid-punctuation-001,cash$box@syntax1.independent.example,mx,gecerli,ascii_dot_atom,external_reference_adapted,python-email-validator:test_syntax; RFC 5322 dot-atom,Supported ASCII atext character in the local part.
+valid-punctuation-002,percent%tag@syntax2.independent.example,mx,gecerli,ascii_dot_atom,external_reference_adapted,python-email-validator:test_syntax; RFC 5322 dot-atom,Supported ASCII atext character in the local part.
+valid-punctuation-003,ampersand&name@syntax3.independent.example,mx,gecerli,ascii_dot_atom,external_reference_adapted,python-email-validator:test_syntax; RFC 5322 dot-atom,Supported ASCII atext character in the local part.
+valid-punctuation-004,o'connor@syntax4.independent.example,mx,gecerli,ascii_dot_atom,external_reference_adapted,python-email-validator:test_syntax; RFC 5322 dot-atom,Supported ASCII atext character in the local part.
+valid-punctuation-005,star*user@syntax5.independent.example,mx,gecerli,ascii_dot_atom,external_reference_adapted,python-email-validator:test_syntax; RFC 5322 dot-atom,Supported ASCII atext character in the local part.
+valid-punctuation-006,plus+alias@syntax6.independent.example,mx,gecerli,ascii_dot_atom,external_reference_adapted,python-email-validator:test_syntax; RFC 5322 dot-atom,Supported ASCII atext character in the local part.
+valid-punctuation-007,slash/name@syntax7.independent.example,mx,gecerli,ascii_dot_atom,external_reference_adapted,python-email-validator:test_syntax; RFC 5322 dot-atom,Supported ASCII atext character in the local part.
+valid-punctuation-008,equal=name@syntax8.independent.example,mx,gecerli,ascii_dot_atom,external_reference_adapted,python-email-validator:test_syntax; RFC 5322 dot-atom,Supported ASCII atext character in the local part.
+valid-punctuation-009,question?mark@syntax9.independent.example,mx,gecerli,ascii_dot_atom,external_reference_adapted,python-email-validator:test_syntax; RFC 5322 dot-atom,Supported ASCII atext character in the local part.
+valid-punctuation-010,caret^name@syntax10.independent.example,mx,gecerli,ascii_dot_atom,external_reference_adapted,python-email-validator:test_syntax; RFC 5322 dot-atom,Supported ASCII atext character in the local part.
+valid-punctuation-011,under_score@syntax11.independent.example,mx,gecerli,ascii_dot_atom,external_reference_adapted,python-email-validator:test_syntax; RFC 5322 dot-atom,Supported ASCII atext character in the local part.
+valid-punctuation-012,back`tick@syntax12.independent.example,mx,gecerli,ascii_dot_atom,external_reference_adapted,python-email-validator:test_syntax; RFC 5322 dot-atom,Supported ASCII atext character in the local part.
+valid-punctuation-013,brace{name}@syntax13.independent.example,mx,gecerli,ascii_dot_atom,external_reference_adapted,python-email-validator:test_syntax; RFC 5322 dot-atom,Supported ASCII atext character in the local part.
+valid-punctuation-014,pipe|name@syntax14.independent.example,mx,gecerli,ascii_dot_atom,external_reference_adapted,python-email-validator:test_syntax; RFC 5322 dot-atom,Supported ASCII atext character in the local part.
+valid-domain-decoy-000,person0@mailinator.com.example,mx,gecerli,domain_false_positive,curated_adversarial,project-policy,Risk-like label appears below a different registrable parent.
+valid-domain-decoy-001,person1@yopmail.com.example,mx,gecerli,domain_false_positive,curated_adversarial,project-policy,Risk-like label appears below a different registrable parent.
+valid-domain-decoy-002,person2@sharklasers.com.example,mx,gecerli,domain_false_positive,curated_adversarial,project-policy,Risk-like label appears below a different registrable parent.
+valid-domain-decoy-003,person3@gmial.com.example,mx,gecerli,domain_false_positive,curated_adversarial,project-policy,Risk-like label appears below a different registrable parent.
+valid-domain-decoy-004,person4@hotmial.com.example,mx,gecerli,domain_false_positive,curated_adversarial,project-policy,Risk-like label appears below a different registrable parent.
+valid-domain-decoy-005,person5@outlok.com.example,mx,gecerli,domain_false_positive,curated_adversarial,project-policy,Risk-like label appears below a different registrable parent.
+valid-domain-decoy-006,person6@temp-mail.org.example,mx,gecerli,domain_false_positive,curated_adversarial,project-policy,Risk-like label appears below a different registrable parent.
+valid-domain-decoy-007,person7@trashmail.com.example,mx,gecerli,domain_false_positive,curated_adversarial,project-policy,Risk-like label appears below a different registrable parent.
+valid-domain-decoy-008,person8@gamil.com.example,mx,gecerli,domain_false_positive,curated_adversarial,project-policy,Risk-like label appears below a different registrable parent.
+valid-domain-decoy-009,person9@guerrillamail.com.example,mx,gecerli,domain_false_positive,curated_adversarial,project-policy,Risk-like label appears below a different registrable parent.
+valid-domain-decoy-010,person10@maildrop.cc.example,mx,gecerli,domain_false_positive,curated_adversarial,project-policy,Risk-like label appears below a different registrable parent.
+valid-domain-decoy-011,person11@yandex.co.example,mx,gecerli,domain_false_positive,curated_adversarial,project-policy,Risk-like label appears below a different registrable parent.
+valid-domain-decoy-012,person12@protonmai.com.example,mx,gecerli,domain_false_positive,curated_adversarial,project-policy,Risk-like label appears below a different registrable parent.
+valid-domain-decoy-013,person13@gmail.con.example,mx,gecerli,domain_false_positive,curated_adversarial,project-policy,Risk-like label appears below a different registrable parent.
+valid-domain-decoy-014,person14@icloud.con.example,mx,gecerli,domain_false_positive,curated_adversarial,project-policy,Risk-like label appears below a different registrable parent.
+suspicious-role-000,postmaster@role0.independent.example,mx,supheli,role_account,curated_adversarial,RFC 2142; project-policy,Generic mailbox or explicitly permitted role variation.
+suspicious-role-001,hostmaster@role1.independent.example,mx,supheli,role_account,curated_adversarial,RFC 2142; project-policy,Generic mailbox or explicitly permitted role variation.
+suspicious-role-002,privacy@role2.independent.example,mx,supheli,role_account,curated_adversarial,RFC 2142; project-policy,Generic mailbox or explicitly permitted role variation.
+suspicious-role-003,compliance@role3.independent.example,mx,supheli,role_account,curated_adversarial,RFC 2142; project-policy,Generic mailbox or explicitly permitted role variation.
+suspicious-role-004,careers@role4.independent.example,mx,supheli,role_account,curated_adversarial,RFC 2142; project-policy,Generic mailbox or explicitly permitted role variation.
+suspicious-role-005,recruitment@role5.independent.example,mx,supheli,role_account,curated_adversarial,RFC 2142; project-policy,Generic mailbox or explicitly permitted role variation.
+suspicious-role-006,iletisim@role6.independent.example,mx,supheli,role_account,curated_adversarial,RFC 2142; project-policy,Generic mailbox or explicitly permitted role variation.
+suspicious-role-007,destek@role7.independent.example,mx,supheli,role_account,curated_adversarial,RFC 2142; project-policy,Generic mailbox or explicitly permitted role variation.
+suspicious-role-008,finans@role8.independent.example,mx,supheli,role_account,curated_adversarial,RFC 2142; project-policy,Generic mailbox or explicitly permitted role variation.
+suspicious-role-009,security@role9.independent.example,mx,supheli,role_account,curated_adversarial,RFC 2142; project-policy,Generic mailbox or explicitly permitted role variation.
+suspicious-role-010,abuse@role10.independent.example,mx,supheli,role_account,curated_adversarial,RFC 2142; project-policy,Generic mailbox or explicitly permitted role variation.
+suspicious-role-011,noc@role11.independent.example,mx,supheli,role_account,curated_adversarial,RFC 2142; project-policy,Generic mailbox or explicitly permitted role variation.
+suspicious-role-012,webmaster@role12.independent.example,mx,supheli,role_account,curated_adversarial,RFC 2142; project-policy,Generic mailbox or explicitly permitted role variation.
+suspicious-role-013,info+ticket@role13.independent.example,mx,supheli,role_account,curated_adversarial,RFC 2142; project-policy,Generic mailbox or explicitly permitted role variation.
+suspicious-role-014,support+case@role14.independent.example,mx,supheli,role_account,curated_adversarial,RFC 2142; project-policy,Generic mailbox or explicitly permitted role variation.
+suspicious-role-015,sales-eu@role15.independent.example,mx,supheli,role_account,curated_adversarial,RFC 2142; project-policy,Generic mailbox or explicitly permitted role variation.
+suspicious-role-016,support.tr@role16.independent.example,mx,supheli,role_account,curated_adversarial,RFC 2142; project-policy,Generic mailbox or explicitly permitted role variation.
+suspicious-role-017,billing-us@role17.independent.example,mx,supheli,role_account,curated_adversarial,RFC 2142; project-policy,Generic mailbox or explicitly permitted role variation.
+suspicious-role-018,alerts_notifications@role18.independent.example,mx,supheli,role_account,curated_adversarial,RFC 2142; project-policy,Generic mailbox or explicitly permitted role variation.
+suspicious-role-019,marketing.bot@role19.independent.example,mx,supheli,role_account,curated_adversarial,RFC 2142; project-policy,Generic mailbox or explicitly permitted role variation.
+suspicious-disposable-000,holdout0@mailinator.com,mx,supheli,disposable,external_snapshot_holdout,disposable-email-domains snapshot,Disposable provider absent from the original eight-domain evaluation subset.
+suspicious-disposable-001,holdout1@guerrillamail.com,mx,supheli,disposable,external_snapshot_holdout,disposable-email-domains snapshot,Disposable provider absent from the original eight-domain evaluation subset.
+suspicious-disposable-002,holdout2@yopmail.com,mx,supheli,disposable,external_snapshot_holdout,disposable-email-domains snapshot,Disposable provider absent from the original eight-domain evaluation subset.
+suspicious-disposable-003,holdout3@sharklasers.com,mx,supheli,disposable,external_snapshot_holdout,disposable-email-domains snapshot,Disposable provider absent from the original eight-domain evaluation subset.
+suspicious-disposable-004,holdout4@10minutemail.com,mx,supheli,disposable,external_snapshot_holdout,disposable-email-domains snapshot,Disposable provider absent from the original eight-domain evaluation subset.
+suspicious-disposable-005,holdout5@temp-mail.org,mx,supheli,disposable,external_snapshot_holdout,disposable-email-domains snapshot,Disposable provider absent from the original eight-domain evaluation subset.
+suspicious-disposable-006,holdout6@throwawaymail.com,mx,supheli,disposable,external_snapshot_holdout,disposable-email-domains snapshot,Disposable provider absent from the original eight-domain evaluation subset.
+suspicious-disposable-007,holdout7@getnada.com,mx,supheli,disposable,external_snapshot_holdout,disposable-email-domains snapshot,Disposable provider absent from the original eight-domain evaluation subset.
+suspicious-disposable-008,holdout8@maildrop.cc,mx,supheli,disposable,external_snapshot_holdout,disposable-email-domains snapshot,Disposable provider absent from the original eight-domain evaluation subset.
+suspicious-disposable-009,holdout9@mohmal.com,mx,supheli,disposable,external_snapshot_holdout,disposable-email-domains snapshot,Disposable provider absent from the original eight-domain evaluation subset.
+suspicious-disposable-010,holdout10@fakemail.net,mx,supheli,disposable,external_snapshot_holdout,disposable-email-domains snapshot,Disposable provider absent from the original eight-domain evaluation subset.
+suspicious-disposable-011,holdout11@dispostable.com,mx,supheli,disposable,external_snapshot_holdout,disposable-email-domains snapshot,Disposable provider absent from the original eight-domain evaluation subset.
+suspicious-disposable-012,holdout12@trashmail.com,mx,supheli,disposable,external_snapshot_holdout,disposable-email-domains snapshot,Disposable provider absent from the original eight-domain evaluation subset.
+suspicious-disposable-013,holdout13@tempail.com,mx,supheli,disposable,external_snapshot_holdout,disposable-email-domains snapshot,Disposable provider absent from the original eight-domain evaluation subset.
+suspicious-disposable-014,holdout14@minuteinbox.com,mx,supheli,disposable,external_snapshot_holdout,disposable-email-domains snapshot,Disposable provider absent from the original eight-domain evaluation subset.
+suspicious-disposable-015,holdout15@emailondeck.com,mx,supheli,disposable,external_snapshot_holdout,disposable-email-domains snapshot,Disposable provider absent from the original eight-domain evaluation subset.
+suspicious-disposable-016,holdout16@tempmailo.com,mx,supheli,disposable,external_snapshot_holdout,disposable-email-domains snapshot,Disposable provider absent from the original eight-domain evaluation subset.
+suspicious-disposable-017,holdout17@mailnesia.com,mx,supheli,disposable,external_snapshot_holdout,disposable-email-domains snapshot,Disposable provider absent from the original eight-domain evaluation subset.
+suspicious-disposable-018,holdout18@mytemp.email,mx,supheli,disposable,external_snapshot_holdout,disposable-email-domains snapshot,Disposable provider absent from the original eight-domain evaluation subset.
+suspicious-disposable-019,holdout19@sub.mailinator.com,mx,supheli,disposable,external_snapshot_holdout,disposable-email-domains snapshot,Disposable provider absent from the original eight-domain evaluation subset.
+suspicious-typo-000,holdout0@gamil.com,mx,supheli,domain_typo,curated_adversarial,provider typo policy,Frozen provider typo; suggestion is advisory and must not mark invalid.
+suspicious-typo-001,holdout1@gmai.com,mx,supheli,domain_typo,curated_adversarial,provider typo policy,Frozen provider typo; suggestion is advisory and must not mark invalid.
+suspicious-typo-002,holdout2@gmail.co,mx,supheli,domain_typo,curated_adversarial,provider typo policy,Frozen provider typo; suggestion is advisory and must not mark invalid.
+suspicious-typo-003,holdout3@gmail.con,mx,supheli,domain_typo,curated_adversarial,provider typo policy,Frozen provider typo; suggestion is advisory and must not mark invalid.
+suspicious-typo-004,holdout4@gmail.om,mx,supheli,domain_typo,curated_adversarial,provider typo policy,Frozen provider typo; suggestion is advisory and must not mark invalid.
+suspicious-typo-005,holdout5@gmailc.om,mx,supheli,domain_typo,curated_adversarial,provider typo policy,Frozen provider typo; suggestion is advisory and must not mark invalid.
+suspicious-typo-006,holdout6@gmal.com,mx,supheli,domain_typo,curated_adversarial,provider typo policy,Frozen provider typo; suggestion is advisory and must not mark invalid.
+suspicious-typo-007,holdout7@gmial.com,mx,supheli,domain_typo,curated_adversarial,provider typo policy,Frozen provider typo; suggestion is advisory and must not mark invalid.
+suspicious-typo-008,holdout8@gmaill.com,mx,supheli,domain_typo,curated_adversarial,provider typo policy,Frozen provider typo; suggestion is advisory and must not mark invalid.
+suspicious-typo-009,holdout9@hitmail.com,mx,supheli,domain_typo,curated_adversarial,provider typo policy,Frozen provider typo; suggestion is advisory and must not mark invalid.
+suspicious-typo-010,holdout10@hotmai.com,mx,supheli,domain_typo,curated_adversarial,provider typo policy,Frozen provider typo; suggestion is advisory and must not mark invalid.
+suspicious-typo-011,holdout11@hotmail.co,mx,supheli,domain_typo,curated_adversarial,provider typo policy,Frozen provider typo; suggestion is advisory and must not mark invalid.
+suspicious-typo-012,holdout12@hotmail.con,mx,supheli,domain_typo,curated_adversarial,provider typo policy,Frozen provider typo; suggestion is advisory and must not mark invalid.
+suspicious-typo-013,holdout13@hotmial.com,mx,supheli,domain_typo,curated_adversarial,provider typo policy,Frozen provider typo; suggestion is advisory and must not mark invalid.
+suspicious-typo-014,holdout14@iclod.com,mx,supheli,domain_typo,curated_adversarial,provider typo policy,Frozen provider typo; suggestion is advisory and must not mark invalid.
+suspicious-typo-015,holdout15@icloud.con,mx,supheli,domain_typo,curated_adversarial,provider typo policy,Frozen provider typo; suggestion is advisory and must not mark invalid.
+suspicious-typo-016,holdout16@outlok.com,mx,supheli,domain_typo,curated_adversarial,provider typo policy,Frozen provider typo; suggestion is advisory and must not mark invalid.
+suspicious-typo-017,holdout17@outllok.com,mx,supheli,domain_typo,curated_adversarial,provider typo policy,Frozen provider typo; suggestion is advisory and must not mark invalid.
+suspicious-typo-018,holdout18@protonmai.com,mx,supheli,domain_typo,curated_adversarial,provider typo policy,Frozen provider typo; suggestion is advisory and must not mark invalid.
+suspicious-typo-019,holdout19@yahho.com,mx,supheli,domain_typo,curated_adversarial,provider typo policy,Frozen provider typo; suggestion is advisory and must not mark invalid.
+suspicious-a-fallback-000,person0@fallback0.independent.example,a_fallback,supheli,dns_uncertain,curated_holdout,RFC 5321 MX fallback,No MX; A/AAAA fallback is available.
+suspicious-a-fallback-001,person1@fallback1.independent.example,a_fallback,supheli,dns_uncertain,curated_holdout,RFC 5321 MX fallback,No MX; A/AAAA fallback is available.
+suspicious-a-fallback-002,person2@fallback2.independent.example,a_fallback,supheli,dns_uncertain,curated_holdout,RFC 5321 MX fallback,No MX; A/AAAA fallback is available.
+suspicious-a-fallback-003,person3@fallback3.independent.example,a_fallback,supheli,dns_uncertain,curated_holdout,RFC 5321 MX fallback,No MX; A/AAAA fallback is available.
+suspicious-a-fallback-004,person4@fallback4.independent.example,a_fallback,supheli,dns_uncertain,curated_holdout,RFC 5321 MX fallback,No MX; A/AAAA fallback is available.
+suspicious-a-fallback-005,person5@fallback5.independent.example,a_fallback,supheli,dns_uncertain,curated_holdout,RFC 5321 MX fallback,No MX; A/AAAA fallback is available.
+suspicious-a-fallback-006,person6@fallback6.independent.example,a_fallback,supheli,dns_uncertain,curated_holdout,RFC 5321 MX fallback,No MX; A/AAAA fallback is available.
+suspicious-a-fallback-007,person7@fallback7.independent.example,a_fallback,supheli,dns_uncertain,curated_holdout,RFC 5321 MX fallback,No MX; A/AAAA fallback is available.
+suspicious-a-fallback-008,person8@fallback8.independent.example,a_fallback,supheli,dns_uncertain,curated_holdout,RFC 5321 MX fallback,No MX; A/AAAA fallback is available.
+suspicious-a-fallback-009,person9@fallback9.independent.example,a_fallback,supheli,dns_uncertain,curated_holdout,RFC 5321 MX fallback,No MX; A/AAAA fallback is available.
+suspicious-dns-error-000,person0@timeout0.independent.example,error,supheli,dns_uncertain,curated_holdout,project-policy,Temporary resolver failure is not proof of invalidity.
+suspicious-dns-error-001,person1@timeout1.independent.example,error,supheli,dns_uncertain,curated_holdout,project-policy,Temporary resolver failure is not proof of invalidity.
+suspicious-dns-error-002,person2@timeout2.independent.example,error,supheli,dns_uncertain,curated_holdout,project-policy,Temporary resolver failure is not proof of invalidity.
+suspicious-dns-error-003,person3@timeout3.independent.example,error,supheli,dns_uncertain,curated_holdout,project-policy,Temporary resolver failure is not proof of invalidity.
+suspicious-dns-error-004,person4@timeout4.independent.example,error,supheli,dns_uncertain,curated_holdout,project-policy,Temporary resolver failure is not proof of invalidity.
+suspicious-dns-error-005,person5@timeout5.independent.example,error,supheli,dns_uncertain,curated_holdout,project-policy,Temporary resolver failure is not proof of invalidity.
+suspicious-dns-error-006,person6@timeout6.independent.example,error,supheli,dns_uncertain,curated_holdout,project-policy,Temporary resolver failure is not proof of invalidity.
+suspicious-dns-error-007,person7@timeout7.independent.example,error,supheli,dns_uncertain,curated_holdout,project-policy,Temporary resolver failure is not proof of invalidity.
+suspicious-dns-error-008,person8@timeout8.independent.example,error,supheli,dns_uncertain,curated_holdout,project-policy,Temporary resolver failure is not proof of invalidity.
+suspicious-dns-error-009,person9@timeout9.independent.example,error,supheli,dns_uncertain,curated_holdout,project-policy,Temporary resolver failure is not proof of invalidity.
+suspicious-smtputf8-000,élif@utf80.independent.example,mx,supheli,smtputf8,external_reference_adapted,python-email-validator:test_syntax; RFC 6531,Supported Unicode dot-atom subset requiring SMTPUTF8.
+suspicious-smtputf8-001,müller@utf81.independent.example,mx,supheli,smtputf8,external_reference_adapted,python-email-validator:test_syntax; RFC 6531,Supported Unicode dot-atom subset requiring SMTPUTF8.
+suspicious-smtputf8-002,δοκιμή@utf82.independent.example,mx,supheli,smtputf8,external_reference_adapted,python-email-validator:test_syntax; RFC 6531,Supported Unicode dot-atom subset requiring SMTPUTF8.
+suspicious-smtputf8-003,пользователь@utf83.independent.example,mx,supheli,smtputf8,external_reference_adapted,python-email-validator:test_syntax; RFC 6531,Supported Unicode dot-atom subset requiring SMTPUTF8.
+suspicious-smtputf8-004,用户@utf84.independent.example,mx,supheli,smtputf8,external_reference_adapted,python-email-validator:test_syntax; RFC 6531,Supported Unicode dot-atom subset requiring SMTPUTF8.
+suspicious-smtputf8-005,उपयोगकर्ता@utf85.independent.example,mx,supheli,smtputf8,external_reference_adapted,python-email-validator:test_syntax; RFC 6531,Supported Unicode dot-atom subset requiring SMTPUTF8.
+suspicious-smtputf8-006,kullanıcı@utf86.independent.example,mx,supheli,smtputf8,external_reference_adapted,python-email-validator:test_syntax; RFC 6531,Supported Unicode dot-atom subset requiring SMTPUTF8.
+suspicious-smtputf8-007,josé@utf87.independent.example,mx,supheli,smtputf8,external_reference_adapted,python-email-validator:test_syntax; RFC 6531,Supported Unicode dot-atom subset requiring SMTPUTF8.
+suspicious-smtputf8-008,naïve@utf88.independent.example,mx,supheli,smtputf8,external_reference_adapted,python-email-validator:test_syntax; RFC 6531,Supported Unicode dot-atom subset requiring SMTPUTF8.
+suspicious-smtputf8-009,résumé@utf89.independent.example,mx,supheli,smtputf8,external_reference_adapted,python-email-validator:test_syntax; RFC 6531,Supported Unicode dot-atom subset requiring SMTPUTF8.
+suspicious-smtputf8-010,ångström@utf810.independent.example,mx,supheli,smtputf8,external_reference_adapted,python-email-validator:test_syntax; RFC 6531,Supported Unicode dot-atom subset requiring SMTPUTF8.
+suspicious-smtputf8-011,françois@utf811.independent.example,mx,supheli,smtputf8,external_reference_adapted,python-email-validator:test_syntax; RFC 6531,Supported Unicode dot-atom subset requiring SMTPUTF8.
+suspicious-smtputf8-012,özge@utf812.independent.example,mx,supheli,smtputf8,external_reference_adapted,python-email-validator:test_syntax; RFC 6531,Supported Unicode dot-atom subset requiring SMTPUTF8.
+suspicious-smtputf8-013,çağrı@utf813.independent.example,mx,supheli,smtputf8,external_reference_adapted,python-email-validator:test_syntax; RFC 6531,Supported Unicode dot-atom subset requiring SMTPUTF8.
+suspicious-smtputf8-014,şule@utf814.independent.example,mx,supheli,smtputf8,external_reference_adapted,python-email-validator:test_syntax; RFC 6531,Supported Unicode dot-atom subset requiring SMTPUTF8.
+suspicious-smtputf8-015,мария@utf815.independent.example,mx,supheli,smtputf8,external_reference_adapted,python-email-validator:test_syntax; RFC 6531,Supported Unicode dot-atom subset requiring SMTPUTF8.
+suspicious-smtputf8-016,андрей@utf816.independent.example,mx,supheli,smtputf8,external_reference_adapted,python-email-validator:test_syntax; RFC 6531,Supported Unicode dot-atom subset requiring SMTPUTF8.
+suspicious-smtputf8-017,μήνυμα@utf817.independent.example,mx,supheli,smtputf8,external_reference_adapted,python-email-validator:test_syntax; RFC 6531,Supported Unicode dot-atom subset requiring SMTPUTF8.
+suspicious-smtputf8-018,παράδειγμα@utf818.independent.example,mx,supheli,smtputf8,external_reference_adapted,python-email-validator:test_syntax; RFC 6531,Supported Unicode dot-atom subset requiring SMTPUTF8.
+suspicious-smtputf8-019,δοκιμαστής@utf819.independent.example,mx,supheli,smtputf8,external_reference_adapted,python-email-validator:test_syntax; RFC 6531,Supported Unicode dot-atom subset requiring SMTPUTF8.
+invalid-missing-at-0,person0.independent.example,none,gecersiz,invalid_syntax,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-missing-at-1,person1.independent.example,none,gecersiz,invalid_syntax,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-missing-at-2,person2.independent.example,none,gecersiz,invalid_syntax,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-missing-at-3,person3.independent.example,none,gecersiz,invalid_syntax,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-missing-at-4,person4.independent.example,none,gecersiz,invalid_syntax,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-missing-at-5,person5.independent.example,none,gecersiz,invalid_syntax,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-missing-at-6,person6.independent.example,none,gecersiz,invalid_syntax,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-missing-at-7,person7.independent.example,none,gecersiz,invalid_syntax,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-missing-at-8,person8.independent.example,none,gecersiz,invalid_syntax,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-missing-at-9,person9.independent.example,none,gecersiz,invalid_syntax,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-double-at-0,person0@@independent.example,none,gecersiz,invalid_syntax,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-double-at-1,person1@@independent.example,none,gecersiz,invalid_syntax,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-double-at-2,person2@@independent.example,none,gecersiz,invalid_syntax,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-double-at-3,person3@@independent.example,none,gecersiz,invalid_syntax,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-double-at-4,person4@@independent.example,none,gecersiz,invalid_syntax,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-double-at-5,person5@@independent.example,none,gecersiz,invalid_syntax,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-double-at-6,person6@@independent.example,none,gecersiz,invalid_syntax,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-double-at-7,person7@@independent.example,none,gecersiz,invalid_syntax,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-double-at-8,person8@@independent.example,none,gecersiz,invalid_syntax,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-double-at-9,person9@@independent.example,none,gecersiz,invalid_syntax,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-double-dot-0,person..0@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-double-dot-1,person..1@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-double-dot-2,person..2@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-double-dot-3,person..3@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-double-dot-4,person..4@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-double-dot-5,person..5@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-double-dot-6,person..6@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-double-dot-7,person..7@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-double-dot-8,person..8@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-double-dot-9,person..9@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-space-0,first last0@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-space-1,first last1@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-space-2,first last2@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-space-3,first last3@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-space-4,first last4@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-space-5,first last5@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-space-6,first last6@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-space-7,first last7@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-space-8,first last8@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-space-9,first last9@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-domain-leading-hyphen-0,person0@-mail0.example,none,gecersiz,invalid_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-domain-leading-hyphen-1,person1@-mail1.example,none,gecersiz,invalid_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-domain-leading-hyphen-2,person2@-mail2.example,none,gecersiz,invalid_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-domain-leading-hyphen-3,person3@-mail3.example,none,gecersiz,invalid_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-domain-leading-hyphen-4,person4@-mail4.example,none,gecersiz,invalid_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-domain-underscore-0,person0@mail_0.example,none,gecersiz,invalid_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-domain-underscore-1,person1@mail_1.example,none,gecersiz,invalid_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-domain-underscore-2,person2@mail_2.example,none,gecersiz,invalid_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-domain-underscore-3,person3@mail_3.example,none,gecersiz,invalid_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-domain-underscore-4,person4@mail_4.example,none,gecersiz,invalid_domain,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-leading-dot-0,.person0@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-leading-dot-1,.person1@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-leading-dot-2,.person2@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-leading-dot-3,.person3@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-leading-dot-4,.person4@independent.example,none,gecersiz,invalid_local_part,external_reference_adapted,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-too-long-0,xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx0@independent.example,none,gecersiz,invalid_length,curated_boundary,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-too-long-1,xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx1@independent.example,none,gecersiz,invalid_length,curated_boundary,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-too-long-2,xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx2@independent.example,none,gecersiz,invalid_length,curated_boundary,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-too-long-3,xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx3@independent.example,none,gecersiz,invalid_length,curated_boundary,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-local-too-long-4,xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx4@independent.example,none,gecersiz,invalid_length,curated_boundary,python-email-validator:test_syntax; RFC 5321/5322,Unsupported or malformed mailbox syntax.
+invalid-nxdomain-000,person0@missing0.independent.example,nxdomain,gecersiz,dns_definitive,curated_holdout,project-policy,NXDOMAIN is a definitive domain failure.
+invalid-nxdomain-001,person1@missing1.independent.example,nxdomain,gecersiz,dns_definitive,curated_holdout,project-policy,NXDOMAIN is a definitive domain failure.
+invalid-nxdomain-002,person2@missing2.independent.example,nxdomain,gecersiz,dns_definitive,curated_holdout,project-policy,NXDOMAIN is a definitive domain failure.
+invalid-nxdomain-003,person3@missing3.independent.example,nxdomain,gecersiz,dns_definitive,curated_holdout,project-policy,NXDOMAIN is a definitive domain failure.
+invalid-nxdomain-004,person4@missing4.independent.example,nxdomain,gecersiz,dns_definitive,curated_holdout,project-policy,NXDOMAIN is a definitive domain failure.
+invalid-nxdomain-005,person5@missing5.independent.example,nxdomain,gecersiz,dns_definitive,curated_holdout,project-policy,NXDOMAIN is a definitive domain failure.
+invalid-nxdomain-006,person6@missing6.independent.example,nxdomain,gecersiz,dns_definitive,curated_holdout,project-policy,NXDOMAIN is a definitive domain failure.
+invalid-nxdomain-007,person7@missing7.independent.example,nxdomain,gecersiz,dns_definitive,curated_holdout,project-policy,NXDOMAIN is a definitive domain failure.
+invalid-nxdomain-008,person8@missing8.independent.example,nxdomain,gecersiz,dns_definitive,curated_holdout,project-policy,NXDOMAIN is a definitive domain failure.
+invalid-nxdomain-009,person9@missing9.independent.example,nxdomain,gecersiz,dns_definitive,curated_holdout,project-policy,NXDOMAIN is a definitive domain failure.
+invalid-nxdomain-010,person10@missing10.independent.example,nxdomain,gecersiz,dns_definitive,curated_holdout,project-policy,NXDOMAIN is a definitive domain failure.
+invalid-nxdomain-011,person11@missing11.independent.example,nxdomain,gecersiz,dns_definitive,curated_holdout,project-policy,NXDOMAIN is a definitive domain failure.
+invalid-nxdomain-012,person12@missing12.independent.example,nxdomain,gecersiz,dns_definitive,curated_holdout,project-policy,NXDOMAIN is a definitive domain failure.
+invalid-nxdomain-013,person13@missing13.independent.example,nxdomain,gecersiz,dns_definitive,curated_holdout,project-policy,NXDOMAIN is a definitive domain failure.
+invalid-nxdomain-014,person14@missing14.independent.example,nxdomain,gecersiz,dns_definitive,curated_holdout,project-policy,NXDOMAIN is a definitive domain failure.
+invalid-nxdomain-015,person15@missing15.independent.example,nxdomain,gecersiz,dns_definitive,curated_holdout,project-policy,NXDOMAIN is a definitive domain failure.
+invalid-nxdomain-016,person16@missing16.independent.example,nxdomain,gecersiz,dns_definitive,curated_holdout,project-policy,NXDOMAIN is a definitive domain failure.
+invalid-nxdomain-017,person17@missing17.independent.example,nxdomain,gecersiz,dns_definitive,curated_holdout,project-policy,NXDOMAIN is a definitive domain failure.
+invalid-nxdomain-018,person18@missing18.independent.example,nxdomain,gecersiz,dns_definitive,curated_holdout,project-policy,NXDOMAIN is a definitive domain failure.
+invalid-nxdomain-019,person19@missing19.independent.example,nxdomain,gecersiz,dns_definitive,curated_holdout,project-policy,NXDOMAIN is a definitive domain failure.
+invalid-no-mail-host-000,person0@nohost0.independent.example,no_mail_host,gecersiz,dns_definitive,curated_holdout,project-policy,Domain resolves but has neither MX nor permitted fallback.
+invalid-no-mail-host-001,person1@nohost1.independent.example,no_mail_host,gecersiz,dns_definitive,curated_holdout,project-policy,Domain resolves but has neither MX nor permitted fallback.
+invalid-no-mail-host-002,person2@nohost2.independent.example,no_mail_host,gecersiz,dns_definitive,curated_holdout,project-policy,Domain resolves but has neither MX nor permitted fallback.
+invalid-no-mail-host-003,person3@nohost3.independent.example,no_mail_host,gecersiz,dns_definitive,curated_holdout,project-policy,Domain resolves but has neither MX nor permitted fallback.
+invalid-no-mail-host-004,person4@nohost4.independent.example,no_mail_host,gecersiz,dns_definitive,curated_holdout,project-policy,Domain resolves but has neither MX nor permitted fallback.
+invalid-no-mail-host-005,person5@nohost5.independent.example,no_mail_host,gecersiz,dns_definitive,curated_holdout,project-policy,Domain resolves but has neither MX nor permitted fallback.
+invalid-no-mail-host-006,person6@nohost6.independent.example,no_mail_host,gecersiz,dns_definitive,curated_holdout,project-policy,Domain resolves but has neither MX nor permitted fallback.
+invalid-no-mail-host-007,person7@nohost7.independent.example,no_mail_host,gecersiz,dns_definitive,curated_holdout,project-policy,Domain resolves but has neither MX nor permitted fallback.
+invalid-no-mail-host-008,person8@nohost8.independent.example,no_mail_host,gecersiz,dns_definitive,curated_holdout,project-policy,Domain resolves but has neither MX nor permitted fallback.
+invalid-no-mail-host-009,person9@nohost9.independent.example,no_mail_host,gecersiz,dns_definitive,curated_holdout,project-policy,Domain resolves but has neither MX nor permitted fallback.
+invalid-no-mail-host-010,person10@nohost10.independent.example,no_mail_host,gecersiz,dns_definitive,curated_holdout,project-policy,Domain resolves but has neither MX nor permitted fallback.
+invalid-no-mail-host-011,person11@nohost11.independent.example,no_mail_host,gecersiz,dns_definitive,curated_holdout,project-policy,Domain resolves but has neither MX nor permitted fallback.
+invalid-no-mail-host-012,person12@nohost12.independent.example,no_mail_host,gecersiz,dns_definitive,curated_holdout,project-policy,Domain resolves but has neither MX nor permitted fallback.
+invalid-no-mail-host-013,person13@nohost13.independent.example,no_mail_host,gecersiz,dns_definitive,curated_holdout,project-policy,Domain resolves but has neither MX nor permitted fallback.
+invalid-no-mail-host-014,person14@nohost14.independent.example,no_mail_host,gecersiz,dns_definitive,curated_holdout,project-policy,Domain resolves but has neither MX nor permitted fallback.
+invalid-no-mail-host-015,person15@nohost15.independent.example,no_mail_host,gecersiz,dns_definitive,curated_holdout,project-policy,Domain resolves but has neither MX nor permitted fallback.
+invalid-no-mail-host-016,person16@nohost16.independent.example,no_mail_host,gecersiz,dns_definitive,curated_holdout,project-policy,Domain resolves but has neither MX nor permitted fallback.
+invalid-no-mail-host-017,person17@nohost17.independent.example,no_mail_host,gecersiz,dns_definitive,curated_holdout,project-policy,Domain resolves but has neither MX nor permitted fallback.
+invalid-no-mail-host-018,person18@nohost18.independent.example,no_mail_host,gecersiz,dns_definitive,curated_holdout,project-policy,Domain resolves but has neither MX nor permitted fallback.
+invalid-no-mail-host-019,person19@nohost19.independent.example,no_mail_host,gecersiz,dns_definitive,curated_holdout,project-policy,Domain resolves but has neither MX nor permitted fallback.

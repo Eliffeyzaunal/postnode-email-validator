@@ -1,0 +1,400 @@
+{
+  "metric_name": "syntax_reference_agreement",
+  "reference": "python-email-validator==2.3.0",
+  "corpus_size": 473,
+  "corpus_sha256": "d7fba06c4ef11c2bfbdee8c02fe3bdc3e4ed04fb2e746b951d5cab6b0fbd5c01",
+  "agreement": 0.8943,
+  "policy_aligned_corpus_size": 403,
+  "policy_aligned_agreement": 1.0,
+  "valid_precision": 0.8927,
+  "valid_recall": 0.8927,
+  "valid_f1": 0.8927,
+  "confusion": {
+    "reference_valid_project_valid": 208,
+    "reference_invalid_project_valid": 25,
+    "reference_valid_project_invalid": 25,
+    "reference_invalid_project_invalid": 215
+  },
+  "category_agreement": {
+    "invalid_alabel": {
+      "matched": 5,
+      "total": 5,
+      "agreement": 1.0
+    },
+    "invalid_domain": {
+      "matched": 55,
+      "total": 55,
+      "agreement": 1.0
+    },
+    "invalid_local": {
+      "matched": 75,
+      "total": 75,
+      "agreement": 1.0
+    },
+    "length_boundary": {
+      "matched": 25,
+      "total": 25,
+      "agreement": 1.0
+    },
+    "missing_or_extra_at": {
+      "matched": 50,
+      "total": 50,
+      "agreement": 1.0
+    },
+    "policy_outer_space": {
+      "matched": 0,
+      "total": 20,
+      "agreement": 0.0
+    },
+    "policy_quoted_local": {
+      "matched": 20,
+      "total": 20,
+      "agreement": 1.0
+    },
+    "policy_single_char_tld": {
+      "matched": 0,
+      "total": 20,
+      "agreement": 0.0
+    },
+    "policy_smtputf8_octet_limit": {
+      "matched": 0,
+      "total": 5,
+      "agreement": 0.0
+    },
+    "policy_trailing_root_dot": {
+      "matched": 0,
+      "total": 5,
+      "agreement": 0.0
+    },
+    "valid_ascii": {
+      "matched": 105,
+      "total": 105,
+      "agreement": 1.0
+    },
+    "valid_idn": {
+      "matched": 40,
+      "total": 40,
+      "agreement": 1.0
+    },
+    "valid_smtputf8": {
+      "matched": 48,
+      "total": 48,
+      "agreement": 1.0
+    }
+  },
+  "mismatch_count": 50,
+  "mismatch_examples": [
+    {
+      "category": "policy_trailing_root_dot",
+      "email": "domaincase3-0@trailing.example.",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_trailing_root_dot",
+      "email": "domaincase3-1@trailing.example.",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_trailing_root_dot",
+      "email": "domaincase3-2@trailing.example.",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_trailing_root_dot",
+      "email": "domaincase3-3@trailing.example.",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_trailing_root_dot",
+      "email": "domaincase3-4@trailing.example.",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_outer_space",
+      "email": "  spaced0@example.com  ",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_single_char_tld",
+      "email": "single0@example.c",
+      "reference_valid": true,
+      "project_valid": false
+    },
+    {
+      "category": "policy_outer_space",
+      "email": "  spaced1@example.com  ",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_single_char_tld",
+      "email": "single1@example.c",
+      "reference_valid": true,
+      "project_valid": false
+    },
+    {
+      "category": "policy_outer_space",
+      "email": "  spaced2@example.com  ",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_single_char_tld",
+      "email": "single2@example.c",
+      "reference_valid": true,
+      "project_valid": false
+    },
+    {
+      "category": "policy_outer_space",
+      "email": "  spaced3@example.com  ",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_single_char_tld",
+      "email": "single3@example.c",
+      "reference_valid": true,
+      "project_valid": false
+    },
+    {
+      "category": "policy_outer_space",
+      "email": "  spaced4@example.com  ",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_single_char_tld",
+      "email": "single4@example.c",
+      "reference_valid": true,
+      "project_valid": false
+    },
+    {
+      "category": "policy_outer_space",
+      "email": "  spaced5@example.com  ",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_single_char_tld",
+      "email": "single5@example.c",
+      "reference_valid": true,
+      "project_valid": false
+    },
+    {
+      "category": "policy_outer_space",
+      "email": "  spaced6@example.com  ",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_single_char_tld",
+      "email": "single6@example.c",
+      "reference_valid": true,
+      "project_valid": false
+    },
+    {
+      "category": "policy_outer_space",
+      "email": "  spaced7@example.com  ",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_single_char_tld",
+      "email": "single7@example.c",
+      "reference_valid": true,
+      "project_valid": false
+    },
+    {
+      "category": "policy_outer_space",
+      "email": "  spaced8@example.com  ",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_single_char_tld",
+      "email": "single8@example.c",
+      "reference_valid": true,
+      "project_valid": false
+    },
+    {
+      "category": "policy_outer_space",
+      "email": "  spaced9@example.com  ",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_single_char_tld",
+      "email": "single9@example.c",
+      "reference_valid": true,
+      "project_valid": false
+    },
+    {
+      "category": "policy_outer_space",
+      "email": "  spaced10@example.com  ",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_single_char_tld",
+      "email": "single10@example.c",
+      "reference_valid": true,
+      "project_valid": false
+    },
+    {
+      "category": "policy_outer_space",
+      "email": "  spaced11@example.com  ",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_single_char_tld",
+      "email": "single11@example.c",
+      "reference_valid": true,
+      "project_valid": false
+    },
+    {
+      "category": "policy_outer_space",
+      "email": "  spaced12@example.com  ",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_single_char_tld",
+      "email": "single12@example.c",
+      "reference_valid": true,
+      "project_valid": false
+    },
+    {
+      "category": "policy_outer_space",
+      "email": "  spaced13@example.com  ",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_single_char_tld",
+      "email": "single13@example.c",
+      "reference_valid": true,
+      "project_valid": false
+    },
+    {
+      "category": "policy_outer_space",
+      "email": "  spaced14@example.com  ",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_single_char_tld",
+      "email": "single14@example.c",
+      "reference_valid": true,
+      "project_valid": false
+    },
+    {
+      "category": "policy_outer_space",
+      "email": "  spaced15@example.com  ",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_single_char_tld",
+      "email": "single15@example.c",
+      "reference_valid": true,
+      "project_valid": false
+    },
+    {
+      "category": "policy_outer_space",
+      "email": "  spaced16@example.com  ",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_single_char_tld",
+      "email": "single16@example.c",
+      "reference_valid": true,
+      "project_valid": false
+    },
+    {
+      "category": "policy_outer_space",
+      "email": "  spaced17@example.com  ",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_single_char_tld",
+      "email": "single17@example.c",
+      "reference_valid": true,
+      "project_valid": false
+    },
+    {
+      "category": "policy_outer_space",
+      "email": "  spaced18@example.com  ",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_single_char_tld",
+      "email": "single18@example.c",
+      "reference_valid": true,
+      "project_valid": false
+    },
+    {
+      "category": "policy_outer_space",
+      "email": "  spaced19@example.com  ",
+      "reference_valid": false,
+      "project_valid": true
+    },
+    {
+      "category": "policy_single_char_tld",
+      "email": "single19@example.c",
+      "reference_valid": true,
+      "project_valid": false
+    },
+    {
+      "category": "policy_smtputf8_octet_limit",
+      "email": "ééééééééééééééééééééééééééééééééé@example.com",
+      "reference_valid": true,
+      "project_valid": false
+    },
+    {
+      "category": "policy_smtputf8_octet_limit",
+      "email": "ééééééééééééééééééééééééééééééééé@1.example.com",
+      "reference_valid": true,
+      "project_valid": false
+    },
+    {
+      "category": "policy_smtputf8_octet_limit",
+      "email": "ééééééééééééééééééééééééééééééééé@2.example.com",
+      "reference_valid": true,
+      "project_valid": false
+    },
+    {
+      "category": "policy_smtputf8_octet_limit",
+      "email": "ééééééééééééééééééééééééééééééééé@3.example.com",
+      "reference_valid": true,
+      "project_valid": false
+    },
+    {
+      "category": "policy_smtputf8_octet_limit",
+      "email": "ééééééééééééééééééééééééééééééééé@4.example.com",
+      "reference_valid": true,
+      "project_valid": false
+    }
+  ],
+  "documented_policy_differences": {
+    "policy_outer_space": "The service trims surrounding input whitespace before validation.",
+    "policy_single_char_tld": "The service requires a final domain label of at least two characters.",
+    "policy_trailing_root_dot": "The service normalizes a trailing DNS root dot.",
+    "policy_smtputf8_octet_limit": "The service applies RFC 5321's 64-octet local-part limit to UTF-8."
+  },
+  "baseline_observation": {
+    "initial_agreement": 0.8732,
+    "finding": "Malformed pre-encoded Punycode A-labels were accepted by the stdlib IDNA codec.",
+    "resolution": "IDNA 2008/UTS 46 validation was made explicit with the idna package."
+  },
+  "scope": "Syntax-only agreement with an independent implementation; no DNS, disposable, role-account, typo, SMTP delivery, or real-customer accuracy claim."
+}

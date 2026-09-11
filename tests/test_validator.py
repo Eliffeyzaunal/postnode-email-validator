@@ -1,3 +1,5 @@
+import pytest
+
 from app.models import Status
 from app.reason_codes import ReasonCode
 
@@ -26,6 +28,28 @@ def test_dns_error_is_not_invalid(service):
     _, _, item = service.validate_one("user@error.example", persist=False)
     assert item.status == Status.SUSPICIOUS
     assert ReasonCode.DNS_LOOKUP_ERROR in item.reason_codes
+
+
+def test_smtputf8_address_is_supported_but_requires_capability(service):
+    _, _, item = service.validate_one("élif@example.com", persist=False)
+    assert item.status == Status.SUSPICIOUS
+    assert item.normalized == "élif@example.com"
+    assert ReasonCode.SMTPUTF8_REQUIRED in item.reason_codes
+
+
+@pytest.mark.parametrize(
+    "email",
+    ["info+ticket@example.com", "sales-eu@example.com", "support.tr@example.com"],
+)
+def test_configured_role_variants_are_suspicious(service, email):
+    _, _, item = service.validate_one(email, persist=False)
+    assert item.status == Status.SUSPICIOUS
+    assert ReasonCode.ROLE_ACCOUNT in item.reason_codes
+
+
+def test_unreviewed_role_suffix_stays_valid(service):
+    _, _, item = service.validate_one("info+personal@example.com", persist=False)
+    assert item.status == Status.VALID
 
 
 def test_missing_domain_is_invalid(service):

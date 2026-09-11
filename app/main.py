@@ -90,6 +90,10 @@ def _response_item(item) -> ResultResponse:
         domain=item.domain,
         status=item.status,
         reason_codes=item.reason_codes,
+        reason_details=[
+            {"code": code, "description": REASON_DESCRIPTIONS[code]}
+            for code in item.reason_codes
+        ],
         suggestion=mask_email(item.suggestion) if item.suggestion else None,
     )
 

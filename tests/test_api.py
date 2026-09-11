@@ -62,6 +62,12 @@ def test_validate_endpoint(service):
         body = response.json()
         assert body["results"][0]["status"] == "supheli"
         assert body["results"][0]["masked_email"] == "u***r@gmial.com"
+        details = {
+            item["code"]: item["description"]
+            for item in body["results"][0]["reason_details"]
+        }
+        assert details["DOMAIN_TYPO"] == "Alan adı yaygın bir yazım hatasıyla eşleşiyor."
+        assert set(details) == set(body["results"][0]["reason_codes"])
         assert "user@gmial.com" not in response.text
     finally:
         main_module.get_service = original

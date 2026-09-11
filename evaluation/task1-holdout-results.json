@@ -1,0 +1,148 @@
+{
+  "evaluation_mode": "frozen_holdout",
+  "dataset_size": 300,
+  "dataset_sha256": "596bfc798839f00825c1e009b87db9bc188a7b3e327880c4fecdd607e8973b1f",
+  "dns_mode": "static_scenarios",
+  "data_origin": "mixed_external_reference_and_curated_adversarial",
+  "class_balance": {
+    "gecerli": 100,
+    "supheli": 100,
+    "gecersiz": 100
+  },
+  "acceptance_dataset_overlap": 0,
+  "accuracy": 1.0,
+  "false_positive_rate_valid_to_nonvalid": 0.0,
+  "per_class": {
+    "gecerli": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 100
+    },
+    "supheli": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 100
+    },
+    "gecersiz": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 100
+    }
+  },
+  "macro_average": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+  },
+  "confusion_matrix": {
+    "gecerli": {
+      "gecerli": 100,
+      "supheli": 0,
+      "gecersiz": 0
+    },
+    "supheli": {
+      "gecerli": 0,
+      "supheli": 100,
+      "gecersiz": 0
+    },
+    "gecersiz": {
+      "gecerli": 0,
+      "supheli": 0,
+      "gecersiz": 100
+    }
+  },
+  "category_success": {
+    "ascii_dot_atom": {
+      "correct": 15,
+      "total": 15,
+      "accuracy": 1.0
+    },
+    "disposable": {
+      "correct": 20,
+      "total": 20,
+      "accuracy": 1.0
+    },
+    "dns_definitive": {
+      "correct": 40,
+      "total": 40,
+      "accuracy": 1.0
+    },
+    "dns_uncertain": {
+      "correct": 20,
+      "total": 20,
+      "accuracy": 1.0
+    },
+    "domain_false_positive": {
+      "correct": 15,
+      "total": 15,
+      "accuracy": 1.0
+    },
+    "domain_typo": {
+      "correct": 20,
+      "total": 20,
+      "accuracy": 1.0
+    },
+    "idn_domain": {
+      "correct": 20,
+      "total": 20,
+      "accuracy": 1.0
+    },
+    "invalid_domain": {
+      "correct": 10,
+      "total": 10,
+      "accuracy": 1.0
+    },
+    "invalid_length": {
+      "correct": 5,
+      "total": 5,
+      "accuracy": 1.0
+    },
+    "invalid_local_part": {
+      "correct": 25,
+      "total": 25,
+      "accuracy": 1.0
+    },
+    "invalid_syntax": {
+      "correct": 20,
+      "total": 20,
+      "accuracy": 1.0
+    },
+    "role_account": {
+      "correct": 20,
+      "total": 20,
+      "accuracy": 1.0
+    },
+    "role_false_positive": {
+      "correct": 20,
+      "total": 20,
+      "accuracy": 1.0
+    },
+    "smtputf8": {
+      "correct": 20,
+      "total": 20,
+      "accuracy": 1.0
+    },
+    "valid_neutral": {
+      "correct": 30,
+      "total": 30,
+      "accuracy": 1.0
+    }
+  },
+  "origin_counts": {
+    "curated_adversarial": 75,
+    "curated_boundary": 5,
+    "curated_holdout": 90,
+    "external_reference_adapted": 110,
+    "external_snapshot_holdout": 20
+  },
+  "failures": [],
+  "limitations": [
+    "Synthetic/curated addresses are used; there is no customer or SMTP RCPT TO data.",
+    "The balanced class distribution is not an estimate of production prevalence.",
+    "Static DNS scenarios measure decision logic; live DNS performance is reported separately.",
+    "The corpus must remain frozen and must not be used to tune rules after results are recorded."
+  ]
+}

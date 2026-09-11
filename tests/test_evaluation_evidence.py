@@ -2,7 +2,13 @@ import csv
 
 import pytest
 
-from scripts.evaluate import evaluate, load_cases, prepare_review, review_summary
+from scripts.evaluate import (
+    classification_metrics,
+    evaluate,
+    load_cases,
+    prepare_review,
+    review_summary,
+)
 
 
 def test_draft_labels_never_count_as_human_review(tmp_path):
@@ -52,3 +58,18 @@ def test_evaluation_exposes_label_disagreement_instead_of_rewriting_it(tmp_path)
     assert report["failures"][0]["case_id"] == case["id"]
     assert case["expected_status"] == "gecersiz"
     assert report["human_review"]["acceptance_met"] is False
+
+
+def test_metrics_include_precision_recall_f1_matrix_and_categories():
+    report = classification_metrics(
+        [("gecerli", "gecerli"), ("supheli", "gecersiz"), ("gecersiz", "gecersiz")],
+        ["syntax", "dns", "dns"],
+    )
+    assert report["per_class"]["gecerli"]["precision"] == 1.0
+    assert report["per_class"]["supheli"]["recall"] == 0.0
+    assert report["confusion_matrix"]["supheli"]["gecersiz"] == 1
+    assert report["category_success"]["dns"] == {
+        "correct": 1,
+        "total": 2,
+        "accuracy": 0.5,
+    }

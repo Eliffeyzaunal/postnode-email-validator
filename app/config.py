@@ -16,7 +16,10 @@ class Settings(BaseSettings):
     )
     disposable_domains_path: Path = PROJECT_ROOT / "data" / "disposable_domains.txt"
     role_accounts_path: Path = PROJECT_ROOT / "data" / "role_accounts.txt"
+    role_variant_suffixes_path: Path = PROJECT_ROOT / "data" / "role_variant_suffixes.txt"
     domain_typos_path: Path = PROJECT_ROOT / "data" / "domain_typos.json"
+    popular_email_domains_path: Path = PROJECT_ROOT / "data" / "popular_email_domains.txt"
+    allow_smtputf8: bool = True
     blocklist_providers_path: Path = PROJECT_ROOT / "config" / "blocklists.json"
     blocklist_assets_path: Path = PROJECT_ROOT / "config" / "monitored-assets.example.json"
     blocklist_fake_dns_path: Path = PROJECT_ROOT / "data" / "blocklist_fake_dns.json"

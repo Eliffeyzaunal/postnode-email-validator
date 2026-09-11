@@ -39,5 +39,6 @@ bekleyen, 0 uyuşmazlık.
 
 Adres örnekleri tek başına çalıştırılır. Liste bağlamına bağlı yinelenme, ardışık
 üretim ve alan adı yoğunluğu kuralları ayrı senaryolarda kontrol edilir. Destek
-kapsamı dışındaki SMTPUTF8/Unicode yerel bölüm ve tırnaklı adres biçimleri bu
-değerlendirmeden kapsamlı standart uyumluluğu sonucu çıkarılmasına izin vermez.
+kapsamındaki kontrollü SMTPUTF8/Unicode yerel bölüm desteği birim testlerde
+ölçülür; tırnaklı adres biçimleri ve yeni davranış mevcut 258 satırlık ölçüme
+dahil değildir. Bu veriden kapsamlı standart uyumluluğu sonucu çıkarılamaz.

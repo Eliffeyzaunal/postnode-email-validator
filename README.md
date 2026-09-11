@@ -2,6 +2,8 @@
 
 [![Testler](https://github.com/Eliffeyzaunal/postnode-email-validator/actions/workflows/tests.yml/badge.svg)](https://github.com/Eliffeyzaunal/postnode-email-validator/actions/workflows/tests.yml)
 
+Görev 1'in şartname, kod, test ve ölçüm eşlemesi: [`TASK1-REPORT.md`](TASK1-REPORT.md).
+
 PDF'deki Görev 1 için liste hijyeni/adres doğrulama, Görev 2 için periyodik kara liste izleme ve Görev 4 için SES bounce/şikâyet sınıflandırması sağlayan bağımsız FastAPI/CLI servisidir. Üretimde MySQL, otomatik birim testlerinde aynı SQLAlchemy repository kodu üzerinden geçici SQLite kullanılır.
 
 ## Özellikler
@@ -9,7 +11,10 @@ PDF'deki Görev 1 için liste hijyeni/adres doğrulama, Görev 2 için periyodik
 - Sözdizimi, uzunluk, yerel bölüm ve alan adı kontrolleri
 - MX sorgusu; MX yoksa A/AAAA geri dönüşünün ayrı sınıflandırılması
 - Kalıcı MySQL DNS önbelleği ve toplu işlemde alan adı tekilleştirme
-- Güncellenebilir disposable-domain, rol hesabı ve typo veri dosyaları
+- Kaynak/lisans bilgili 8.746 disposable-domain snapshot'ı ve aylık güncelleme scripti
+- 55 role-account terimi ve yanlış pozitifi sınırlayan yapılandırılmış varyasyonlar
+- 30 kesin typo eşlemesi + 27 güvenilir sağlayıcıyla kontrollü fuzzy öneri
+- IDN/Punycode ve kontrollü SMTPUTF8 yerel bölüm desteği
 - Yazım hatası için düzeltme önerisi
 - Yinelenen adres, ardışık üretilmiş yerel bölüm ve alan adı yoğunluğu analizi
 - Toplam/karar dağılımı, ilk 10 alan adı ve tahmini bounce oranı
@@ -94,6 +99,10 @@ curl -X POST http://127.0.0.1:8000/api/v1/validate/file \
 {
   "status": "supheli",
   "reason_codes": ["DOMAIN_TYPO"],
+  "reason_details": [{
+    "code": "DOMAIN_TYPO",
+    "description": "Alan adı yaygın bir yazım hatasıyla eşleşiyor."
+  }],
   "masked_email": "t***t@gmial.com",
   "suggestion": "t***t@gmail.com"
 }
@@ -303,6 +312,7 @@ Tahmini bounce oranı gerçek teslimat ölçümü değildir; `invalid + 0.25 × 
 | LOCAL_PART_TOO_LONG | Yerel bölüm 64'ü aşıyor. |
 | INVALID_LOCAL_PART | Yerel bölüm karakter/nokta kuralı hatalı. |
 | INVALID_DOMAIN | Alan adı etiketi veya uzunluğu hatalı. |
+| SMTPUTF8_REQUIRED | Unicode yerel bölüm geçerli; gönderim altyapısının SMTPUTF8 desteği doğrulanmalı. |
 | DOMAIN_NXDOMAIN | Alan adı DNS'te yok. |
 | DOMAIN_NO_MAIL_HOST | MX/A/AAAA yok. |
 | DOMAIN_A_FALLBACK | MX yok ama A/AAAA var. |
@@ -319,6 +329,8 @@ Tahmini bounce oranı gerçek teslimat ölçümü değildir; `invalid + 0.25 × 
 ```bash
 pytest
 python scripts/evaluate.py
+python scripts/evaluate_task1_holdout.py
+python scripts/evaluate_task1_syntax_reference.py
 python scripts/evaluate_bounce_classifier.py
 python scripts/benchmark.py
 ```
@@ -333,9 +345,67 @@ etiket ve çözümlenmemiş uyuşmazlık olmamasını denetler. Ayrıntılar
 [`evaluation/REVIEW.md`](evaluation/REVIEW.md) dosyasındadır. Sabit DNS kullanılır;
 taslak etiketlerle uyum, gerçek müşteri doğruluğu iddiası değildir.
 
+Görev 1 raporu accuracy, üç sınıf için precision/recall/F1, macro ortalamalar,
+confusion matrix, kategori bazlı başarı ve geçerli→geçersiz yanlış pozitif oranını
+ayrı gösterir. Güncel sentetik/sabit-DNS sonucu `%100` accuracy, precision,
+recall ve macro F1 ile `%0` geçerli→geçersiz FPR'dır. Ayrıntılar
+[`evaluation/report.md`](evaluation/report.md) ve [`TASK1-REPORT.md`](TASK1-REPORT.md)
+içindedir; bu sayılar üretim doğruluğu olarak sunulmaz.
+
+Kabul setinden ayrı `evaluation/task1-holdout.csv`, her karar sınıfında 100 olmak
+üzere 300 dondurulmuş örnek içerir ve kabul setiyle sıfır adres örtüşmesine sahiptir.
+Güncel statik-senaryo sonucu `%100` accuracy/macro F1 ve `%0` geçerli→geçerli
+olmayan FPR'dır. Bu da müşteri trafiği değildir.
+
+Syntax kararları ayrıca Unlicense lisanslı `python-email-validator==2.3.0` ile
+473 deterministik örnekte karşılaştırılır. Ham uyum `%89,43`, açıkça belgelenmiş
+ürün/RFC politika farkları hariç uyum `%100`'dür. İlk çalıştırma geçersiz Punycode
+A-label kabulünü ortaya çıkarmış ve açık IDNA doğrulamasıyla düzeltilmiştir.
+Ham farklar rapordan çıkarılmaz. Veri ayrımı, kaynaklar ve sınırlamalar
+[`docs/task1-holdout-methodology.md`](docs/task1-holdout-methodology.md) içindedir.
+
 `benchmark/emails-10000.csv` tam 10.000 satırdır. Benchmark, üretimde kullanılan MySQL kayıt yoluyla hem boş DNS cache ile ilk koşuyu hem de dolu cache ile ikinci koşuyu ölçer. Ağ değişkenliğini ortadan kaldırmak için DNS cevabı sabittir; ilk koşuda dört tekil alan adı için dört sorgu, ikinci koşuda ise kalıcı cache sayesinde sıfır sorgu beklenir. İki koşuda toplam 20.000 sonuç satırının MySQL'e yazıldığı doğrulanır ve benchmark kendi oluşturduğu satırları bitişte temizler.
 
 GitHub Actions, her `main` push ve pull request işleminde Python 3.11 ve 3.12 üzerinde SQLite birim testlerini, gerçek MySQL 8.4 entegrasyon testini, değerlendirmeyi ve MySQL benchmark'ını otomatik çalıştırır.
+
+Ayrı Görev 1 coverage adımı yalnızca adres doğrulama modüllerini ölçer, XML/JSON
+kanıtı üretir ve toplam kapsam `%85` altına düşerse CI'ı başarısız yapar. Güncel
+yerel ölçüm `%88,39`'dur.
+
+Gerçek DNS gecikmesini ölçmek için `python scripts/benchmark_live_dns.py
+--acknowledge-live-dns` kullanılabilir. Bu ölçüm herkese açık 20 alan adıyla,
+müşteri verisi olmadan çalışır ve tüm cevaplar teknik hata ise geçersiz sayılır.
+Gerçek DNS sonucu, deterministik 10.000 adres/MySQL benchmark'ıyla hız üstünlüğü
+iddiası amacıyla karşılaştırılmaz.
+
+### 200 adreslik canlı DNS karşılaştırması
+
+Sentetik `%100` kabul ölçümünden ayrı, dış syntax referansı ve gerçek DNS kullanan üç sınıflı
+değerlendirme aşağıdaki komutla çalıştırılır:
+
+```bash
+python scripts/evaluate_task1_live_challenge.py --acknowledge-live-dns
+```
+
+Komut; 200 satırlık dondurulmuş corpus için accuracy, macro precision/recall/F1,
+geçerli adres yanlış-pozitif oranı, confusion matrix ve kategori başarısını üretir.
+Geçerli domainler tekilleştirilir; çalışan yapılandırılmış resolver'lar yoklanır,
+teknik hatalar yeniden denenir ve iki karar tarafına aynı canlı DNS snapshot'ı verilir.
+Bu, geçici resolver farkının taraflardan birini kayırmasını önler; projenin DNS
+algoritması için bağımsız doğrulama iddiası taşımaz. Bir teknik hata bile kalırsa
+ilgili satır puana gizlice eklenmez ve `measurement_valid=false` ile komut başarısız
+olur. Mailbox/SMTP bağlantısı kurulmaz; yalnız herkese açık domain DNS kayıtları
+sorgulanır. Sonuçlar
+`evaluation/task1-live-challenge-results.json` ve
+`evaluation/task1-live-challenge-report.md` dosyalarına yazılır.
+
+Yerel resolver teknik hata verirse açıkça seçilmiş resolver ve daha geniş yeniden
+deneme bütçesi kullanılabilir:
+
+```bash
+python scripts/evaluate_task1_live_challenge.py --acknowledge-live-dns \
+  --nameserver 1.1.1.1 --nameserver 8.8.8.8 --dns-timeout 5 --dns-retries 3
+```
 
 CI, ölçülmüş süreleri `delivery-evidence-python-*` adlı indirilebilir dosya
 paketlerinde saklar. Windows'ta `collect_delivery_evidence.bat` aynı ölçümleri
@@ -351,9 +421,9 @@ kural eklenmesini, 360 satırlık veri bütünlüğünü ve kalıcı/geçici hat
 
 ## Liste kaynakları ve güncelleme
 
-`data/disposable_domains.txt` küçük başlangıç listesidir. Üretim öncesinde açık kaynak [disposable_email_blocklist.conf](https://github.com/disposable-email-domains/disposable-email-domains/blob/main/disposable_email_blocklist.conf) dosyasıyla ayda bir güncellenmeli; değişiklik test ve kod incelemesinden geçmelidir. Uygulama çalışırken internetten otomatik indirme yapmaz; bu, sonucun denetlenebilir ve belirleyici kalmasını sağlar.
+`data/disposable_domains.txt`, açık kaynak [disposable_email_blocklist.conf](https://github.com/disposable-email-domains/disposable-email-domains/blob/main/disposable_email_blocklist.conf) dosyasının 8.746 alan adlı, kaynak commit'i ve SHA-256 özeti kaydedilmiş snapshot'ıdır. `scripts/update_disposable_domains.py` ile ayda bir güncellenir; değişiklik test ve kod incelemesinden geçer. Uygulama çalışırken internetten otomatik indirme yapmaz. Kaynak, lisans ve bakım adımları [`docs/disposable-domain-maintenance.md`](docs/disposable-domain-maintenance.md) içindedir.
 
-`role_accounts.txt` ve `domain_typos.json` da kod değişmeden güncellenebilir veri dosyalarıdır. Typo tespiti yalnızca açık eşleme kullanır; bulanık benzerlik kullanılmaması yanlış pozitif riskini azaltır.
+`role_accounts.txt`, `role_variant_suffixes.txt`, `domain_typos.json` ve `popular_email_domains.txt` kod değişmeden güncellenebilir. Role varyasyonu yalnızca gözden geçirilmiş son eklerle; fuzzy typo ise aynı TLD'de, benzersiz en yakın sonuçla ve güvenilir sağlayıcı allowlist'iyle çalışır. Fuzzy bulgu kesin ret üretmez.
 
 ## Güvenlik ve gizlilik
 
