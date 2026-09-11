@@ -307,3 +307,59 @@ def test_batch_summary_reports_unknown_rate(classifier: EventClassifier):
     assert response.total == 2
     assert response.category_counts == {"complaint": 1, "unknown": 1}
     assert response.unknown_rate == 0.5
+
+def test_invalid_sns_message_json_is_left_wrapped(classifier: EventClassifier):
+    event = {
+        "Type": "Notification",
+        "MessageId": "sns-invalid",
+        "Message": "{not-json",
+        "diagnostic_code": "599 unknown",
+    }
+
+    unwrapped = classifier.unwrap_sns(event)
+
+    assert unwrapped is event
+
+
+def test_sns_message_without_ses_shape_is_left_wrapped(classifier: EventClassifier):
+    event = {
+        "Type": "Notification",
+        "MessageId": "sns-other",
+        "Message": json.dumps({"hello": "world"}),
+    }
+
+    assert classifier.unwrap_sns(event) is event
+
+
+def test_rule_with_non_matching_trigger_is_rejected(tmp_path: Path):
+    source = json.loads((PROJECT_ROOT / "config" / "bounce_rules.json").read_text())
+    source["rules"][0]["trigger_example"] = {"diagnostic_code": "totally unrelated"}
+    path = tmp_path / "bad-trigger.json"
+    path.write_text(json.dumps(source), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="kendi kosuluyla eslesmiyor"):
+        EventClassifier(path)
+
+
+def test_rule_with_matching_counter_example_is_rejected(tmp_path: Path):
+    source = json.loads((PROJECT_ROOT / "config" / "bounce_rules.json").read_text())
+    source["rules"][0]["counter_example"] = source["rules"][0]["trigger_example"]
+    path = tmp_path / "bad-counter.json"
+    path.write_text(json.dumps(source), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="karsi ornegiyle de eslesiyor"):
+        EventClassifier(path)
+
+
+def test_multi_recipient_container_with_no_dict_recipients_falls_back(classifier: EventClassifier):
+    event = {
+        "event_id": "malformed-recipient-list",
+        "bounce": {
+            "bouncedRecipients": ["one@example.com", "two@example.com"],
+        },
+        "diagnostic_code": "599 unknown",
+    }
+
+    expanded = classifier.expand_recipients(event)
+
+    assert expanded == [event]

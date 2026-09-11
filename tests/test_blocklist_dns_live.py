@@ -64,3 +64,67 @@ def test_live_dns_no_answer_is_query_error_state():
     response = LiveBlocklistDNSClient(resolver=resolver).resolve("empty.example")
 
     assert response.state == DNSResponseState.ERROR
+
+class TXTRecordWithoutStrings:
+    def __str__(self):
+        return '"fallback text"'
+
+
+def test_live_dns_applies_explicit_nameservers():
+    resolver = ResolverStub([])
+    client = LiveBlocklistDNSClient(
+        timeout_seconds=7,
+        nameservers=["1.1.1.1", "8.8.8.8"],
+        resolver=resolver,
+    )
+
+    assert resolver.timeout == 7
+    assert resolver.lifetime == 7
+    assert resolver.nameservers == ["1.1.1.1", "8.8.8.8"]
+    assert client.resolver is resolver
+
+
+def test_live_dns_no_nameservers_is_servfail():
+    resolver = ResolverStub(dns.resolver.NoNameservers())
+    response = LiveBlocklistDNSClient(resolver=resolver).resolve("servfail.example")
+
+    assert response.state == DNSResponseState.SERVFAIL
+
+
+def test_live_dns_generic_dns_exception_is_error():
+    resolver = ResolverStub(dns.exception.DNSException("dns failed"))
+    response = LiveBlocklistDNSClient(resolver=resolver).resolve("dns-error.example")
+
+    assert response.state == DNSResponseState.ERROR
+    assert "dns failed" in response.detail
+
+
+def test_live_dns_oserror_is_error():
+    resolver = ResolverStub(OSError("network unavailable"))
+    response = LiveBlocklistDNSClient(resolver=resolver).resolve("os-error.example")
+
+    assert response.state == DNSResponseState.ERROR
+    assert "network unavailable" in response.detail
+
+
+def test_live_dns_txt_falls_back_to_string_representation():
+    resolver = ResolverStub(
+        [ARecord("127.0.0.2")],
+        [TXTRecordWithoutStrings()],
+    )
+    response = LiveBlocklistDNSClient(resolver=resolver).resolve("txt.example")
+
+    assert response.state == DNSResponseState.OK
+    assert response.txt_records == ["fallback text"]
+
+
+def test_live_dns_keeps_positive_a_when_txt_lookup_fails():
+    resolver = ResolverStub(
+        [ARecord("127.0.0.2")],
+        dns.resolver.NoAnswer(),
+    )
+    response = LiveBlocklistDNSClient(resolver=resolver).resolve("txt-missing.example")
+
+    assert response.state == DNSResponseState.OK
+    assert response.a_records == ["127.0.0.2"]
+    assert response.txt_records == []

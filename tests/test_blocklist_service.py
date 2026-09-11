@@ -159,3 +159,41 @@ def test_run_and_notifications_are_persisted(blocklist_service):
     assert stored["total_checks"] == 10
     assert len(stored["results"]) == 10
     assert len(notifications) == 5
+
+def test_service_rejects_repository_dns_mode_mismatch(blocklist_service):
+    from types import SimpleNamespace
+    from app.blocklist.service import BlocklistMonitorService
+
+    wrong_mode = "live" if blocklist_service.settings.blocklist_dns_mode != "live" else "fake"
+    repository = SimpleNamespace(dns_mode=wrong_mode)
+
+    with pytest.raises(ValueError, match="DNS modu aynı"):
+        BlocklistMonitorService(blocklist_service.settings, repository=repository)
+
+
+def test_service_rejects_empty_asset_request(blocklist_service):
+    request = BlocklistCheckRequest(assets=[])
+
+    with pytest.raises(ValueError, match="En az bir"):
+        blocklist_service.run_once(request)
+
+
+def test_service_rejects_duplicate_asset_ids(blocklist_service):
+    request = BlocklistCheckRequest(
+        assets=[
+            MonitoredAsset(id="same-id", type="ip", value="127.0.0.2"),
+            MonitoredAsset(id="same-id", type="ip", value="127.0.0.3"),
+        ]
+    )
+
+    with pytest.raises(ValueError, match="benzersiz"):
+        blocklist_service.run_once(request)
+
+
+def test_provider_status_exposes_configuration(blocklist_service):
+    statuses = blocklist_service.provider_status()
+
+    assert statuses
+    assert all("id" in item for item in statuses)
+    assert all("availability" in item for item in statuses)
+    assert all("asset_types" in item for item in statuses)
