@@ -256,14 +256,19 @@ ayrı değerlendirilir. Yeni bir tanı metni kuralı JSON'a eklenebilir; Python 
 ```bash
 python scripts/generate_bounce_evaluation.py
 python scripts/evaluate_bounce_classifier.py
+python scripts/evaluate_bounce_automated.py --require-acceptance
 ```
 
 Rapor kategori doğruluğunu, bilinmeyen oranını, en sık 20 güvenli bilinmeyen
 örüntüyü ve kalıcı/geçici ayrımını ayrı gösterir. Özellikle geçici bir olayı kalıcı
-sayma oranı ölçülür. Mevcut taslak değerlendirme %100 şartname uyumu ve sıfır
-geçici→kalıcı hata göstermektedir; bu gerçek müşteri doğruluğu iddiası değildir.
-Görev kabulü için en az 300 satırlık bağımsız insan kontrolü hâlâ gereklidir;
-akış [`evaluation/bounce-REVIEW.md`](evaluation/bounce-REVIEW.md) içinde açıklanır.
+sayma oranı ölçülür. Mevcut otomatik değerlendirme sentetik şartname uyumunu ve geçici→kalıcı
+güvenlik hatasını ölçer; bu gerçek müşteri doğruluğu iddiası değildir.
+Repo içi Görev 4 doğrulaması `scripts/evaluate_bounce_automated.py --require-acceptance`
+ile otomatik yapılır; 360 sentetik olayın yanında her kuralın olumlu ve karşı
+örneği de kontrol edilir. Bu otomatik kabul, gerçek veri veya bağımsız insan
+etiketlemesinin yerine geçmez. İnsan incelemesi otomatik CI kabulünün parçası
+değildir; PDF kabulü ya da üretim doğruluğu iddiası için ayrıca tamamlanmalıdır. Ayrıntılar
+[`evaluation/bounce-AUTOMATED.md`](evaluation/bounce-AUTOMATED.md) dosyasındadır.
 
 ## Süreç ve demo belgeleri
 
@@ -369,8 +374,9 @@ Ham farklar rapordan çıkarılmaz. Veri ayrımı, kaynaklar ve sınırlamalar
 GitHub Actions, her `main` push ve pull request işleminde Python 3.11 ve 3.12 üzerinde SQLite birim testlerini, gerçek MySQL 8.4 entegrasyon testini, değerlendirmeyi ve MySQL benchmark'ını otomatik çalıştırır.
 
 Ayrı Görev 1 coverage adımı yalnızca adres doğrulama modüllerini ölçer, XML/JSON
-kanıtı üretir ve toplam kapsam `%85` altına düşerse CI'ı başarısız yapar. Güncel
-yerel ölçüm `%88,39`'dur.
+kanıtı üretir ve toplam kapsam `%95` altına düşerse CI'ı başarısız yapar. Son
+başarılı GitHub Actions ölçümü `%98,44`'tür. Aynı koşuda Görev 2 kapsamı `%96,64`,
+Görev 4 kapsamı `%98,69` ve tam test sonucu `284 passed` olmuştur.
 
 Gerçek DNS gecikmesini ölçmek için `python scripts/benchmark_live_dns.py
 --acknowledge-live-dns` kullanılabilir. Bu ölçüm herkese açık 20 alan adıyla,
@@ -444,4 +450,6 @@ Görev 2 sahte DNS modunda gerçek DNSBL ağına sorgu göndermez. Canlı mod d�
 
 Görev 4 değerlendirmesi anonim sentetik olaylardan oluşur. Gerçek `ses_events`
 dışa aktarımı sağlanmadan sağlayıcı dağılımı ve üretim doğruluğu ölçülemez; gerçek
-veri geldiğinde önce anonimleştirilmeli, ardından aynı CLI ve insan inceleme akışında çalıştırılmalıdır.
+veri geldiğinde önce anonimleştirilmeli, ardından aynı CLI ve insan inceleme akışında
+çalıştırılmalıdır. 360 olaylık otomatik sentetik kabulün geçmesi, bağımsız kişi
+tarafından etiketlenmiş 300 gerçek/anonimleştirilmiş olay kabulünün tamamlandığı anlamına gelmez.

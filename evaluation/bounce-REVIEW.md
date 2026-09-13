@@ -1,4 +1,10 @@
-# Görev 4 İnsan Etiket İncelemesi
+# Görev 4 Bağımsız İnsan Etiket İncelemesi
+
+> Bu akış otomatik CI kabulünden ayrıdır. Repo içi sentetik kabul için
+> `bounce-AUTOMATED.md` ve `scripts/evaluate_bounce_automated.py` kullanılır;
+> bağımsız insan etiketlemesi CI için zorunlu değildir. PDF'deki insan-etiketli
+> kabul maddesini veya gerçek veri doğruluğu iddiasını karşılamak için bu akış
+> ayrıca tamamlanmalıdır.
 
 `bounce-evaluation.jsonl` dosyası 360 anonim ve sentetik SES-benzeri olay içerir.
 Üretim verisi veya gerçek e-posta adresi içermez. `expected_category` alanları
