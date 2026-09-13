@@ -18,9 +18,12 @@ sınıflandıran kütüphane, CLI ve API uçları eklendi.
 
 ## Doğrulama
 
-- Yerel: `150 passed, 4 skipped`
+- Güncel tam yerel test: `284 passed, 4 skipped`
 - 4 atlama: yerelde MySQL bağlantısı bulunmadığı için entegrasyon testleri
+- Son başarılı CI'da Görev 4 coverage: `%98,69`; Görev 4 testi: `114 passed`
 - Sentetik taslak doğruluk: `%100`
+- Otomatik kabul kontrolleri: `7/7 PASS`
+- 22 kuralın olumlu ve karşı örnek fixture'ları: başarılı
 - Geçiciyi kalıcı sayma: `0 / 160`
 - Bilinmeyen oranı: `40 / 360 (%11,11)`
 
@@ -29,3 +32,4 @@ sınıflandıran kütüphane, CLI ve API uçları eklendi.
 Değerlendirme verisi anonim ve sentetiktir; gerçek `ses_events` dışa aktarımı
 kullanılmamıştır. En az 300 satırlık insan etiket kontrolü henüz beklediği için
 insan-etiketli kabul kriteri tamamlanmış olarak işaretlenmemiştir.
+Otomatik sentetik kabul bu insan incelemesinin yerine geçmez.

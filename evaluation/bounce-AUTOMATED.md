@@ -32,5 +32,6 @@ GitHub Actions aynı kontrolü Python 3.11 ve 3.12 üzerinde çalıştırır ve 
 
 Bu ölçüm gerçek müşteri veya üretim doğruluğu iddiası değildir. Sentetik veri ve
 kural fixture'larına göre tekrar üretilebilir otomatik doğrulamadır. İnsan etiket
-incelemesi istenirse ek bir kalite auditi olarak `bounce-REVIEW.md` akışı
-kullanılabilir; otomatik CI kabulünün parçası değildir.
+incelemesi otomatik CI kabulünün parçası değildir; ancak PDF'deki bağımsız insan
+etiketli kabul maddesi veya üretim doğruluğu iddiası için `bounce-REVIEW.md` akışı
+ayrıca tamamlanmalıdır.
